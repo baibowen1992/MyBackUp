@@ -23,7 +23,6 @@ script----开发配合脚本
     /opt/zmanda/amanda/mysql/bin/mysql -uzmc -pnewpassword
 新建需要的数据表
 ```
-
  CREATE TABLE `gci_drives_owner` (
 `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
 `owner` varchar(100) DEFAULT NULL COMMENT 'owner',
@@ -32,6 +31,8 @@ script----开发配合脚本
 PRIMARY KEY (`id`),
 unique(`drives`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8；
+users表中新增资源池字段
+alter table users add COLUMN resource_pool VARCHAR(1000) NULL;
 ```
 
 

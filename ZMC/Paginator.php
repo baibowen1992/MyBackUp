@@ -53,7 +53,7 @@ class ZMC_Paginator
 		$this->sortKey = $sortKey;
 		$this->rowsPerPage = intval($rowsPerPage);
 		if (empty($this->rowsPerPage))
-			$this->rowsPerPage = 10;
+			$this->rowsPerPage = 1000;
 
 		$key = $pm->tombstone . ':' . $pm->subnav . ':rows:' . $sortKey;
 		if (isset($_POST['rows_per_page_' . $sortKey]) && intval($_POST['rows_per_page_' . $sortKey] >= 5))

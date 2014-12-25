@@ -17,8 +17,8 @@ class ZMC_Report_Backups
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Report', 'ZMC - Backups Report', 'backups');
-		$pm->addDefaultInstruction('View summary reports for previous backups.');
+		ZMC_HeaderFooter::$instance->header($pm, 'Report', '云备份 - Backups Report', 'backups');
+		$pm->addDefaultInstruction('查看前一次备份汇总报告');
 		if (!ZMC_BackupSet::assertSelected($pm))
 			return 'MessageBox'; 
 		$pm->addError(ZMC_BackupCalendar::initReportCalendar($pm));
@@ -27,7 +27,7 @@ class ZMC_Report_Backups
 		$pm->numBackup=0;
 		if (isset($pm->BIDRangeArray[0]['bidinfo']))
 			if (!($pm->numBackup = $pm->BIDRangeArray[0]['bidinfo']->mGetNumItem()))
-				$pm->addMessage('No BACKUPS on this day.');
+				$pm->addMessage('今天没有备份集.');
 	
 		ZMC_Report::renderMessageArea($pm);
 		return 'ReportBackups';

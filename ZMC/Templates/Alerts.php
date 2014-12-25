@@ -14,16 +14,16 @@
 
 global $pm;
 echo "\n<form method='post' action='$pm->url'>\n";
-ZMC::titleHelpBar($pm, 'ZMC Alerts / Event Log', '', 'zmcTitleBarTable');
+ZMC::titleHelpBar($pm, '日志', '', 'wocloudTitleBarTable');
 ?>
 
 	<div class="dataTable">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<? ZMC_Form::thAll() ?>
-				<th width="101" class="subHeadingTitle" title="Name" scope="col">Backup Set</th>
-				<th width="154" class="subHeadingTitle" title="Last Backup" scope="col">Last Backup</th>
-				<th width="325" class="subHeadingTitle" title="Last Alert" scope="col">Last Alert</th>
+				<th width="101" class="subHeadingTitle" title="Name" scope="col">备份集</th>
+				<th width="154" class="subHeadingTitle" title="Last Backup" scope="col">上一次备份</th>
+				<th width="325" class="subHeadingTitle" title="Last Alert" scope="col">上次警告</th>
 			</tr>
 <?
 $i = 0;

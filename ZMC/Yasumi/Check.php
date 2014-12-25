@@ -55,13 +55,6 @@ class ZMC_Yasumi_Check extends ZMC_Yasumi
 			$this->addMessageToInstallationPage($box, "Disk space verification", 'error');
 		else
 			$this->addMessageToInstallationPage($box, "Disk space verification", 'success');
-
-		if (ZMC::$registry->verify_installed_files && !is_dir('.svn') && $this->checkMd5($box)){
-			$box->addInternal("Verification of AE Zmanda Management Console installation failed.\nPlease correct this issue, before continuing.");
-			$this->addMessageToInstallationPage($box, "Verification of MD5 checksum", 'error');
-		}
-		else
-			$this->addMessageToInstallationPage($box, "Verification of MD5 checksum", 'success');
 		$this->noticeLog("Performing check on VMWare VCLI.");
 		$this->checkVmwareVcli($box);
 		$this->noticeLog("Checking xinetd configuration.");
@@ -82,11 +75,6 @@ class ZMC_Yasumi_Check extends ZMC_Yasumi
 		if($this->checkTmp($box))
 			$this->addMessageToInstallationPage($box, "Verification of /tmp directory done successfully", 'success');
 
-		
-		if (ZMC::$registry->qa_mode || ZMC::$registry->verify_installed_files){
-			$this->noticeLog("Performing check on curl connectivity.");
-			$this->checkCurl($box);
-		}
 		if (!empty(ZMC::$registry->internet_connectivity) && ZMC::$registry->verify_installed_files){
 			$this->noticeLog("Performing check on PHP packages/moduels.");
 			$this->checkPhp($box);
@@ -590,7 +578,7 @@ EOD;
 							$this->addMessageToInstallationPage($box, "Verification of VMware VCLI configuration done successfully", 'success');
 						}
 						else
-							$box->addWarning("VMWare VCLI version $ver found (not supported by this version of Zmanda AE).");
+							$box->addWarning("VMWare VCLI version $ver found (not supported by this version).");
 
 
 						
@@ -767,7 +755,7 @@ EOD;
 		try
 		{
 			
-			$url = 'https://network.zmanda.com';
+			$url = 'https://network.wocloud.cn';
 			ZMC_ProcOpen::procOpen('curl', '/opt/zmanda/amanda/common/bin/curl', array('--progress-bar', '--max-time', '30', '--tlsv1', $url), $stdout, $stderr);
 			$this->noticeLog("Connectivity to $url verified.");
 			

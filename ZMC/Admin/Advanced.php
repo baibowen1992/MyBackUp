@@ -17,7 +17,7 @@ class ZMC_Admin_Advanced
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->skip_backupset_start = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Admin', 'ZMC - Advanced Administration / Command Line Interface', 'advanced');
+		ZMC_HeaderFooter::$instance->header($pm, 'Admin', '云备份 - 高级管理 / 命令行接口', 'advanced');
 
 		if (isset($_GET['mysql_stat']))
 			$pm->commandResult = "==>ZMC DB Status<==\n" . mysql_stat() . "\n\n==>Server Uptime<==\n" . exec('uptime');
@@ -28,19 +28,19 @@ class ZMC_Admin_Advanced
 		   	if (method_exists('ZMC_Admin_Advanced', $action))
 				call_user_func(array('ZMC_Admin_Advanced', $action), $pm);
 		}
-		$pm->addWarning('EXPERTS ONLY! Directly edit configuration files and run command-line AE tools.');
+		$pm->addWarning('专家模式! 直接编辑配置文件和运行命令行工具。');
 		return 'AdminAdvanced';
 	}
 	
 	public static function opAdminTasks($pm)
 	{
 		if (!ZMC_User::hasRole('Administrator'))
-			return $pm->addError('Only ZMC administrators may perform this action.');
+			return $pm->addError('仅允许管理员进行该操作');
 
 		if (isset($_POST['updateAmReports']))
 		{
 			ZMC_BackupSet::updateAmReports($pm);
-			$pm->addMessage('Updating reports. If the unprocessed logs are large, this may take a while, but you may continue to use ZMC.');
+			$pm->addMessage('更新报告。如果需要处理的日志文件较大，可能会消耗一些时间，但是不影响云备份使用。');
 		}
 
 		if (empty(ZMC::$registry->admin_task_commands)) 
@@ -110,6 +110,6 @@ class ZMC_Admin_Advanced
 			}
 		}
 		else
-			$pm->commandResult = wordwrap('Only the following *non-interactive* commands are permitted: ' . implode(', ', ZMC::$registry->admin_task_commands));
+			$pm->commandResult = wordwrap('仅支持下述非交互式命令: ' . implode(', ', ZMC::$registry->admin_task_commands));
 	}
 }

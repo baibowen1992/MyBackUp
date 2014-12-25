@@ -25,21 +25,21 @@ if($pm->restore['restore_pref'] == ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore
 	$sel_express = "checked";
 }
 if($sel_express == "checked" || $sel_select == "checked")
-	$dis_search_pref = "disabled";
+    $dis_search_pref = "disabled";
 else
 	$dis_search_pref = "";
 
 ?>
-<div class="zmcLeftWindow" style="width:460px">
-	<? ZMC::titleHelpBar($pm, 'What would you like to restore from: ' . $pm->restore['config']); ?>
-	<div class="zmcFormWrapper zmcLongInput">
+<div class="wocloudLeftWindow" style="width:460px">
+    <? ZMC::titleHelpBar($pm, '选择想从备份集 ' . $pm->restore['config'] . '中还原的内容'); ?>
+	<div class="wocloudFormWrapper wocloudLongInput">
 		<div class="p">
-			<label>Restore To:<br />(on or before)</label>
+			<label>备份日期:<br />(在此或之前)</label>
 			<input
 				id="nowBox"
 				type="checkbox" 
 				name="now" 
-				title="Restore from most recently available backups."
+				title="从最近的可用备份恢复."
 				<? if (empty($pm->restore['date_time_human'])) echo 'checked="checked"'; ?>
 				value="1"
 				onclick="
@@ -58,24 +58,24 @@ else
 					{
 						//od.value='YYYY-MM-DD'
 						//ot.value='HH:MM'
-						odt.value='Enter a date/time'
+						odt.value='输入 日期/时间'
 					}
 					//od.disabled=disabled
 					//ot.disabled=disabled
 					odt.disabled=disabled
 				"
 			/>
-			<div style='float:left;' class='zmcShortestLabel'>
-				<label style="float:left;" for="nowBox">Today, &nbsp;OR</label>
+			<div style='float:left;' class='wocloudShortestLabel'>
+				<label style="float:left;" for="nowBox">今天， 或者</label>
 				<input 
 					style='width:160px;'
 					id="date_time_human" 
 					type="text" 
 					name="date_time_human" 
-					title="<?= empty($pm->restore['date_time_human']) ? 'Enter any date/time in your favorite format.' : $pm->restore['date_time_parsed'] ?>"
+					title="<?= empty($pm->restore['date_time_human']) ? '按照支持的格式输入日期/时间。' : $pm->restore['date_time_parsed'] ?>"
 					size="35"
 					maxlength="35"
-					onfocus="if (this.value == 'Enter a date/time') this.value=''"
+					onfocus="if (this.value == '输入日期或者时间') this.value=''"
 					onchange="gebi('nowBox').checked=false;"
 					value="<?= $pm->restore['date_time_human'] ?>"
 					<? if (empty($pm->restore['date_time_human'])) echo 'disabled="disabled"'; ?>
@@ -85,7 +85,7 @@ else
 					<img height="18" width="18" alt="More Information" src="/images/icons/icon_info.png"/>
 				</a>
 				<div class="contextualInfo">
-					<p>Search for backups made on, or before, a date/time.  Format is flexible.  Examples:</p>
+					<p>搜素在某个日期/时间当天或者之前的所有备份。格式举例如下：</p>
 					<ul style="margin-left:20px;"><li>yesterday</li>
 					<li>last thursday</li>
 					<li>last year</li>
@@ -120,7 +120,7 @@ else
 	$disableDate = true;
 ?>"
 				<? if (!empty($disableDate)) echo 'disabled="disabled"'; ?>
-				class="zmcShortestInput" />
+				class="wocloudShortestInput" />
 			&nbsp;
 			<input 
 				id="time" 
@@ -137,12 +137,12 @@ else
 					echo empty($t) ? 'HH:MM' : $t;
 				}
 ?>"
-				class="zmcUltraShortInput" />
+				class="wocloudUltraShortInput" />
 			-->
 				</div>
 		</div>
 		<div class="p">
-			<label>Restore Device:<span class="required">*</span></label>
+			<label>恢复源数据存储设备:<span class="required">*</span></label>
 			<select type="text" name="restore_device">
 <?
 			foreach($pm->restore['device_list'] as $device)
@@ -152,12 +152,12 @@ else
 		</div>
 		<? if (!empty($pm->restore['media_explored'])) { ?>
 		<div class="p">
-			<label>Media Explored:</label>
+			<label>存储搜索:</label>
 <?
 			$prefix = '';
 			foreach($pm->restore['media_explored'] as $media)
 			{
-				echo "$prefix<div class='zmcAfter'>",
+				echo "$prefix<div class='wocloudAfter'>",
 					' <b>', ZMC::amandaDate2humanDate($media['datetime']), "</b> ",
 					ZMC_BackupSet::displayName($media['tape_label']), 
 					"</div>\n";
@@ -172,33 +172,33 @@ else
 				$disabled = 	'disabled';
 ?>
 		<div class="p">
-			<label>Host Name:<span class="required">*</span></label>
+			<label>备份主机名:<span class="required">*</span></label>
 			<input
 				type="text"
 				name="client"
 				id="client"
 				value="<?= ZMC::escape($pm->restore['client']); ?>"
-				title="Restore backup of which host?"
+				title="备份文件的来源主机?"
 <?
 			if (count($pm->suggestedHosts)) echo <<<EOD
 					onFocus="YAHOO.zmc.restore.what.swapPopOn('Host', 150, 350, false)" />
-					<input type="button" name="editHost" value="Edit" onclick="YAHOO.zmc.restore.what.swapPopOn('Host', 150, 350, true)"
+					<input type="button" name="editHost" value="选择" onclick="YAHOO.zmc.restore.what.swapPopOn('Host', 150, 350, true)"
 EOD;
 ?>
 			/>
 		</div>
 		<div class="p">
-			<label>Alias/Directory/Path:<span class="required">*</span></label>
+			<label>备份目录:<span class="required">*</span></label>
 			<input
 				type="text"
 				name="disk_name"
 				id="disk_name"
 				value="<?= ZMC::escape($pm->restore['disk_name']); ?>"
-				title="The top directory/path for the host to be restored."
+				title="想还原的备份项的根目录。"
 <?
 			if (count($pm->suggestedHosts)) echo <<<EOD
 					onFocus="YAHOO.zmc.restore.what.swapPopOn('Path', 150, 350, false)" />
-					<input type="button" name="editDirectory" value="Edit" onclick="YAHOO.zmc.restore.what.swapPopOn('Path', 150, 350, true)"
+					<input type="button" name="editDirectory" value="选择" onclick="YAHOO.zmc.restore.what.swapPopOn('Path', 150, 350, true)"
 EOD;
 ?>
 			/>
@@ -206,7 +206,7 @@ EOD;
 
 		<? if (!empty($pm->backup_history_missing)) {?>
 		<div class="p">
-			<label>ZMC Type:<span class="required">*</span></label>
+			<label>备份类型:<span class="required">*</span></label>
 			<input
 				type="text"
 				name="zmc_type"
@@ -227,26 +227,26 @@ EOD;
 	</div>
 
 
-		<div class="zmcFormWrapper zmcLongInput">
+		<div class="wocloudFormWrapper wocloudLongInput">
 		<div class="p">
-			<label>Restore Preference: &nbsp;</label>	
-			<input type="radio" <?=$sel_express?> onClick="var rpt = gebi('restore_pattern_type'); if(rpt){ rpt.disabled= 'true'; rpt.value='default_match';}var frs = gebi('restore_search'); if(frs){ frs.disabled= 'true'; frs.value='';}" name="restore_pref" value="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::EXPRESS])?>" id="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::EXPRESS])?>"><label for="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::EXPRESS])?>">Restore All</label>
+			<label>还原类别: &nbsp;</label>	
+			<input type="radio" <?=$sel_express?> onClick="var rpt = gebi('restore_pattern_type'); if(rpt){ rpt.disabled= 'true'; rpt.value='default_match';}var frs = gebi('restore_search'); if(frs){ frs.disabled= 'true'; frs.value='';}" name="restore_pref" value="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::EXPRESS])?>" id="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::EXPRESS])?>"><label for="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::EXPRESS])?>">还原所有</label>
 		</div>
 		<div class="p">
 			<label>&nbsp;</label>	
-			<input type="radio" <?=$sel_select?> onClick="var rpt = gebi('restore_pattern_type'); if(rpt){ rpt.disabled= 'true'; rpt.value='default_match';}var frs = gebi('restore_search'); if(frs){ frs.disabled= 'true'; frs.value='';}" name="restore_pref" value="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SELECT])?>" id="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SELECT])?>"><label for="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SELECT])?>">Explore & Select</label>
+			<input type="radio" <?=$sel_select?> onClick="var rpt = gebi('restore_pattern_type'); if(rpt){ rpt.disabled= 'true'; rpt.value='default_match';}var frs = gebi('restore_search'); if(frs){ frs.disabled= 'true'; frs.value='';}" name="restore_pref" value="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SELECT])?>" id="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SELECT])?>"><label for="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SELECT])?>">检索并选择</label>
 		</div>
 		<div class="p">
 			<label>&nbsp;</label>	
-			<input type="radio" <?=$sel_search?> onClick="var rpt = gebi('restore_pattern_type'); if(rpt) rpt.disabled= '';var frs = gebi('restore_search'); if(frs) frs.disabled= '';" name="restore_pref" value="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SEARCH])?>" id="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SEARCH])?>"><label for="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SEARCH])?>">Search Specific files</label>
+			<input type="radio" <?=$sel_search?> onClick="var rpt = gebi('restore_pattern_type'); if(rpt) rpt.disabled= '';var frs = gebi('restore_search'); if(frs) frs.disabled= '';" name="restore_pref" value="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SEARCH])?>" id="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SEARCH])?>"><label for="<?=ZMC::escape(ZMC_Restore::$buttons[ZMC_Restore::SEARCH])?>">搜索特定文件</label>
 		</div>
-		<div class="p">
-			<label>File/Pattern to <br />Restore:<span class="required">*</span></label>
-			<input id='restore_search' type="text" name="restore_search" value="<?=ZMC::escape($pm->restore['restore_search'])?>" class="zmcButtonsLeft" <?=$dis_search_pref?> />
+		<div class="p" >
+			<label>还原文件名<br>或匹配模式<span class="required">*</span></label>
+			<input id='restore_search' type="text" name="restore_search" value="<?=ZMC::escape($pm->restore['restore_search'])?>" class="wocloudButtonsLeft" <?=$dis_search_pref?> />
 		</div>
-		<?php $restore_pattern_type = array('default_match' => 'Anything','starts_with' => 'Starts With', 'ends_with' => 'Ends With', 'exact_match' => 'Exact Match');?>
+		<?php $restore_pattern_type = array('default_match' => '任意部分','starts_with' => '开头', 'ends_with' => '结尾', 'exact_match' => '严格匹配');?>
 		<div class="p">
-			<label>Search for:&nbsp;</label>
+			<label>搜索:&nbsp;</label>
 			<select id='restore_pattern_type' name='restore_pattern_type' <?=$dis_search_pref?> >
 			<?php 
 			$pm->restore['restore_pattern_type'] = ($pm->restore['restore_pattern_type'] != '')? $pm->restore['restore_pattern_type'] : 'default_match';
@@ -262,11 +262,11 @@ EOD;
 			<br />
 		</div>
 	</div>
-	<div class="zmcButtonBar">
-		<input id="explore_button" type="submit" name="action" value="Next" class="zmcButtonsRight" <?=$disabled?> />
+	<div class="wocloudButtonBar">
+		<input id="explore_button" type="submit" name="action" value="下一步" class="wocloudButtonsRight" <?=$disabled?> />
 <?
 			if (!empty($pm->restore['restore_type']) || $pm->amgetindex_state['state'][0] != "Not Started" )
-				echo '<input type="submit" name="action" value="Reset" title="Clear all inputs and cache memory which allows Fresh Restore." class="zmcButtonsLeft" '.$disabled.'/>';
+				echo '<input type="submit" name="action" value="重置" title="清除所有输入数据和缓存" class="wocloudButtonsLeft" '.$disabled.'/>';
 ?>
 	</div>
-</div><!-- zmcLeftWindow -->
+</div><!-- wocloudLeftWindow -->

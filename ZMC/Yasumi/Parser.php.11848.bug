@@ -1,20 +1,5 @@
 <?
 /*
- *		Copyright (C) 2006-2013 Zmanda Incorporated.
- *			     All Rights Reserved.
- *
- * The software you have just accessed, its contents, output and underlying
- * programming code are the proprietary and confidential information of Zmanda
- * Incorporated.  Only specially authorized employees, agents or licensees of
- * Zmanda may access and use this software.  If you have not been given
- * specific written permission by Zmanda, any attempt to access, use, decode,
- * modify or otherwise tamper with this software will subject you to civil
- * liability and/or criminal prosecution to the fullest extent of the law.
-  */
-
-
-
-/*
  * Yasumi_Parser - Flyweight psuedo-parser for global device confs found in /etc/zmanda/zmc_aee/devices / * / *.conf
  * Allows reading of device confs without introducing length latencies into the ZMC GUI.
  * Syntax check need not be comprehensive, since regular Amanda C parser will report such errors.
@@ -26,8 +11,8 @@
  * 3) Not a requirement: reject invalid Amanda configuration files (requirement delegated to Amanda C parser)
  *
  * Notes:
- * DLE: http://wiki.zmanda.com/index.php/Backup_server - Custom Compression 
- * http://wiki.zmanda.com/index.php/Special:Search?search=appending+to+tape&go=Go
+ * DLE: http://wiki.wocloud.cn/index.php/Backup_server - Custom Compression 
+ * http://wiki.wocloud.cn/index.php/Special:Search?search=appending+to+tape&go=Go
  * All DLE properties containing numbers should be manipulated as strings using:
  *		http://us2.php.net/manual/en/ref.bc.php
  * Quick tests:

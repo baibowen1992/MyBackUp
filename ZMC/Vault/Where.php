@@ -20,7 +20,7 @@ class ZMC_Vault_Where extends ZMC_Vault
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{			
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Vault', 'ZMC - Where to Vault', 'where');
+		ZMC_HeaderFooter::$instance->header($pm, 'Vault', '云备份 - Where to Vault', 'where');
 		$wherePage = new self($pm);
 		$wherePage->ymlFilePath = ZMC::$registry->etc_amanda . $pm->selected_name . DIRECTORY_SEPARATOR . 'jobs'
 				. DIRECTORY_SEPARATOR . 'vault' . DIRECTORY_SEPARATOR . 'Vault-default.yml';
@@ -32,7 +32,7 @@ class ZMC_Vault_Where extends ZMC_Vault
 		
 		$licenses = ZMC_License::readLicenses($pm);
 		if ($licenses['licenses']['zmc']['Remaining']['vault'] <= 0) {
-			$pm->addError("You do not have the license for 'Vault' feature. Please contact Zmanda Support for more information.");
+			$pm->addError("You do not have the license for 'Vault' feature. Please contact Support for more information.");
 			return 'MessageBox';
 		}
 		

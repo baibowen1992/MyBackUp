@@ -69,14 +69,14 @@ echo "\n<form method='post' action='$pm->url'>\n";
 ?>
 
 
-<div class="zmcLeftWindow">
+<div class="wocloudLeftWindow">
 	<? ZMC::titleHelpBar($pm, 'Legend: Data'); ?>
 	<img src="/images/section/report/legend_data.gif" />
 </div>
 
 
 
-<div class="zmcLeftWindow">
+<div class="wocloudLeftWindow">
 	<? ZMC::titleHelpBar($pm, 'Data Chart', '', '', '', ZMC_Report::renderDayWeekNavigation("ReportData")); ?>
 	<div class="dataTable">
 		<table width="100%">

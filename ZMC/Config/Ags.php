@@ -44,7 +44,7 @@ class ZMC_Config_Ags extends ZMC_Config
 			'long_name'		=> 'AEE REST Configuration Service',
 			'max_clock_skew' => 30, 
 			'messages'		=> array(
-					'dle_collision' => 'Duplicate (or ambiguous) host/directory path combination detected.  If you really do want two objects/DLEs with the same host name and the same directory/path, please use the advanced form field "Alias" to differentiate the objects, and use the exclude list to prevent duplication of backup data. Amanda does not discriminate between the characters \\ / : and _ in host name and path names (which may be the cause of the ambiguity).  Please see <a href="http://network.zmanda.com/lore/article.php?id=387">this KiB article</a> for a workaround.',
+					'dle_collision' => 'Duplicate (or ambiguous) host/directory path combination detected.  If you really do want two objects/DLEs with the same host name and the same directory/path, please use the advanced form field "Alias" to differentiate the objects, and use the exclude list to prevent duplication of backup data. Amanda does not discriminate between the characters \\ / : and _ in host name and path names (which may be the cause of the ambiguity).  Please see <a href="http://network.wocloud.cn/lore/article.php?id=387">this KiB article</a> for a workaround.',
 				),
 			'name'			=> 'AEE GUI Server',
 			'short_name_lc'	=> 'ags',

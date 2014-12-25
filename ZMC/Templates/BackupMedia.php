@@ -20,17 +20,17 @@ if (!empty($pm->binding))
 {
 	$vtape = ($pm->binding['dev_meta']['media_type'] === 'vtape');
 ?>
-	<div class="zmcLeftWindow" style="<?= ($tape ? 'max-width:510px;':'') ?>">
+<!--	<div class="wocloudLeftWindow" style="<?= ($tape ? 'max-width:510px;':'') ?>">
 <?
 		$div_attribs = 'style="border-top:1px solid #5c706e;"';
 		if (empty($pm->tapeListPm))
 		{
 			if ($tape)
-				echo '<div class="zmcFormWrapperText">No Amanda labeled media has been used yet.</div>';
+				echo '<div class="wocloudFormWrapperText">还没有经过确认的存储设备被使用</div>';
 		}
 		else
 		{
-			$pm->tapeListPm->tableTitle = 'Manage Media for: ' . $pm->binding['config_name'];
+			$pm->tapeListPm->tableTitle = '管理存储设备: ' . $pm->binding['config_name'];
 			$pm->tapeListPm->tbody_height = '285';
 			$pm->tapeListPm->tombstone = $pm->tombstone;
 			$pm->tapeListPm->subnav = $pm->subnav;
@@ -59,7 +59,7 @@ if (!empty($pm->binding))
 			$icon = ZMC_Type_Devices::getIcon($pm, $pm->binding, $disabled);
 			$iconLink = '<a href="' . ZMC_HeaderFooter::$instance->getUrl('Admin', 'devices') . '?' . 'action=Edit&amp;edit_id=' . urlencode($pm->binding['private']['zmc_device_name']) . "\">$icon</a>";
 			$pm->tapeListPm->prepend_html = '
-				<div class="zmcFormWrapper zmcUltraShortInput" style="min-height:25px;">
+				<div class="wocloudFormWrapper wocloudUltraShortInput" style="min-height:25px;">
 					<div style="float:right; padding:2px; margin:2px; border:solid blue 1px;">'.$iconLink.'</div>';
 			if (!$vtape)
 				$pm->tapeListPm->prepend_html .= '
@@ -78,7 +78,7 @@ if (!empty($pm->binding))
 			{
 				$dc = intval($pm->conf['dumpcycle']);
 				$ir = $pm->edit['initial_retention'];
-				$pm->tapeListPm->prepend_html .= '<div class="zmcFormWrapperText" style="float:right; margin:0 10px 0 0; min-height:30px;"><table class="dataTable infoTable">';
+				$pm->tapeListPm->prepend_html .= '<div class="wocloudFormWrapperText" style="float:right; margin:0 10px 0 0; min-height:30px;"><table class="dataTable infoTable">';
 				$cells = array(
 					array('Total', '', $pm->size_total ." ". ZMC::$registry->units['storage'][strtolower($pm->conf['displayunit'])]),
 					array('Total Expired', 'background-color:#fcc;', $pm->size_expired ." ". ZMC::$registry->units['storage'][strtolower($pm->conf['displayunit'])]),
@@ -106,8 +106,8 @@ if (!empty($pm->binding))
 				</table>
 			</div>
         <div class="p">
-			<label><b>Backup Cycle<span class="required">*</span>:</b></label>
-			<input id="dumpcycle" type="text" name="dumpcycle" title="Backup Cycle" value="$dc" onkeyup="
+                          <label><b>备份周期<span class="required">*</span>:</b></label>
+                          <input id="dumpcycle" type="text" name="dumpcycle" title="备份周期" value="$dc" onkeyup="
 				var d=parseInt(gebi('dumpcycle').value);
 				var irp=parseInt(gebi('initial_retention').value);
 				if (!(irp >= d))
@@ -120,13 +120,13 @@ if (!empty($pm->binding))
 					gebi('dc_err').style.visibility='hidden';
 					gebi('dc').innerHTML=this.value;
 				}
-				"> <div class="zmcAfter">days</div> <div class="zmcAfter zmcUserWarningsText zmcIconError" id='dc_err' style='visibility:$dc_err;'>&nbsp;&nbsp;Backup Cycle must be the same or shorter than the Retention.</div>
+				"> <div class="wocloudAfter">天</div> <div class="wocloudAfter wocloudUserWarningsText wocloudIconError" id='dc_err' style='visibility:$dc_err;'>&nbsp;&nbsp;备份周期必须不大于备份保留时间</div>
             <label style='clear:left;'>&nbsp;</label>
-			<div style="float:left;">Every DLE will have at least one full backup every <b><span id='dc'>$dc</span></b> days.</div>
+			<div style="float:left;">每一个备份项每<b><span id='dc'>$dc</span></b> 天至少要有一次全备份</div>
 		</div>
         <div class="p">
-			<label><b>Retention<span class="required">*</span>:</b></label>
-			<input id="initial_retention" type="text" name="initial_retention" title="Initial Retention Period" value="$ir" onkeyup="
+			<label><b>保留时间<span class="required">*</span>:</b></label>
+			<input id="initial_retention" type="text" name="initial_retention" title="初始保留周期" value="$ir" onkeyup="
 				var d=parseInt(gebi('dumpcycle').value);
 				var irp=parseInt(gebi('initial_retention').value);
 				if (!(irp >= d))
@@ -139,12 +139,12 @@ if (!empty($pm->binding))
 					gebi('dc_err').style.visibility='hidden';
 					gebi('irp').innerHTML=this.value;
 				}
-				" /> <div class="zmcAfter">days</div> <div class="zmcAfter zmcUserWarningsText zmcIconError" id='irp_err' style='visibility:$irp_err;'>&nbsp;&nbsp;Retention must be the same or longer than the Backup Cycle.</div>
+				" /> <div class="wocloudAfter">days</div> <div class="wocloudAfter wocloudUserWarningsText wocloudIconError" id='irp_err' style='visibility:$irp_err;'>&nbsp;&nbsp;保留周期必须不小于备份周期</div>
             <label style='clear:left;'>&nbsp;</label>
 			<div style="float:left;"><input type="submit" name="action" value="Update" /></div>
             <label style='clear:left;'>&nbsp;</label>
             <label style='clear:left;'>&nbsp;</label>
-			<div style="float:left;">Retain the ability to restore existing and changed files, folders,<br />directories, and other items in your backup images for <b><span id='irp'>$ir</span></b> days.</div>
+			<div style="float:left;">你的备份数据将会保留 <b><span id='irp'>$ir</span></b> 天</div>
 		</div>
 EOD;
 				if (ZMC::$registry->dev_only)
@@ -156,15 +156,15 @@ EOD;
 		<fieldset style="clear:both;"><legend>Optional Additional Retention Requirements</legend>
 			<div class="p">
 				<label>Keep at Least:</label>
-				<input id="retain_n_fulls" type="text" name="retain_n_fulls" title="Retain N Full Backups" value="$rnf" /> <div class="zmcAfter">Full Backup Images</div>
+				<input id="retain_n_fulls" type="text" name="retain_n_fulls" title="Retain N Full Backups" value="$rnf" /> <div class="wocloudAfter">Full Backup Images</div>
 			</div>
 			<div class="p">
 				<label>Father Period:</label>
-				<input id="father_retention" type="text" name="father_retention" title="Retain 1 Full Backup Every N Days" value="$father" /> <div class="zmcAfter">days</div>
+				<input id="father_retention" type="text" name="father_retention" title="Retain 1 Full Backup Every N Days" value="$father" /> <div class="wocloudAfter">days</div>
 			</div>
 			<div class="p">
 				<label>Grandfather Period:</label>
-				<input id="grandfather_retention" type="text" name="grandfather_retention" title="Retain 1 Full Backup Every N Days" value="$grand" /> <div class="zmcAfter">days</div>
+				<input id="grandfather_retention" type="text" name="grandfather_retention" title="Retain 1 Full Backup Every N Days" value="$grand" /> <div class="wocloudAfter">days</div>
 			</div>
 		</fieldset>
 EOD;
@@ -177,12 +177,12 @@ EOD;
 			ZMC_Loader::renderTemplate('tableWhereStagingWhen', $pm->tapeListPm);
 		}
 	?>
-	</div><!-- zmcLeftWindow -->
+	</div><!-- wocloudLeftWindow -->
 
 	<?
 	if (!empty($pm->labelListPm))
 	{
-		echo '<div class="zmcRightWindow">';
+		echo '<div class="wocloudRightWindow">';
 		$pm->labelListPm->disable_onclick = true;
 		$pm->labelListPm->checkbox_qualifier = '_lm';
 		$pm->labelListPm->data_table_div_attribs = $div_attribs;
@@ -196,8 +196,8 @@ EOD;
 		elseif ($pm->binding['dev_meta']['media_type'] !== 'tape')
 		{
 			ZMC::titleHelpBar($pm, 'Unknown Media Type');
-			echo "<div class='zmcFormWrapperText'><span class='zmcUserErrorsText'>Error: Unrecognized media type.</div>";
-			echo "</div><!-- zmcRightWindow -->";
+			echo "<div class='wocloudFormWrapperText'><span class='wocloudUserErrorsText'>Error: Unrecognized media type.</div>";
+			echo "</div><!-- wocloudRightWindow -->";
 			return;
 		}
 		else
@@ -270,16 +270,16 @@ EOD;
             <p>If labeling has not completed in a long time, press the "Clear" button, check the physical drive and tape status, and try again.</p>
             <br />
             <p><a href="<? echo ZMC::$registry->wiki ?>Backup_Media#Editing_the_Tape_Label_Prefix_and_starting_number" target="_blank">Implications of these options are discussed in more detail here</a>.</p>';
-			$pm->form_type = array('advanced_form_classes' => 'zmcShortLabel zmcShortInput');
+			$pm->form_type = array('advanced_form_classes' => 'wocloudShortLabel wocloudShortInput');
 			ob_start();
 			ZMC_Loader::renderTemplate('formAdvanced', $pm);
 			$pm->labelListPm->prepend_html = ob_get_clean();
 		}
 		$pm->labelListPm->no_form_close = true;
 		ZMC_Loader::renderTemplate('tableWhereStagingWhen', $pm->labelListPm);
-		echo "</div><!-- zmcRightWindow -->";
+		echo "</div><!-- wocloudRightWindow -->";
 	}
 }
 
-$pm->tableTitle = 'View Media Used by Backup Sets';
+$pm->tableTitle = '查看备份集中数据对存储设备的使用';
 ZMC_Loader::renderTemplate('tableWhereStagingWhen', $pm);

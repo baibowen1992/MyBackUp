@@ -1,0 +1,1074 @@
+/*
+ *
+ * The software you have just accessed, its contents, output and underlying
+ * programming code are the proprietary and confidential information
+ * Incorporated.  Only specially authorized employees, agents or licensees
+ * may access and use this software.  If you have not been given
+ * specific written permission by Zmanda, any attempt to access, use, decode,
+ * modify or otherwise tamper with this software will subject you to civil
+ * liability and/or criminal prosecution to the fullest extent of the law.
+ * $Id: wocloud.css 39108 2014-02-11 00:20:13Z anuj $ */
+
+/*  KEY REFERENCES:
+ *  CSS Compatibility and Internet Explorer: http://msdn.microsoft.com/en-us/library/cc351024(VS.85).aspx
+ *  http://www.quirksmode.org/css/contents.html
+ *  http://www.w3.org/TR/css3-selectors/
+ */
+
+html {
+	color:black;
+	/*background:#B6BCA6;*/
+	background:#ffffff;
+	
+}
+ 
+.wait, .wait * { cursor: wait !important; }
+
+blockquote,body,code,dd,div,dl,dt,fieldset,form,h1,h2,h3,h4,input,legend,li,ol,p,pre,td,textarea,th,ul {
+	margin:0;
+	padding:0;
+}
+
+#subNav {
+	color:#747474;
+	height:22px;
+	left:49px;
+	position:absolute;
+	top:59px;
+	margin-top:9px;
+}
+
+#subNav ol {
+	list-style:none;
+	margin:-2px 0px 0px 0px;
+	padding:0px 135px 0px;
+}
+
+#subNav li {
+	float:left;
+	margin:0px;
+	padding:0px 0px 0px 9px;
+}
+
+#subNav a {
+	color:#676767;
+	display:block;
+	float:left;
+	padding:5px 6px 0px 6px;
+	text-decoration:none;
+	voice-family: "\"}\"";
+	voice-family:inherit;
+	font-size:14px;
+}
+
+#subNav a:hover { color:#2183d9; }
+
+#subNav #current {
+	color:#0b8ad9;
+	font-weight:bold;
+	padding:3px 6px 0px 13px;
+}
+
+#subNav li.disabled {
+	/* color:#4B4B4B; */
+	font-weight:normal;
+	padding:3px 6px 0px 13px;
+}
+.sf-body{ margin:0 auto; width:1440px; text-align:left;}
+.sf-header{ font:12px/18px "\5FAE\8F6F\96C5\9ED1", Helvetica, Arial, Verdana, "\5B8B\4F53"; color:#666666; text-align:center; background: none repeat scroll 0 0 #FFFFFF;}
+.sf-header .sf-main{ width:1003px;  padding:5px 10px; *zoom:1; }
+.sf-main{margin-left:300px; }
+.sf-header .sf-main:after{clear:both;content:".";display:block;height:0;visibility:hidden; overflow:hidden;}
+.sf-header .sf-logo{ display:block;float:left; width:425px;height:70px;margin:0;}
+.sf-header .sf-logo:hover{text-decoration: none;}
+.sf-footer-copyright i{ display:inline-block; *display:inline; *zoom:1; font-size:0; overflow:hidden; line-height:0; width:1px; height:12px; margin:7px 0; background:#C8C8D0; margin:0 10px; vertical-align:middle;}
+.sf-footer-copyright{  clear:both; padding-top:20px; text-align:center; line-height:27px; border-top:1px #dfdfdf solid; margin-top:15px; width:1440px;}
+.sf-footer-copyright a{ color:#656565; *zoom:1; vertical-align:middle;}
+.sf-footer-copyright i{ display:inline-block; *display:inline; *zoom:1; font-size:0; overflow:hidden; line-height:0; width:1px; height:12px; margin:7px 0; background:#C8C8D0; margin:0 10px; vertical-align:middle;}
+.sf-footer-copyright span{background:url(../images/footer-logo.png) no-repeat;padding:7px 54px 0 0; }
+.loginbody{background:url(../images/login/cube.jpg) no-repeat top center;}
+.loginbody .sf-pagewrap{background:none;}	
+.loginbody .sf-header{background: none repeat scroll 0 0 #FFFFFF;}
+.loginbody .c-layout220{background:none;}
+.mt20{ margin-top:20px!important;}
+button.btn,input[type="submit"].btn {
+   *padding-top: 3px; 
+  *padding-bottom: 3px; 
+ 
+}
+
+.tabbedNavigation {
+	background:url("/images/navigation/in-body-tabs/nav-background.gif") repeat-x bottom;
+	background-color:#ececc8;
+	padding:0px 0px 0px 3px;
+}
+
+.tabbedNavigation ul {
+	display:block;
+	list-style:none;
+	margin:0px;
+}
+
+.tabbedNavigation li {
+	background:url("/images/navigation/in-body-tabs/navbtn_left_up.gif") no-repeat left bottom;
+	float:left;
+	margin:0;
+	padding:0px 3px 0px 9px;
+}
+
+.tabbedNavigation a {
+	background:url("/images/navigation/in-body-tabs/navbtn_right_up.gif") no-repeat right bottom;
+	color:#0000ff;
+	display:block;
+	float:left;
+	padding:5px 15px 0px 6px;
+}
+
+.tabbedNavigation a:hover {
+	color:#1a1a1a;
+	text-decoration:none;
+}
+
+.tabbedNavigation .current {
+	background-image:url("/images/navigation/in-body-tabs/navbtn_left_down.gif");
+	padding-right:3px;
+}
+
+.tabbedNavigation .current a {
+	background-image:url("/images/navigation/in-body-tabs/navbtn_right_down.gif");
+	color:#1a1a1a;
+	cursor:default;
+	font-weight:bold;
+	padding-bottom:0px;
+	text-decoration:none;
+}
+
+.tabbedNavigation .disabled {
+	background:url("/images/navigation/in-body-tabs/navbtn_left_disabled.gif") no-repeat left bottom;
+	filter:alpha(opacity=60);
+	float:left;
+	margin:0;
+	opacity:0.6;
+	padding:0px 3px 0px 9px;
+}
+
+.tabbedNavigation .disabled a {
+	background:url("/images/navigation/in-body-tabs/navbtn_disabled.gif") no-repeat right bottom;
+	color:#ccc;
+	cursor:default;
+	display:block;
+	float:left;
+	padding:5px 15px 0px 6px;
+}
+
+.links {
+	font:bold 12px Arial, sans-serif, Helvetica;
+	padding:0px 4px;
+	text-align:right;
+	position:absolute;
+	top: 10px;
+	left: -120px;
+	float:right;
+}
+
+.links a {
+	color:#1a1a1a;
+	text-decoration:none;
+}
+
+.links a:hover {
+	color:#83b1c8;
+	text-decoration:none;
+}
+
+.headerLinks a {
+	color:#747474;
+	font-size:14px;
+	text-decoration:none;
+}
+
+.headerLinks a:hover {
+	/*color:#ffffff;*/
+	color:#0364cf;
+	text-decoration:none;
+}
+
+.dataTable {
+	background-color:#ffffff;
+	clear:left;
+	color:#676767;
+	font-size:12px;
+	margin:0px;
+	position:relative;
+}
+
+.dataTable tr td {
+	padding:6px 5px 6px 5px;
+	vertical-align:top;
+}
+
+.dataTable tr.topbar td { border-top:3px solid black; }
+.infoTable td { border: 1px solid #dce2c6; }
+.dataTable tr:hover { background-color:#f5f5f5; }/*   #ccd3ba*/
+.dataTable tr:active { background-color:#ffff99; }
+.dataTable th, .wocloudSubHeadingSelect, .wocloudSubHeadingWide {
+	/*background:#ececc8;*/
+	background:#fff;
+	color: #1a1a1a;
+	font-weight:bold;
+	padding-left:5px;
+	padding-right:5px;
+	text-align:left;
+}
+
+.maxCol200 td, .maxCol200 th { max-width:200px; }
+
+.wocloudSubHeadingSelect {
+	border:1px solid #5c706e;
+	border-bottom-width:0;
+	height:20px;
+	margin:0 10px;
+}
+
+.wocloudSubHeadingSelect a:visited {
+	color:#000fff;
+	text-decoration:none;
+}
+
+.wocloudSubHeadingWide {
+	border-bottom:1px solid #5c706e;
+	padding:2px;
+}
+
+.centerHeadings th {
+	padding:0px;
+	text-align:center;
+}
+
+th.leftHeading {
+	padding:0 5px 0 5px;
+	text-align:left;
+}
+
+.stripeWhite {
+	background-color:#ffffff;
+	width:100%;
+}
+
+.stripeWhiteSkip {
+	background-color:#ffff99;
+	width:100%;
+}
+
+.stripeDeleted td { text-decoration: line-through; }
+
+.stripeGray {
+	/*background-color:#eaece7;*/
+	background-color:#ffffff;
+	width:100%;
+}
+
+.stripeGraySkip {
+	background-color:#eaec66;
+	width:100%;
+}
+
+.stripeGrayDeleted {
+	background-color:#eaece7;
+}
+
+.stripeGrayDeleted td {
+	text-decoration: line-through;
+}
+
+.stripeGreen {
+	background-color:#cdd2bb;
+	width:100%;
+}
+
+.stripeBrightYellow {
+	background-color:#ffff33;
+	width:100%;
+}
+.stripeYellow {
+	background-color:#ffff99;
+	width:100%;
+}
+
+.stripeRed {
+	background-color:#ffbbbb;
+	width:100%;
+}
+
+.center { text-align:center; }
+
+.alertsHeadingExpanded {
+	background-repeat:no-repeat;
+	/*background:url(/images/global/backup_set_heading_expanded.png);*/
+	background:#ffffff;
+	height:36px;
+	left:750px;
+	position:absolute;
+	top:60px;
+	width:308px;
+	z-index:450;
+}
+
+.alertsHeadingTitle {
+	font-weight:bold;
+	left:10px;
+	position:absolute;
+	top:9px;
+	width:305px;
+}
+
+.alertsHeadingTitle a:link {
+	color:#000fff;
+	text-decoration:none;
+}
+
+.alertsHeadingTitle a:visited {
+	color:#663399;
+	text-decoration:none;
+}
+
+.alertsHeadingTitle a:hover { text-decoration:underline; }
+
+.contentHeadingHelp {
+	height:18px;
+	position:absolute;
+	right:10px;
+	top:6px;
+	width:18px;
+}
+
+.contextualInfo {
+	background-color:#dcdfe8;
+	border:1px solid #5b716f;
+	display:none;
+	filter:alpha(opacity=95);
+	margin:0 0 0 -2px;
+	opacity:0.95;
+	padding:5px;
+	position:absolute;
+	width:300px;
+	z-index:1015;
+}
+
+.contextualInfoImage { float:right; }
+.contextualInfoImage:hover .contextualInfo { display:block; }
+.required { color:#ff0000; }
+
+.confirmationWindow {
+	background-color:#cccccc;
+	filter:alpha(opacity=60);
+	height:100%;
+	left:0px;
+	opacity:0.6;
+	position:absolute;
+	top:0px;
+	width:100%;
+	z-index:1000;
+}
+
+ul {
+	list-style-type:square;
+	list-style-position:inside;
+	font-weight:bold;
+}
+
+ul ul {
+	list-style-type:disc;
+	list-style-position:inside;
+	font-weight:normal;
+}
+
+ul ul ul {
+	list-style-type:none;
+	list-style-position:inside;
+}
+
+hr {
+	background-color:#5c706e; /* this is used because Firefox uses "background-color" tag to colorize hr */
+	color:#5c706e; /* this is because IE uses "color" tag to colorize hr */
+	height:1px;
+	width:100%;
+}
+
+caption {
+	font-weight:bold;
+	text-align:center;
+}
+
+form { display:inline; }
+
+form p, form .p { /* used for any paragraph within a form */
+	clear:left;
+	margin:2px 2px 2px 0;
+	padding:7px 2px 0px 0px;
+}
+
+form p label, form .p label, .label { /* used for any label within a paragraph found in a form */
+	float:left;
+	/* margin-top:2px; */
+	white-space:nowrap;
+}
+
+form .p .wrap { white-space:normal; }
+
+label, .label { color:#1a1a1a; }
+
+.longLabel { width:160px; }
+
+textarea.textBox { width:200px; }
+
+textarea.textBoxDisabled {
+	/* color:#4B4B4B; */
+	background-color:#D4D0C8!important;
+	width:200px;
+}
+
+legend {
+	color:#006699;
+	margin-left:5px;
+}
+
+.headingBackground {
+	background:url(/images/global/main_heading_background.gif);
+	background-repeat:repeat-x;
+	height:29px;
+	position:relative;
+}
+
+.monitorTableTextCell {
+	border-right:1px solid #d9d9d9;
+	border-top:1px solid #dce2c6;
+	line-height:.9em;
+	padding:2px 3px;
+	vertical-align:middle;
+}
+
+.outOfBounds {
+	background-image:url(/images/global/out_of_bounds.png);
+	background-repeat:no-repeat;
+}
+
+.footer {
+	clear:both;
+	position:relative;
+	width:100%;
+}
+
+.footerPagination {
+	font-size:11px;
+	float:right;
+	text-align:right;
+	margin:-5px 15px 0px 0px;
+	z-index:15;
+}
+
+.footerBackground {
+	background-repeat:repeat-x;
+	background:url(/images/global/footer_background.gif);
+	border-right:1px solid #5c706e;
+	height:28px;
+	position:absolute;
+	width:100%;
+}
+
+.wocloudWindowBackgroundimageRight {
+	bottom:5px;
+	position:absolute;
+	right:10px;
+}
+
+.wocloudWindowBackgroundimage {
+	bottom:5px;
+	left:10px;
+	position:absolute;
+}
+
+.wocloudTitleBar {
+	/*background:#ccd3ba url(/images/global/title_bar.png) repeat-x;*/
+	background:#ebf8ff;
+	font-weight:bold;
+	height:21px;
+	overflow:hidden;
+	padding:7px 28px 0px 10px;
+	margin-bottom:8px;
+	position:relative;
+}
+
+.wocloudTitleBar a:link {
+	color:#000fff;
+	text-decoration:none;
+}
+
+.wocloudTitleBar a:visited {
+	color:#990066;
+	text-decoration:none;
+}
+
+.wocloudTitleBar a:hover { text-decoration:underline; }
+
+.wocloudTitleBarTable {
+	border-top:1px solid #d1d1d1;	border-bottom:1px solid #d1d1d1;
+	clear:both;
+	height:21px;
+}
+
+div.wocloudWindow div.wocloudTitleBarTable, div.wocloudRightWindow div.wocloudTitleBarTable, div.wocloudLeftWindow div.wocloudTitleBarTable {
+	border-top:0px;
+}
+
+div.wocloudAfter {
+	float:left;
+	padding-left:7px;
+}
+
+.wocloudContentContainer { position:relative; }
+
+.wocloudButtonBar {
+	/*background:url(/images/global/button-bar.gif) repeat-x;*/
+	background:#fff;
+	bottom:0px;
+	clear:both;
+	height:29px;
+	padding:6px 0px 0 40px;
+	position:relative;
+	border-top:1px #d1d1d1 solid;
+	z-index:5;
+}
+
+.wocloudButtonBar input { margin:2px; }
+
+.wocloudButtonBar .wocloudCenter {
+	display:block;
+	float:none;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.wocloudWindow, .wocloudRightWindow, .wocloudLeftWindow, .wocloudConfirmWindow {
+	background-color:#FFFFFF;
+	border:1px solid #d1d1d1;
+	margin:15px 10px 15px 10px;
+	/* overflow:hidden; */
+	position:relative;
+	width:auto;
+}
+
+.wocloudRightWindow {
+	float:right;
+	margin-left:0;
+}
+/*johnny mod @20141210     margin-left:50px;width: 500px;*/
+.wocloudLeftWindow { float:left;}
+
+.wocloudFormWrapper {
+	min-height:80px;
+	padding:10px;
+	position:relative;
+}
+
+.wocloudAdvancedForm {
+	background-color:#FFFFFF;
+	border-top:1px solid #5c706e;
+	color: #1a1a1a;
+	cursor:pointer;
+	font:bold 11px Arial, sans-serif, Helvetica;
+	padding:3px 0px 3px 10px;
+	position:relative;
+}
+
+.wocloudFormWrapperLeft, .wocloudFormWrapperText {
+	min-height:80px;
+	padding:10px 10px 10px 100px;
+	position:relative;
+}
+
+.wocloudFormWrapperText {
+	background-color:white;
+	border:1px solid #5C706E;
+	margin:10px;
+	padding:10px;
+}
+
+.wocloudFormWrapperRight {
+	min-height:80px;
+	padding:10px 100px 10px 10px;
+	position:relative;
+}
+
+input[type=radio],
+input[type=checkbox] {
+	vertical-align:middle;
+	margin:2px 8px 2px 3px;
+}
+
+label[for] { cursor:pointer; }
+
+.wocloudFormWrapper label, .wocloudFormWrapperRight label, .wocloudFormWrapperLeft label {
+	line-height:1.3em!important;
+	width:130px;
+}
+
+.wocloudAutoLabel label,	div label.wocloudAutoLabel		{ width:auto; }
+.wocloudShortestLabel label,div label.wocloudShortestLabel	{ width:80px; }
+.wocloudShortLabel label,	div label.wocloudShortLabel		{ width:120px; }
+.wocloudLongLabel label,	div label.wocloudLongLabel		{ width:160px; }
+.wocloudLongerLabel label,	div label.wocloudLongerLabel	{ width:180px; }
+.wocloudLongestLabel label,	div label.wocloudLongestLabel	{ width:195px; }
+
+div select.wocloudUltraShortInput, .wocloudUltraShortInput select { width:65px; }
+div input.wocloudUltraShortInput[type=text],
+div input.wocloudUltraShortInput[type=checkbox],
+.wocloudUltraShortInput input[type=text],
+.wocloudUltraShortInput input[type=checkbox] { width:45px; }
+
+div input.wocloudShortestInput[type=text], .wocloudShortestInput input[type=text] { width:95px; }
+div select.wocloudShortestInput, .wocloudShortestInput select { width:102px; }
+div input.wocloudShorterInput[type=text],
+div input.wocloudShorterInput[type=password],
+.wocloudShorterInput input[type=text],
+.wocloudShorterInput input[type=password] { width:125px; }
+
+div select.wocloudShorterInput, .wocloudShorterInput select { width:133px; }
+div input.wocloudShortInput[type=text],
+div input.wocloudShortInput[type=password],
+.wocloudShortInput input[type=text],
+.wocloudShortInput input[type=password] { width:150px; }
+
+div select.wocloudShortInput, .wocloudShortInput select { width:158px; }
+
+input[type=text], input[type=password], textarea { width:175px; }
+
+select { width:183px; }
+
+div input.wocloudLongInput[type=text],
+div input.wocloudLongInput[type=password],
+div textarea.wocloudLongInput,
+.wocloudLongInput input[type=text],
+.wocloudLongInput input[type=password],
+.wocloudLongInput textarea { width:200px; }
+div select.wocloudLongInput, .wocloudLongInput select { width:208px; }
+
+div input.wocloudLongerInput[type=text],
+div input.wocloudLongerInput[type=password],
+div textarea.wocloudLongerInput,
+.wocloudLongerInput input[type=text],
+.wocloudLongerInput input[type=password],
+.wocloudLongerInput textarea { width:300px; }
+div select.wocloudLongerInput, .wocloudLongerInput select { width:308px; }
+
+div input.wocloudLongestInput[type=text],
+div textarea.wocloudLongestInput,
+.wocloudLongestInput [type=text],
+.wocloudLongestInput [type=password],
+.wocloudLongestInput textarea { width:375px; }
+
+div select.wocloudLongestInput, .wocloudLongestInput select { width:383px; }
+
+div input.wocloudVarInput[type=text], .wocloudVarInput [type=text] { width:60%; }
+
+.wocloudMessageBox {
+	/*background-color: #CCD3BA;*/
+	background-color: #FFFFFF;
+	margin:0px;
+	max-height:300px;
+	overflow:auto;
+	padding:0px;
+	position:relative;
+}
+
+td .wocloudMessageBox { max-height:150px; }
+
+.wocloudCenterNoLeftPad {
+	padding-left:2px!important;
+	text-align:left!important;
+}
+
+.wocloudSuccessBar  {
+	background: url("/images/section/monitor/success.gif") repeat scroll 0 0 transparent; 
+	height:13px;
+}
+
+.wocloudFailureBar  {
+	background: url("/images/section/monitor/failure.gif") repeat scroll 0 0 transparent; 
+	height:13px;
+}
+
+.wocloudProgressBar {
+	background: url("/images/section/monitor/progress.gif") repeat scroll 0 0 transparent;
+	height:13px;
+}
+
+.wocloudIconSuccess {
+	background:url(/images/global/calendar/icon_calendar_success.gif) no-repeat 0px 2px;
+	padding:0 0 2px 16px;
+}
+
+.wocloudIconWarning {
+	background:url(/images/global/calendar/icon_calendar_warning.gif) no-repeat 0px 2px;
+	padding:0 0 2px 16px;
+}
+
+.wocloudIconError {
+	background:url(/images/global/calendar/icon_calendar_failure.gif) no-repeat 0px 2px;
+	padding:0 0 2px 16px;
+}
+
+.wocloudLabelSuccess { background:url(/images/global/calendar/icon_calendar_success.gif) no-repeat right center; }
+
+.wocloudLabelWarning { background:url(/images/global/calendar/icon_calendar_warning.gif) no-repeat right center; }
+
+.wocloudLabelError { background:url(/images/global/calendar/icon_calendar_failure.gif) no-repeat right center; }
+
+/*** Errors, Warnings, Messages, Instructions, etc. ***/
+
+.wocloudMsgBox {
+	/*background-color:#ccc;*/
+	background-color:#B0D9EE;
+	color:#FFFFFF;
+	/* cursor:pointer; Why? interferes with browser's "wait" cursor after submitting a form */
+	font-size:10px;
+	font-weight:bold;
+	margin:1px 1px 1px 5px;
+	padding:0 2px;
+	position:absolute;
+	right:0px;
+    cursor:pointer
+}
+
+.wocloudUserMessages, .wocloudUserInstructions, .wocloudUserErrors, .wocloudUserWarnings, .wocloudUserDetails, .wocloudUserInternalErrors {
+	float:left;
+	margin:0px;
+	position:relative;
+	width:49%;
+    margin-left: 10px;
+    margin-top: 12px;
+}
+
+.wocloudConfirmWindow .wocloudMessages, #wocloudLoginMessageBox .wocloudMessages{
+	width:99%;
+	float:none!important;
+}
+
+.wocloudUserInternalErrors { border:2px solid red; }
+
+.wocloudMsgWarnErr {
+	padding:10px 16px 10px 14px;
+	/*background-color: #E3EADA;*/
+	/*background-color: #fff5ea;*/
+    background-color: #B0D9EE;
+}
+
+.wocloudUserMessages, .wocloudUserMessagesText, .wocloudUserInstructions, .wocloudUserInstructionsText, .instructions { /*color:#676767; */ color:#F1583C;}
+
+.wocloudUserErrors, .wocloudUserErrorsText {
+	color:#F1583C;
+	font-weight:bold;
+}
+
+.wocloudUserWarnings, .wocloudUserWarningsText { color:#e67c0b; }
+
+.wocloudUserDetails { display:none; }
+
+.wocloudUserErrors a:link,   .wocloudUserErrorsText a:link   { text-decoration:underline; }
+.wocloudUserWarnings a:link, .wocloudUserWarningsText a:link { text-decoration:underline; }
+.wocloudUserMessages a:link, .wocloudUserMessagesText a:link, .wocloudUserInstructions a:link, .wocloudUserInstructionsText a:link, .instructions a:link { color:#0b87e5; font-weight:bold; }
+
+.wocloudUserDetails a:link { text-decoration:underline; }
+.wocloudUserErrors a:visited,   .wocloudUserErrorsText a:visited { text-decoration:underline; }
+.wocloudUserWarnings a:visited, .wocloudUserWarningsText a:visited { text-decoration:underline; }
+.wocloudUserMessages a:visited, .wocloudUserMessagesText a:visited, .wocloudUserInstructions a:visited, .wocloudUserInstructionsText a:visited, .instructions a:visited {  color:#0b87e5; font-weight:bold; }
+
+.wocloudUserDetails a:visited, .wocloudUserDetailsText a:visited { text-decoration:none; }
+.wocloudUserMessages a:hover, .wocloudUserInstructions a:hover, .wocloudUserErrors a:hover, .wocloudUserWarnings a:hover, .wocloudUserDetails a:hover, .wocloudUserMessagesText a:hover, .wocloudUserErrorsText a:hover, .wocloudUserWarningsText a:hover, .instructions a:hover {
+	color:#3389cc;
+}
+
+#wocloudLoginContent p { text-align:justify; }
+
+#wocloudEstimateClient {
+	position:absolute;
+	left:140px;
+}
+
+#wocloudEstimateCalcsize {
+	position:absolute;
+	left:320px;
+}
+
+#wocloudEstimateServer {
+	position:absolute;
+	left:665px;
+}
+
+.wocloudBackupWhereCreateTable td, .wocloudBackupWhereCreateTable th {
+	background:#E3EADA;
+	padding:5px 15px 5px 15px;
+}
+
+.wocloudBackupWhereCreateTable th {
+	background:#ececc8;
+	border:0;
+	color: #1a1a1a;
+	font-weight:bold;
+	text-align:center;
+}
+
+table.wocloudLoginCellCenter td { text-align:center; }
+
+.wocloudLoginCellCenter {
+	background-color: #E3EADA;
+	width:161px;
+	height:168px;
+	display:table-cell;
+	vertical-align:middle;
+}
+
+.wocloudBreadCrumbs {
+	padding:5px 10px 5px 10px;
+	min-height:17px;
+	height:auto;
+	font-size:12px;
+}
+
+.wocloudBreadCrumbs a:visited { color:#000fff; }
+
+/*** HTML TAGS ***/
+body {
+	/*background-color:#B6BCA6;
+	//#87CEEB*/
+	background-color:#ffffff;
+	border:1px solid #5C706E;
+	border-width:0 0px 0px 0;
+	color:#666;
+	font:normal 13px Arial, sans-serif, Helvetica;
+	line-height:1.3em;
+	margin:0px;
+	min-height:350px;
+	padding:0px;
+	text-decoration:none;
+	/* width:1000px; */
+}
+
+.wocloudBorder { border:1px solid #5c706e; }
+
+a:link, a:visited { text-decoration:none; color:#2183d9 }
+a:hover           { text-decoration:underline; }
+
+h1, h2, h3 { margin:0px; }
+
+h1 {
+	font-size:120%;
+	font-weight:bold;
+	padding:12px 0px 8px 0px;
+}
+
+h2 {
+	font-size:114%;
+	font-weight:bold;
+	padding:10px 0px 6px 0px;
+}
+
+h3 {
+	font-size:100%;
+	font-weight:bold;
+	padding:8px 0 4px 0;
+}
+
+div > h1:first-of-type, div > h2:first-of-type, div > h3:first-of-type { padding-top:0; }
+
+input, select, textarea {
+	float:left;
+	padding:1px;
+}
+
+table{ border-spacing:0; }
+
+table > tbody {
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+
+textarea {
+	overflow:auto;
+	padding-left:2px;
+	position:relative;
+}
+
+select, textarea, [type=text], [type=password] {
+	/*background-color:#DBDBDB;*/
+	background-color:#fff;
+	margin-right:5px;
+	border:1px #2192d9 solid;
+}
+
+[type=submit], [type=cancel], [type=reset], [type=button] {
+	/*background-color:lightgrey;*/
+	
+	background-color:#fff;
+	float:right;
+	padding:0 2px;
+	margin:0px 7px;
+	vertical-align:top;
+	border:1px #0e6eb8 solid;
+}
+[type=submit]:hover, [type=cancel]:hover, [type=reset]:hover, [type=button]:hover {
+	/*background-color:lightgrey;*/
+	
+	background-color:#0e6eb8;
+	color:#fff;
+	float:right;
+	
+	vertical-align:top;
+	border:1px #0e6eb8 solid;
+}
+#login_button{
+	/*background-color:lightgrey;*/
+	
+	background-color:#039de8;
+	float:right;
+	padding:0 2px;
+	margin:0px 7px;
+	vertical-align:top;
+	border:1px #039de8 solid;
+	box-shadow:0 3px 0 #026fa6;
+}
+input.wocloudButtonsLeft, button.wocloudButtonsLeft,
+.wocloudButtonsLeft [type=submit],
+.wocloudButtonsLeft [type=cancel],
+.wocloudButtonsLeft [type=reset],
+.wocloudButtonsLeft [type=button] {
+	/*background-color:lightgrey;*/
+	background-color:#0e6eb8;
+	float:left;
+	vertical-align:top;
+	border:1px #0e6eb8 solid;
+	color:#fff;
+	
+	
+}
+input.wocloudButtonsLeft:hover, button.wocloudButtonsLeft:hover,
+.wocloudButtonsLeft [type=submit]:hover,
+.wocloudButtonsLeft [type=cancel]:hover,
+.wocloudButtonsLeft [type=reset]:hover,
+.wocloudButtonsLeft [type=button]:hover {
+	/*background-color:lightgrey;*/
+	background-color:#fff;
+	float:left;
+	vertical-align:top;
+	border:1px #0e6eb8 solid;
+	color:#0e6eb8;
+	
+	
+}
+
+/* select:hover does not work in IE8: https://connect.microsoft.com/IE/feedback/ViewFeedback.aspx?FeedbackID=416378 */
+button:focus, button:hover, input:focus, input:hover, textarea:focus, textarea:hover,  { background-color:#0e6eb8; 
+color:#fff;
+border:1px #298dcc solid;
+}
+select:focus, select:hover { background-color:#fff; 
+color:#676767;
+border:1px #0e6eb8 solid;
+}
+.logininput:hover{ background-color:#fff; color:#298dcc;}
+#login_button:hover{ background-color:#2192d9; 
+color:#2192d9;
+border:1px #2192d9 solid;
+}
+button[DISABLED], input[DISABLED], select[DISABLED], textarea[DISABLED] {
+	cursor:default;
+	background-color:#fff;
+	color: #000;
+}
+
+[type=submit][DISABLED], [type=cancel][DISABLED], [type=reset][DISABLED], [type=button][DISABLED] {
+	background-color:#fff!important;
+	border:1px #a6a6a6 solid;
+	color:#a6a6a6;
+}
+
+[type=image]:hover { background-color:inherit; }
+
+.ieonly :disabled { background-color:graytext; }
+
+.wocloudHoverHighlight:hover { background-color:#FFFF00; }
+
+#conflict_file_selected, #file_conflict_div input[type=radio]:checked+label {
+	background-color:#F0F000;
+	width:auto;
+}
+
+pre,.pre, .wocloudUserDetails wocloudMsgBox {
+	color:black;
+	font:11px/12px "Courier New", Courier, monospace; /* http://www.codestyle.org/css/font-family/sampler-Monospace.shtml */
+	overflow:auto;
+	padding:1px; /* workaround for chrome bug */
+	white-space: -moz-pre-wrap;	/* Mozilla, since 1999 */
+	white-space: -o-pre-wrap;	/* Opera 7 */
+	white-space: pre-wrap;	/* css-3 */
+	white-space: -pre-wrap;		/* Opera 4-6 */
+	word-wrap:break-word;		/* http://www.w3.org/TR/css3-text/#text-wrap */
+}
+
+legend {
+	font-weight:bold;
+	color:#1A1A1A;
+	margin-left:10px;
+	margin: 0 0 3px 15px;
+	padding: 2px;
+	/*background: #ECECC8;*/
+	background: #fff;
+	border: 1px solid white;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+fieldset {
+	/*background-color:#EBF2E2;*/
+	background-color:#ffffff;
+	color:#1a1a1a;
+	border:1px solid #d1d1d1;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	padding:5px 8px 5px 5px;
+	margin:8px;
+}
+
+.wocloudFormWrapper fieldset {
+	margin-top:9px;
+	float:left;
+}
+
+img, hr { border:none; }
+
+small { font-size:11px; }
+
+a.wocloudHelpLink {
+	/*background:transparent url(/images/icons/icon_help.png) no-repeat center center;*/
+	background:transparent  no-repeat center center;
+	display:block;
+	height:18px;
+	position:absolute;
+	right:5px;
+	text-decoration:none;
+	top:5px;
+	width:18px;
+	z-index:5;
+}
+
+a.wocloudHelpLink:hover {
+	background:transparent url(/images/icons/icon_help_hover.png) no-repeat center center;
+}
+
+a.wocloudHelpLinkHug {
+	float:left;
+	position:relative;
+	top:0;
+}

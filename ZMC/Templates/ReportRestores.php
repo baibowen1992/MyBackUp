@@ -19,12 +19,12 @@ foreach($pm->rows as $key => $val){
 	elseif (isset($_REQUEST['edit_id']) && !empty($_REQUEST['edit_id'])){
 		if($_REQUEST['edit_id'] == $val['id']){
 ?>
-<div class="zmcLeftWindow" style="width:48%; clear:right;">
+<div class="wocloudLeftWindow" style="width:48%; clear:right;">
 <? ZMC::titleHelpBar($pm, $pm['selected_name'] . ' Restore Status:  ' . $val['state'], '', '', '', '&nbsp;<span id="progress_dots"></span>'); 
 	if (!empty($val['progress']))
-		echo "<div class='zmcSubHeadingSelect' style='margin:10px 10px -10px 10px;'>{$val['progress']}</div>\n";
+		echo "<div class='wocloudSubHeadingSelect' style='margin:10px 10px -10px 10px;'>{$val['progress']}</div>\n";
 ?>
-	<div class="zmcFormWrapperText" id="restore_status_summary">
+	<div class="wocloudFormWrapperText" id="restore_status_summary">
 	<div style="overflow:auto; border-bottom:1px solid black; margin-bottom:7px;">
 	<p style="padding-top:0;" id="job_output">
 <?php
@@ -37,9 +37,9 @@ foreach($pm->rows as $key => $val){
 				echo '</p>';
 			}
 			echo '</div><div style="height: 300px; overflow: auto;"><span id="job_status"></span>';
-			$replacement =  '<span class="zmcUserErrorsText stripeRed">*&nbsp;Client&nbsp;Error:</span>';
+			$replacement =  '<span class="wocloudUserErrorsText stripeRed">*&nbsp;Client&nbsp;Error:</span>';
 			echo str_replace(array('* Client Status: FAILURE', '* Client Error:', ' Client Error:', ' Client Warning:'),
-				array('<span class="zmcUserErrorsText stripeRed">* Client Status: Restore Failed.</span>', $replacement, $replacement, '<span class="zmcIconWarning">Client&nbsp;Warning:</span>'),
+				array('<span class="wocloudUserErrorsText stripeRed">* Client Status: Restore Failed.</span>', $replacement, $replacement, '<span class="wocloudIconWarning">Client&nbsp;Warning:</span>'),
 				str_replace("\n", "<br />\n", trim(ZMC::escape($val['status'])))), '</div>';
 ?>
 	</div>
@@ -64,25 +64,25 @@ foreach($pm->rows as $key => $val){
 
 function restoreWindowHelper($pm, $val, $listType, $list, $title, $map, $color, $count = 0)
 {
-	echo "<div class='zmcRightWindow' style='clear:Right; width:48%; margin-left:0;'>\n";
+	echo "<div class='wocloudRightWindow' style='clear:Right; width:48%; margin-left:0;'>\n";
 	ZMC::titleHelpBar($pm, $title . ($count ? (': ' . $count) : ''));
 
-	echo '      <div class="zmcFormWrapperText" style="overflow:auto; max-height:300px; background-color:#', $color, ';">';
+	echo '      <div class="wocloudFormWrapperText" style="overflow:auto; max-height:300px; background-color:#', $color, ';">';
 	if (empty($count))
 	{
 		if ($listType === 'Exclude' && $count === 0)
-			echo "<div class='zmcUserMessagesText zmcIconSuccess'>Nothing explicitly excluded. Ok.</div>";
+			echo "<div class='wocloudUserMessagesText wocloudIconSuccess'>Nothing explicitly excluded. Ok.</div>";
 		elseif ($val['restore_type'] === ZMC_Restore::EXPRESS && $listType === "Include")
-			echo "<div class='zmcIconSuccess' style='font-size:24px; padding-top:4px; font-weight:bold;'>*</div>";
+			echo "<div class='wocloudIconSuccess' style='font-size:24px; padding-top:4px; font-weight:bold;'>*</div>";
 		elseif ($val['restore_type'] === ZMC_Restore::EXPRESS && $count != 0)
-			echo "<div class='zmcIconSuccess' style='font-size:24px; padding-top:4px; font-weight:bold;'>*</div>";
+			echo "<div class='wocloudIconSuccess' style='font-size:24px; padding-top:4px; font-weight:bold;'>*</div>";
 		else
-			echo "<div class='zmcUserWarningsText zmcIconError'>Not available.</div>";
+			echo "<div class='wocloudUserWarningsText wocloudIconError'>Not available.</div>";
 	}
 	else
 	{	$map = explode("\n", $val['list_of_files']);
 		if (($count = count($map)) > 100)
-			echo "<div class='zmcUserWarningsText zmcIconWarning'>Too many selections ($count) to display.<br />Showing only the first 100 selections:</div>\n";
+			echo "<div class='wocloudUserWarningsText wocloudIconWarning'>Too many selections ($count) to display.<br />Showing only the first 100 selections:</div>\n";
 		
 		
 		if (!empty($map))
@@ -95,14 +95,14 @@ function restoreWindowHelper($pm, $val, $listType, $list, $title, $map, $color, 
 			}
 		}
 	}
-	echo '  </div><!-- "zmcFormWrapperText" -->';
-	echo '</div><!-- zmcLeftWindow" -->';
+	echo '  </div><!-- "wocloudFormWrapperText" -->';
+	echo '</div><!-- wocloudLeftWindow" -->';
 }
 
 
 
 echo "<form id=\"js_auto_refresh_form\" method='post' action='$pm->url'>";
-ZMC::titleHelpBar($pm, $pm->goto . 'View Restore History', '', 'zmcTitleBarTable');
+ZMC::titleHelpBar($pm, $pm->goto . '查看还原历史', '', 'wocloudTitleBarTable');
 foreach($pm->colUrls as $k => $v){
 	if(isset($_REQUEST['edit_id']) && !empty($_REQUEST['edit_id']))
 		$pm->colUrls[$k] = $v."&edit_id=".$_REQUEST['edit_id'];
@@ -115,7 +115,7 @@ foreach($pm->colUrls as $k => $v){
 				<? ?>
 				<th title='Restore To (on or before)'D>
 					<a href='<?= $pm->colUrls['backup_date'] ?>'>Restore To<br/>(on or before)<? if ($pm->sortImageIdx == 'backup_date') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Original Host'>
+				<th title='源主机'>
 					<a href='<?= $pm->colUrls['host'] ?>'>Original Host<? if ($pm->sortImageIdx == 'host') echo $pm->sortImageUrl; ?></a></th>
 				<th title='Object Name'>
 					<a href='<?= $pm->colUrls['disk_name'] ?>'>Object Name<? if ($pm->sortImageIdx == 'disk_name') echo $pm->sortImageUrl; ?></a></th>

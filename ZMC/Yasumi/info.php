@@ -135,7 +135,7 @@ EOD;
 				}
 				list($file, $lineno, $rest) = explode(':', $line, 3);
 				$file = substr($file, 2);
-				$file = "<a href='http://zmcxen.zmanda.com/trac/trac/browser/zmanda-ui/trunk/ZMC/$file#L$lineno'>$file</a>:$lineno";
+				$file = "<a href='http://zmcxen.wocloud.cn/trac/trac/browser/zmanda-ui/trunk/ZMC/$file#L$lineno'>$file</a>:$lineno";
 				$line = $file . $rest;
 			}
 		}

@@ -17,7 +17,7 @@ class ZMC_Report_Media
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Report', 'ZMC - Backup media usage report', 'Media');
+		ZMC_HeaderFooter::$instance->header($pm, 'Report', '云备份 - Backup media usage report', 'Media');
 		$pm->addDefaultInstruction('View reports about backup media usage.');
 		if (!ZMC_BackupSet::assertSelected($pm))
 			return 'MessageBox'; 

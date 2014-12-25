@@ -15,7 +15,7 @@
 class ZMC_Monitor
 {
 
-public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Monitor', $title = 'ZMC - Monitor Recent Backups', $subnav = 'backups')
+public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Monitor', $title = '云备份 - 监控备份集', $subnav = 'backups')
 {
 	$pm->goto = null;
 	ZMC_HeaderFooter::$instance->header($pm, $tombstone, $title, $subnav);
@@ -45,9 +45,9 @@ public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Monitor', 
 
 	$report->getPaginator($pm);
 	if (empty(ZMC::$userRegistry['monitor_refresh']))
-		$pm->addMessage("Last refreshed at: " . ZMC::humanDate(true));
+		$pm->addMessage("上次刷新时间： " . ZMC::humanDate(true));
 	else
-		$pm->addMessage("Refreshed at: " . ZMC::humanDate(true) . ' (' . ZMC::$userRegistry['monitor_refresh'] . " second refresh interval)");
+		$pm->addMessage("刷新于: " . ZMC::humanDate(true) . ' (' . ZMC::$userRegistry['monitor_refresh'] . " 秒刷新间隔)");
 	return 'Monitor';
 }
 
@@ -223,14 +223,14 @@ protected function getStats($pm, $sql, $recentSql, $allSql, $whenSql)
 	if ($filtered === 0)
 	{
 		if (count($pm->rows) === 0)
-			$pm->addMessage('NO backup runs during selected period for: ' . ZMC_BackupSet::getName());
+			$pm->addMessage('在选定的周期内，备份集' . ZMC_BackupSet::getName(). '中没有正在运行的备份');
 		return;
 	}
 
 	if (count($pm->rows) === 0)
-		return $pm->addWarning("All backup results have been hidden.  Uncheck boxes below to disable filters.");
+		return $pm->addWarning("所有备份结果已经被隐藏，请取消勾选右边的筛选框。");
 
-	$pm->addMessage("Note: Showing $shown of $total backup results on the monitor table below.");
+	$pm->addMessage("注意：显示 $total 中的 $shown 个备份结果在下面的监控框中。");
 }
 
 }

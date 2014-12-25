@@ -24,7 +24,7 @@ class ZMC_BackupSet
 	const STARTED = 'Started';
 	const FAILED = 'Failed';
 	const FINISHED = 'Finished';
-	const BAD_NAME = 'Use only alphanumeric characters, period, underscore, and hyphen characters in backup set names.';
+	const BAD_NAME = '备份集名称中仅支持数字、字母、下划线和破折号。';
 	const ZMC_TEST_QUICK = 'zmc_test_quick';
 
 	private   static $started = false;
@@ -138,17 +138,17 @@ class ZMC_BackupSet
 			$err = '';
 			if (self::getId($name))
 			{
-				$pm->addError('This backup set name already exists.');
+				$pm->addError('该备份集名已存在');
 				return false;
 			}
 			elseif (strpos($name, 'zmc_test') === 0) 
 			{
-				$pm->addError('Backup set names may not begin with "zmc_test".');
+				$pm->addError('备份集名不能以 "zmc_test" 开头。');
 				return false;
 			}
 			elseif (!ZMC_BackupSet::isValidName($pm, $name))
 			{
-				$pm->addError('Backup set names is not valid');
+				$pm->addError('备份集名称不合理');
 				return false;
 			}
 			ZMC_ProcOpen::procOpen('amserverconfig', ZMC::getAmandaCmd('amserverconfig'),
@@ -164,7 +164,7 @@ class ZMC_BackupSet
 				return false;
 			}
 			self::set($pm, $name);
-			ZMC::auditLog($msg = 'ZMC user "' . $_SESSION['user'] . "\" created backup set '$name'");
+			ZMC::auditLog($msg = '用户"' . $_SESSION['user'] . "\" 创建了备份集 '$name'");
 			$pm->addMessage($msg, str_replace('. ', "\n", "$stdout\n$stderr"));
 			return true;
 		}
@@ -180,7 +180,7 @@ class ZMC_BackupSet
 	{ 
 		$name = self::select($pm, true);
 		if (empty($name))
-			$pm->addMessage('Choose a backup set to continue.');
+			$pm->addMessage('请选择一个备份集');
 		return $name;
 	}
 
@@ -205,14 +205,14 @@ class ZMC_BackupSet
 		{
 			if ($pm->tombstone === 'Admin' && $pm->subnav === 'backup sets')
 			{
-				if ($pm->state === 'Add')
+				if ($pm->state === 'create')
 					return $_REQUEST[$editId];
 				return false;
 			}
 			$name = false;
 			if ($atLeastOne)
 			{
-				$pm->addError('Please create a backup set first.');
+				$pm->addError('请先新建一个备份集');
 				return ZMC::redirectPage('ZMC_Admin_BackupSets', $pm); 
 			}
 		}
@@ -260,14 +260,14 @@ class ZMC_BackupSet
 
 		if (!$creatingNewSet && !isset(self::$myNames[$name]))
 		{
-			$pm->addError("Unable to change working backup set to '$name'.\nPlease choose a different backup set.");
+			$pm->addError("不能切换备份集到 '$name'，请选择其他备份集");
 			return $_SESSION['configurationName'] = false;
 		}
 
 		if (!empty($_SESSION['configurationName']) && ($_SESSION['configurationName'] !== $name))
 		{
 			$_SESSION['prior_name'] = $_SESSION['configurationName'];
-			$pm->addEscapedMessage($msg = 'Backup set changed to: <b>' . ZMC::escape($name) . '</b>');
+			$pm->addEscapedMessage($msg = '切换到备份集<b>' . ZMC::escape($name) . '</b>');
 		}
 
 		return $_SESSION['configurationName'] = $name;
@@ -437,19 +437,19 @@ class ZMC_BackupSet
 		
 		if (filter_var($hostname, FILTER_VALIDATE_IP))
 		{
-			if ($pm) $pm->addWarnError("$name looks like an IP address. Please choose a different name.");
+			if ($pm) $pm->addWarnError("$name 看起来像IP地址，请更换");
 			return false;
 		}
 
 		if (!ctype_alnum($name[0]))
 		{
-			if ($pm) $pm->addWarnError("$name does not begin with a letter or digit.");
+			if ($pm) $pm->addWarnError("$name 不是以字母和数字开头。");
 			return false;
 		}
 
 		if (strlen($name) < 5)
 		{
-			if ($pm) $pm->addWarnError("$name is too short (min: 5 characters).");
+			if ($pm) $pm->addWarnError("$name 太短(最少5个字符).");
 			return false;
 		}
 		if(isset($pm->binding[_key_name])){
@@ -463,13 +463,13 @@ class ZMC_BackupSet
 				case "openstack_cloud":
 					if (strlen($name) > 35)
 					{
-						$error_msg = "$name is too long (max: 35 characters).";
+						$error_msg = "$name 太长(最长35个字符).";
 					}
 					break;
 				default:
 					if (strlen($name) > 63)
 					{
-						$error_msg = "$name is too long (max: 63 characters).";
+						$error_msg = "$name 太长(最长63个字符).";
 					}
 					break;
 			}
@@ -523,14 +523,14 @@ class ZMC_BackupSet
 		foreach($reservedWords as $reserved)
 			if (!strncmp($lname, $reserved, strlen($reserved)))
 			{
-				if ($pm) $pm->addWarnError("Please choose a different name.  Name '$name' begins with a reserved word: $reserved");
+				if ($pm) $pm->addWarnError("名称 '$name' 是以保留字符 $reserved 开始，请更换名字。");
 				return false;
 			}
 
 		foreach(array('zmanda', 'amanda', 'google', 'zmc') as $reserved)
 			if (false !== strpos($lname, $reserved))
 			{
-				if ($pm) $pm->addWarnError("Please choose a different name.  Name '$name' contains a reserved word: $reserved");
+				if ($pm) $pm->addWarnError("名称 '$name' 是包含保留字符 $reserved ，请更换名字。");
 				return false;
 			}
 
@@ -581,7 +581,7 @@ class ZMC_BackupSet
 	{
 		if (!self::isValidName($pm, $name))
 		{
-			$pm->addError("Can not add backup set '$name', because the name is not valid.");
+			$pm->addError("备份集 '$name' 名称无效，新建失败.");
 			return false;
 		}
 
@@ -720,7 +720,7 @@ class ZMC_BackupSet
 		unset(self::$names2ids[$name]);
 		unset(self::$sets[$id]);
 		unset(self::$hiddenSets[$id]);
-		ZMC::auditLog($msg = "Deleted backup set: $name");
+		ZMC::auditLog($msg = "删除备份集: $name");
 		$pm->addMessage($msg);
 error_log(__FILE__ . __LINE__ . __FUNCTION__);
 		unset($_SESSION['configurationName']);
@@ -762,7 +762,7 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 			$updates['owner_id'] = $ownerId;
 
 		ZMC_Mysql::update('configurations', $updates, array('configuration_name' => $name), "Can not find and update backup set '$name'");
-		ZMC::auditLog($msg = $_SESSION['user'] . " updated the backup set '$name'");
+		ZMC::auditLog($msg = $_SESSION['user'] . " 更新了备份集 '$name'");
 		$pm->addMessage($msg);
 		return true;
 	}
@@ -782,11 +782,11 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 		if (ZMC::$registry->debug)
 		{
 			if ($syncOnly)
-				$pm->addMessage("Syncronizing Amanda and ZMC Backup Sets only for $syncOnly.");
+				$pm->addMessage("仅同步备份集 $syncOnly 的备份参数");
 			elseif ($skipName)
-				$pm->addMessage("Syncronizing all Amanda and ZMC Backup Sets, except $skipName.");
+				$pm->addMessage("同步所有备份集参数，除了 $skipName.");
 			else
-				$pm->addMessage("Syncronizing all Amanda and ZMC Backup Sets.");
+				$pm->addMessage("同步所有备份集参数");
 		}
 		self::start($pm, true); 
 		$problems = self::getHealedConfigs($pm, $skipName, $syncOnly);
@@ -826,7 +826,7 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 			
 			
 
-			self::updateStatus($name, array('code' => 401, 'status' => "Does not exist on disk at " . ZMC::$registry->etc_amanda . $name));
+			self::updateStatus($name, array('code' => 401, 'status' => "目录 " . ZMC::$registry->etc_amanda . $name." 不存在！"));
 		}
 
 		self::start($pm); 
@@ -1177,19 +1177,19 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 		
 		if (($status['code'] != 0) && (substr($status['code'], 0, 1) != '5'))
 		{
-			$pm->addMessage("Skipped regeneration of '$name', because backup set is not healthy (code #$status[code])");
+			$pm->addMessage("跳过重建 '$name', 因为当前备份集状态不处于健康状态(代码： #$status[code])");
 			return false;
 		}
 
 		if (empty($status['version']) || $status['version'] != ZMC::$registry->zmc_backupset_version)
 		{
-			$pm->addMessage("Skipped regeneration of '$name', because backup set is not from AEE version: " . ZMC::$registry->zmc_backupset_version);
+			$pm->addMessage("跳过重 '$name', 因为当前备份集不是来自于云备份版本: " . ZMC::$registry->zmc_backupset_version);
 			return false;
 		}
 
 		if (empty($status['profile_name']) || $status['profile_name'] === 'NONE')
 		{
-			$pm->addDetail($msg = "'$name': skipped regeneration, because it has no device settings.");
+			$pm->addDetail($msg = "'$name': 跳过重建，因为没有绑定存储设备。");
 			
 			return false;
 		}
@@ -1226,7 +1226,7 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 		catch (Exception $e)
 		{
 			if (!empty($_SESSION['configurationName']) && $_SESSION['configurationName'] === $name) 
-				$pm->addError("Updating device settings for backup set '$name' failed: " . $e->getMessage());
+				$pm->addError("为备份集 '$name' 更新设备配置信息失败: " . $e->getMessage());
 
 			return $e->getMessage();
 		}
@@ -1281,20 +1281,20 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 
 		if (!self::ownedBy($name))
 		{
-			$pm->addError('Only the backup set owner, or user with the administrator role, can activate or deactivate a backup set.');
+			$pm->addError('只有备份集拥有者以及具有管理员权限的用户可以激活和反激活一个备份集。');
 			return false;
 		}
 		$set = self::getByName($name);
 		$err = null;
 		$active = self::isActivated($name);
 		if (!empty($set['dles_failed_license']))
-			$err = 'License limits exceeded. Can not activate.';
+			$err = '许可证过期，不能激活。';
 		elseif (empty($set['schedule_type']))
-			$err = 'No storage device or schedule configured. Can not activate.';
+			$err = '没有绑定存储设备，无法激活。';
 		elseif ($on && $active)
-			$err = 'Already activated. No change.';
+			$err = '已经激活，没有变更。';
 		elseif (!$on && !$active)
-			$err = 'Already deactivated. Backup set was not active.';
+			$err = '已经取消激活，备份集没有激活。';
 		if (!empty($err))
 		{
 			ZMC::auditLog($msg = "$name: $err");
@@ -1311,7 +1311,7 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 		else
 		{
 			self::$sets[self::$names2ids[$name]]['active'] = $on;
-			$pm->addMessage("\"$name\" schedule " . ($on ? 'activated.' : 'deactivated.'));
+			$pm->addMessage("备份集 \"$name\" 计划任务 " . ($on ? '已激活' : '已取消激活'));
 			return true;
 		}
 
@@ -1405,7 +1405,7 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 	{
 		if (	( $checkAll && (count(glob(ZMC::$registry->etc_amanda . '*/logs/log')) + count(glob(ZMC::$registry->etc_amanda . '*/logs/amdump'))))
 			||	(!$checkAll && (file_exists($prefix =ZMC::$registry->etc_amanda . self::getName() . '/logs/log') || file_exists($prefix . '/logs/amdump'))))
-			$pm->addWarning('A backup or restore operation is in progress. Some kinds of edits may cause the operation to fail.');
+			$pm->addWarning('一个备份/还原操作正在进行中，此时修改配置可能导致上述操作失败。');
 	}
 
 	public static function licenseCheck(ZMC_Registry_MessageBox $pm, &$status, $name = null)
@@ -1437,11 +1437,7 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 			$list = '';
 			foreach($lstats['dles_over_limit'][$name] as $type => $ids)
 				$list .= "\n * backup type $type: " . implode(', ', array_keys($ids));
-			$pm->addEscapedError("Some of the DLEs in the backup set '$name' are not covered by a valid, unexpired license.  Please visit the Zmanda Network store, or delete DLEs exceeding the allowed limits determined from the installed license.  See the "
-				. ZMC::getPageUrl($pm, 'Admin', 'licenses')
-				. ' for license details.<br />Please see the '
-				. ZMC::getPageUrl($pm, 'Backup', 'what')
-				. ' for details about the affected DLEs: ' . ZMC::escape($list));
+			$pm->addEscapedError("备份集 '$name' 中部分备份项没有得到授权。 ");
 			return false;
 		}
 		return true;
@@ -1473,7 +1469,7 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 	{
 		try
 		{
-			ZMC::auditLog($msg = $_SESSION['user'] . " aborted backup/restore/vault run for backup set '$name'.");
+			ZMC::auditLog($msg = $_SESSION['user'] . " 终止了备份任务 '$name' 的运行.");
 			ZMC_ProcOpen::procOpen('amcleanup', ZMC::getAmandaCmd('amcleanup'),
 				  array('-k', '-r', $name), $stdout, $stderr, "Error status returned when aborting: $name.");
 			$pm->addMessage($msg);
@@ -1681,7 +1677,7 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 		else
 		{
 			$vation = (empty($set['active']) ? 'Activate+Now' : 'Deactivate+Now');
-			$highlight = 'class="zmcHoverHighlight"';
+			$highlight = 'class="wocloudHoverHighlight"';
 		}
 
 		$img = "<img style=\"vertical-align:middle;\" title='$vation' $highlight src='/images/icons/power-"
@@ -1699,7 +1695,7 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 				$img .= '<img style="vertical-align:middle;" title="Backup Running" src="/images/icons/icon_calendar_progress.gif" height="18" width="20" />';
 		}
 		if (!empty($set['restore_running']))
-			$img .= '<img style="vertical-align:middle;" title="Restore Running" src="/images/icons/icon_restore.gif" height="16" width="16" />';
+			$img .= '<img style="vertical-align:middle;" title="还原中" src="/images/icons/icon_restore.gif" height="16" width="16" />';
 		
 		
 		if (empty($encName))
@@ -1714,8 +1710,8 @@ error_log(__FILE__ . __LINE__ . __FUNCTION__);
 		if (count($dirContents = scandir($dirName = ZMC::$registry->etc_amanda . $name . '/index')) > 2)
 			return true;
 
-		$pm->addMessage("This backup set, \"$name\", has no backups.");
-		$pm->addDetail("\"$dirName\" is empty.  Thus, no Amanda indexes exist for this backup set.  If the backup media still exists, and has not been overwritten, a manual restore might be possible.");
+		$pm->addMessage("备份集 \"$name\"  目前还没有备份数据。");
+		$pm->addDetail("\"$dirName\" 为空，因而该备份集没有备份索引记录存在，如果备份介质还存在，可以尝试手动还原。");
 		return false;
 	}
 
@@ -1893,16 +1889,16 @@ if ZMC is re-installed.');
 					$result = str_replace("\n", ' at ', file_get_contents("$amdumpFn.result"));
 					$return = self::FINISHED;
 					if ($result[0] === '0')
-						$pm->addMessage("Backup finished already! Total time: " . ($sleep * 0.25) . ' seconds');
+						$pm->addMessage("备份完成，总消耗时间为： " . ($sleep * 0.25) . ' seconds');
 					else
 					{
-						$pm->addError("Backup finished already, but a problem occurred: code #$result ($sleep)"
+						$pm->addError("备份完成，但是发生了一个问题，问题代码为： #$result ($sleep)"
 							. (" See $amdumpFn.result: "  . file_get_contents($amdumpFn)));
 						$return = self::FAILED;
 					}
 
 					if (empty($pid)) 
-						$pm->addError("Finished backup run, but there is a problem with the backup monitor ($sleep).");
+						$pm->addError("备份完成，但是备份监控有点问题。($sleep).");
 
 					if ('OK' !== ($fatal = self::updateLastDumpStatus($pm, $config)))
 						$pm->addError($fatal);
@@ -1913,8 +1909,8 @@ if ZMC is re-installed.');
 			}
 
 			if (empty($pid)) 
-				$pm->addError("Started backup, but there is a problem with the backup monitor ($sleep).");
-			$pm->addWarning('Backup running ...');
+				$pm->addError("开始备份，但是备份监控存在一点问题($sleep).");
+			$pm->addWarning('正在执行备份 ...');
 		}
 		catch (Exception $e) 
 		{
@@ -2068,7 +2064,7 @@ if ZMC is re-installed.');
 			if($vaultedOnly)
 				$pm->addMessage("No vaults found.");
 			else
-				$pm->addMessage("No backups found.");
+				$pm->addMessage("暂时没有发现备份");
 			return $tl;
 		}
 
@@ -2341,10 +2337,10 @@ if ZMC is re-installed.');
 		try
 		{
 			if (empty($pm->selected_name)) 
-				$pm->addInternal('No backup set selected. Please select a backup set and try again.');
+				$pm->addInternal('请先选择备份集');
 			$set = ZMC_BackupSet::getByName($pm->selected_name);
 			if (empty($set) || empty($set['profile_name'])) 
-				$pm->addInternal("Backup set {$pm->selected_name} not found.   Please select a backup set and try again.", print_r($set, true));
+				$pm->addInternal("没找到备份集 {$pm->selected_name} 请选择备份集后重试.", print_r($set, true));
 
 			if(!array_key_exists('binding_conf', $data))    
 				$data = array('binding_conf' => $data); 

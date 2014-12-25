@@ -17,12 +17,12 @@ class ZMC_Vault_What extends ZMC_Vault
 	private $confDles = null;
 	
 	protected $zmc_type_class = 'ZMC_Type_What';
-	protected $defaultEditAction = 'Create';
+	protected $defaultEditAction = 'New';
 	
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Vault', 'ZMC - What to Vault', 'what');
+		ZMC_HeaderFooter::$instance->header($pm, 'Vault', '云备份 - What to Vault', 'what');
 		$whatPage = new self($pm);
 		$whatPage->ymlFilePath = ZMC::$registry->etc_amanda . $pm->selected_name . DIRECTORY_SEPARATOR . 'jobs'
 				. DIRECTORY_SEPARATOR . 'vault' . DIRECTORY_SEPARATOR . 'Vault-default.yml';
@@ -49,7 +49,7 @@ class ZMC_Vault_What extends ZMC_Vault
 
 		$licenses = ZMC_License::readLicenses($pm);
 		if ($licenses['licenses']['zmc']['Remaining']['vault'] <= 0) {
-			$pm->addError("You do not have the license for 'Vault' feature. Please contact Zmanda Support for more information.");
+			$pm->addError("You do not have the license for 'Vault' feature. Please contact Support for more information.");
 			return 'MessageBox';
 		}
 		
@@ -76,12 +76,12 @@ EOD
   			$pm->state = $state;
   		$redirectPage = '';
   		
-  		if($pm->state === 'Create' && file_exists($this->ymlFilePath))
+  		if($pm->state === 'New' && file_exists($this->ymlFilePath))
   			$pm->state = 'Edit';
   		
  		switch($pm->state)
 		{	
-			case 'Create':
+			case 'New':
 			case 'Cancel':
 				$pm->vault_job = self::$defaults;
 				unlink($this->ymlFilePath);

@@ -353,8 +353,8 @@ class ZMC_Yasumi_DeviceBinding extends ZMC_Yasumi_DeviceProfile
 		{
 			$stats = stat($this->ymlFilename);
 			if ($stats['size'] !== 0)
-				throw new ZMC_Exception_YasumiFatal($this->reply->addError('Device settings already exists for '
-					. $this->getAmandaConfName() . ' at: ' . $this->ymlFilename));
+				throw new ZMC_Exception_YasumiFatal($this->reply->addError('与备份集 '. $this->getAmandaConfName() . 
+				' 绑定的设备配置文件已存在： ' . $this->ymlFilename));
 		}
 
 		$this->data['binding_conf']['date_created_comment'] = ZMC::humanDate();

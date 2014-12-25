@@ -17,7 +17,7 @@ class ZMC_Vault_When extends ZMC_Vault
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Vault', 'ZMC - Schedule Vault Jobs', 'when');
+		ZMC_HeaderFooter::$instance->header($pm, 'Vault', '云备份 - Schedule Vault Jobs', 'when');
 		ZMC_HeaderFooter::$instance->injectYuiCode("
 			var o=gebi('zmc_schedule_type');
 			if (o) o.onchange();
@@ -33,7 +33,7 @@ class ZMC_Vault_When extends ZMC_Vault
 		
 		$licenses = ZMC_License::readLicenses($pm);
 		if ($licenses['licenses']['zmc']['Remaining']['vault'] <= 0) {
-			$pm->addError("You do not have the license for 'Vault' feature. Please contact Zmanda Support for more information.");
+			$pm->addError("You do not have the license for 'Vault' feature. Please contact Support for more information.");
 			return 'MessageBox';
 		}
 		

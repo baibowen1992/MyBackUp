@@ -80,11 +80,11 @@ class ZMC_S3
 				$success = self::uploadCert($pm);
 				if ($success !== false)
 				{
-					$pm->addMessage('Certificate uploaded to "' . self::getS3fn() . '"');
+					$pm->addMessage('整数上传到 "' . self::getS3fn() . '"');
 					return;
 				}
 			}
-			else
+/*			else
 			{
 				ZMC_ZmandaNetwork::getAndSave($pm, 'S3', self::getS3fn(), "Unable to install certificate at "
 					. ZMC::$registry->s3certs_path . '.  Check directory and file permissions.  Then try again.');
@@ -102,11 +102,12 @@ class ZMC_S3
 						return $pm->addError('Unable to save certificate to "' . self::getS3fn() . '"');
 					if (empty($results['errors']))
 					{
-						$pm->addMessage('Certificate downloaded from Zmanda Network and saved as "' . self::getS3fn() . '"');
+						$pm->addMessage('Certificate downloaded from wocloud and saved as "' . self::getS3fn() . '"');
 						return;
 					}
 				}
 			}
+*/
 		}
 		ZMC_Loader::renderTemplate('AWS_Certificate', $pm);
 		ZMC_HeaderFooter::$instance->footer(); 

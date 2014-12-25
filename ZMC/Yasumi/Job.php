@@ -418,12 +418,12 @@ public function time_diff($start_time = 0 , $end_time = 0){
 		return;
 	if($total_time > 3600){
 		$hour = number_format($total_time / 3600, 2, '.', '');
-		return "($min hours)";
+		return "($min 小时)";
 	}elseif($total_time > 60){
 		$min = number_format($total_time / 60, 2, '.', '');
-		return "($min minutes)";
+		return "($min 分钟)";
 	}else{
-		return "($total_time seconds)";
+		return "($total_time 秒)";
 	}
 	return;
 }

@@ -1,13 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title>ZMC - Device Management</title>
+	<title>云备份 - 设备管理</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=8" />
 		<link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon" />
-	<script src="/scripts/zmc-utils.js"></script>
+	<script src="/scripts/wocloud-utils.js"></script>
 
-	<link rel="stylesheet" href="/scripts/zmc.css" type="text/css" /></head>
+	<link rel="stylesheet" href="/scripts/wocloud.css" type="text/css" /></head>
 <body id="body" class="yui-skin-sam" bgcolor="#FFFFFF">
 	<div style="border-bottom:1px solid; background-color:white;">
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -15,8 +15,8 @@
 			<td width="137">
 				<img 
 					src="/images/global/logo-zmc-aee.png"
-					alt="Zmanda - Open Source Backup" 
-					title="Zmanda - Open Source Backup"
+					alt="云备份" 
+					title="云备份"
 					width="194" 
 					height="56" 
 					border="0" 
@@ -42,15 +42,15 @@
 
 <img style="width:1000px; height:22px;" src="/images/navigation/subnav.png" alt="" />
 
-<div class="headerLinks" style="position:absolute; top:61px; left:15px; z-index:999"><a href="/ZMC_Admin_About">About</a>&nbsp;|&nbsp;<a href="http://docs.zmanda.com/Project:Amanda_Enterprise_3.3/ZMC_Users_Manual" target="_blank">User Guide</a>&nbsp;|&nbsp;<a href="http://www.zmanda.com/feedback.php?feature=Amanda_Enterprise_Edition&email=&r=2009-12-9:r2323">Feedback</a></div><!-- headerLinks -->
+<div class="headerLinks" style="position:absolute; top:59px; left:15px; z-index:999"><a href="/ZMC_Admin_About">关于本系统</a>&nbsp;|&nbsp;<a href="http://docs.wocloud.cn" target="_blank">帮助</a>&nbsp;|&nbsp;
+<!-- headerLinks -->
 
 <div id="subNav">
-	<ol><li><a href='/ZMC_Admin_Users'>users</a></li>
-		<li><a href='/ZMC_Admin_BackupSets'>backup sets</a></li>
-		<li><a href='/ZMC_Admin_BackupSets'>devices</a></li>
-		<li><a href='/ZMC_Admin_Preferences'>preferences</a></li>
-		<li><a href='/ZMC_License'>licenses</a></li>
-		<li id='current'>internal error</li>
+	<ol>
+		<li><a href='/ZMC_Admin_BackupSets'>备份集</a></li>
+		<li><a href='/ZMC_Admin_BackupSets'>存储设备</a></li>
+		<li><a href='/ZMC_Admin_Preferences'>设置</a></li>
+		<li id='current'>内部错误</li>
 
 	</ol>
 </div><!-- subNav -->
@@ -58,37 +58,37 @@
 
 
 
-<div class="zmcWindow" style="margin:10px auto; width:516px; z-index:1005;">
-	<div class='zmcTitleBar ' style='position:relative; '>Internal Error
-		<a class='zmcHelpLink' target='_blank' href='http://docs.zmanda.com/Project:Amanda_Enterprise_3.3/ZMC_Users_Manual/Internal_Error'></a>
+<div class="wocloudWindow" style="margin:10px auto; width:516px; z-index:1005;">
+	<div class='wocloudTitleBar ' style='position:relative; '>内部错误
+		<a class='wocloudHelpLink' target='_blank' href='http://docs.wocloud.cn'></a>
 	</div>
 
-	<div class="zmcMessageBox"  id="zmcMessageBox">
+	<div class="wocloudMessageBox"  id="wocloudMessageBox">
 		<div style="clear:both"></div>
-		<div class='zmcUserInternalErrors' style='width:477px;' id='msgBoxWarns'>
-			<div class="zmcMsgBox" onclick="gebi('msgBoxWarns').style.display='none';" >X</div>
-			<div class="zmcMsgWarnErr"><img onclick="this.parentNode.style.display = 'none'" style="cursor:pointer" src="/images/global/calendar/icon_calendar_failure.gif" style="vertical-align:text-top; padding-right:3px" alt="ERROR" />
-				An internal error has caused the ZMC to stop functioning properly.
+		<div class='wocloudUserInternalErrors' style='width:477px;' id='msgBoxWarns'>
+			<div class="wocloudMsgBox" onclick="gebi('msgBoxWarns').style.display='none';" >X</div>
+			<div class="wocloudMsgWarnErr"><img onclick="this.parentNode.style.display = 'none'" style="cursor:pointer" src="/images/global/calendar/icon_calendar_failure.gif" style="vertical-align:text-top; padding-right:3px" alt="ERROR" />
+				一个内部错误导致备份管理系统无法正产运行。
 			</div>
 		</div>
 		<!-- insert internal_error.php -->
 		<div style="clear:both"></div>
-	</div><!-- zmcMessageBox -->
+	</div><!-- wocloudMessageBox -->
 
-	<div class="zmcFormWrapperLeft">
-		<img class="zmcWindowBackgroundimage" src="/images/global/confirmation_failure.png" />
+	<div class="wocloudFormWrapperLeft">
+		<img class="wocloudWindowBackgroundimage" src="/images/global/confirmation_failure.png" />
 		<div class="storyBodyCopy" style="min-height:55px;">
-			If this is a recurring problem, please contact the Zmanda support team with debug logs ready as described in, <a href="http://docs.zmanda.com/Project:Amanda_Enterprise_3.3/ZMC_Users_Manual/Invoking_Support" target="_blank">Invoking Support</a>. <br /><br />In the meantime, internal errors such as this can often be resolved by following the troubleshooting steps described <a href="http://network.zmanda.com/lore/article.php?id=392" target="_blank">here</a>.
+			如果这是一个多次发生的错误，请联系管理员，并按照下述方法收集debug日志。<a href="http://docs.wocloud.cn" target="_blank">技术支持</a>. <br /><br />同时，部分内部错误可以参见常见错误列表里面的步骤去解决。<a href="http://network.wocloud.cn/lore/article.php?id=392" target="_blank">常见错误</a>.
 		</div>
 		<div style="clear:both"></div>
 	</div>
 
-	<div class="zmcButtonBar">
+	<div class="wocloudButtonBar">
 		<form action="/ZMC_Admin_BackupSets" method="post">
 			<input type="submit" name="continue" value="Continue" />
 		</form>
 	</div>
-</div><!-- zmcWindow -->
+</div><!-- wocloudWindow -->
 
 <div class="confirmationWindow" id="confirmationWindow"></div>
 </body>

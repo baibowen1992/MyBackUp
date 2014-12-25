@@ -15,10 +15,10 @@
 global $pm;
 echo "\n<form method='post' action='$pm->url'>\n";
 ?>
-<div class="zmcLeftWindow">
-	<? ZMC::titleHelpBar($pm, ($pm->edit ? 'Edit Object (DLE) List' : 'Create Object (DLE) List'), $pm->state); ?>
-	<img class="zmcWindowBackgroundimage" src="/images/3.1/<?= ($pm->edit ? 'edit' : 'add') ?>.png" />
-	<div class="zmcFormWrapper zmcLongerInput">
+<div class="wocloudLeftWindow">
+	<? ZMC::titleHelpBar($pm, ($pm->edit ? '编辑备份项' : '新建备份项'), $pm->state); ?>
+	<img class="wocloudWindowBackgroundimage" src="/images/3.1/<?= ($pm->edit ? 'edit' : 'add') ?>.png" />
+	<div class="wocloudFormWrapper wocloudLongerInput">
 <?
 		if (ZMC_User::hasRole('Administrator'))
 			ZMC_Loader::renderTemplate('OwnerSelect', array(
@@ -36,7 +36,7 @@ echo "\n<form method='post' action='$pm->url'>\n";
 			<input
 				type="text"
 				name="name<? if ($pm->edit) echo 'Disabled'; ?>"
-   				title="List names must be unique.  Allowable characters are dash, underscore and alphanumeric characters."
+   				title="名字必须是唯一的，支持的字符有短线、下划线的字母数字字符."
 				onKeyUp="o=gebi('btn'); if(o) o.disabled=false"
 				<?
 					if ($pm->edit)
@@ -47,38 +47,38 @@ echo "\n<form method='post' action='$pm->url'>\n";
 			<label>Comments:</label>
 			<textarea
    				name="comments"
-   				title="List description"
+   				title="描述"
    				cols="31"
    				rows="4"
 				onKeyUp="o=gebi('btn'); if(o) o.disabled=false"
 			><?  if ($pm->edit) echo $pm->edit['comments']; ?></textarea>
 		</div>
-	</div><!-- zmcFormWrapper -->
-	<div class="zmcButtonBar">
-		<input id="btn" disabled="disabled" type="submit" name="action" value="<?= ($pm->edit ? 'Update' : 'Add') ?>" />
-  		<input type="submit" value="Cancel" id="cancelButton" name="action"/>
+	</div><!-- wocloudFormWrapper -->
+	<div class="wocloudButtonBar">
+		<button id="btn" disabled="disabled" type="submit" name="action" value="<?= ($pm->edit ? 'Update' : 'Add') ?>" /><?= ($pm->edit ? '更新' : '创建') ?></button>
+  		<button type="submit" value="Cancel" id="cancelButton" name="action"/>取消</button>
 	</div>
-</div><!-- zmcLeftWindow -->
+</div><!-- wocloudLeftWindow -->
 <?
 
 
 if (empty($pm->rows))
 	return print("<div style='height:250px;'>&nbsp;</div>\n</form>\n");
 
-ZMC::titleHelpBar($pm, $pm->goto . "View, add, edit, and delete lists of objects (DLEs) to backup", '', 'zmcTitleBarTable');
+ZMC::titleHelpBar($pm, $pm->goto . "查看、新增、编辑、删除备份项", '', 'wocloudTitleBarTable');
 ?>
 	<div class="dataTable">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<? ZMC_Form::thAll() ?>
-				<th title='List Name'><a href='<?= $pm->colUrls['id'] ?>'>List Name (click to open)<? if ($pm->sortImageIdx === 'id') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Creation Date'><a href='<?= $pm->colUrls['creation_date'] ?>'>Creation Date<? if ($pm->sortImageIdx === 'creation_date') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Objects'><a href='<?= $pm->colUrls['objects'] ?>'>Objects<? if ($pm->sortImageIdx === 'objects') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Live'><a href='<?= $pm->colUrls['live'] ?>'>Live<? if ($pm->sortImageIdx === 'live') echo $pm->sortImageUrl; ?></a></th>
+				<th title='列表名'><a href='<?= $pm->colUrls['id'] ?>'>列表名(点击打开)<? if ($pm->sortImageIdx === 'id') echo $pm->sortImageUrl; ?></a></th>
+				<th title='创建日期'><a href='<?= $pm->colUrls['creation_date'] ?>'>创建日期<? if ($pm->sortImageIdx === 'creation_date') echo $pm->sortImageUrl; ?></a></th>
+				<th title='对象'><a href='<?= $pm->colUrls['objects'] ?>'>对象<? if ($pm->sortImageIdx === 'objects') echo $pm->sortImageUrl; ?></a></th>
+				<th hidden="hidden" title='Live'><a href='<?= $pm->colUrls['live'] ?>'>Live<? if ($pm->sortImageIdx === 'live') echo $pm->sortImageUrl; ?></a></th>
 				<? if (ZMC_User::hasRole('Administrator')) { ?>
-				<th title='Owner'><a href='<?= $pm->colUrls['user'] ?>'>Owner<? if ($pm->sortImageIdx === 'user') echo $pm->sortImageUrl; ?></a></th>
+				<th title='所属者'><a href='<?= $pm->colUrls['user'] ?>'>所属者<? if ($pm->sortImageIdx === 'user') echo $pm->sortImageUrl; ?></a></th>
 				<? } ?>
-				<th title='Comments'><a href='<?= $pm->colUrls['comments'] ?>'>Comments<? if ($pm->sortImageIdx === 'comments') echo $pm->sortImageUrl; ?></a></th>
+				<th title='备注'><a href='<?= $pm->colUrls['comments'] ?>'>备注<? if ($pm->sortImageIdx === 'comments') echo $pm->sortImageUrl; ?></a></th>
 			</tr>
 <?
 $i = 0;
@@ -125,7 +125,7 @@ echo "      </table>
 
 ZMC_Loader::renderTemplate('tableButtonBar', array('goto' => $pm->goto, 'buttons' => array(
 		'Refresh Table' => true,
-		'Edit' => false,
+		'Edit' => true,
 		'Open' => "onClick=\"
 			noBubble(event)
 			var b; var o=gebi('dataTable').getElementsByTagName('input');
@@ -142,5 +142,5 @@ ZMC_Loader::renderTemplate('tableButtonBar', array('goto' => $pm->goto, 'buttons
 			return false\"",
 		'Duplicate' => false,
 		'Merge' => false,
-		'Delete' => false,
+		'Delete' => true,
 	)));

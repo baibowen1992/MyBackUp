@@ -111,7 +111,7 @@ class ZMC_Yasumi_Stats extends ZMC_Yasumi
 		$this->reply['licenses'] = array('zmc' => array()); 
 		$oneWeek = 60 * 60 * 24 * 7;
 		if (!file_exists($fn = self::ZMC_LICENSE_FILENAME))
-			throw new ZMC_Exception_YasumiFatal($this->reply->addInternal("Zmanda License not found. Please install the license file to the location: $fn.  Download your license from http://network.zmanda.com/")); 
+			throw new ZMC_Exception_YasumiFatal($this->reply->addInternal("License not found. Please install the license"));
 		if (!is_readable($fn = self::ZMC_LICENSE_FILENAME))
 			throw new ZMC_Exception_YasumiFatal($this->reply->addInternal("Can not read license file \"$fn\". " . ZMC::getFilePermHelp($fn)));
 		if (false === ($lines = file($fn = self::ZMC_LICENSE_FILENAME, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)))

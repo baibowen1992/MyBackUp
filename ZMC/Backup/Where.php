@@ -18,13 +18,12 @@ protected $zmc_type_class = 'ZMC_Type_Where';
 
 public static function run(ZMC_Registry_MessageBox $pm)
 {
-	ZMC_HeaderFooter::$instance->header($pm, 'Backup', 'ZMC - Where to Backup', 'where');
-	$pm->addDefaultInstruction('Define and edit device settings for backup sets (how backup sets use storage devices).');
+	ZMC_HeaderFooter::$instance->header($pm, 'Backup', '云备份 - 选择备份存储设备', 'where');
+	$pm->addDefaultInstruction('为备份集设置和编辑存储设备信息 (备份集如何使用存储设备)。');
 	$wherePage = new self($pm);
 
-
 	$wherePage->runState($pm);
-	if (!empty($pm->binding))
+    if (!empty($pm->binding))
 	{
 		$names = ZMC_Type_Devices::getPrettyNames();
 		$pm->pretty_name = $names[$pm->binding['_key_name']];
@@ -32,17 +31,17 @@ public static function run(ZMC_Registry_MessageBox $pm)
 		if($pm->binding['_key_name'] === "changer_library"){
 			$verify_lock = ZMC::$registry->etc_amanda. $pm->binding['config_name']. "/binding-".$pm->binding['private']['zmc_device_name'].".verify_tape_drive_lock";
 			if(file_exists($verify_lock)){
-				$pm->addMessage("<img id='progress_spinner' style='float:right; margin:3px;' title='Verification of Tape drive is in Progress' src='/images/global/calendar/icon_calendar_progress.gif'>Verification of tape drive is in progress. This may require a very long time to check every tape.");
-				$pm->addWarning('Warning: Please ensure that only one user at a time is interacting with the forms on the "Backup Where" page. Please wait for the requested operation to complete before starting a new operation.');
+				$pm->addMessage("<img id='progress_spinner' style='float:right; margin:3px;' title='验证设备是否使用中' src='/images/global/calendar/icon_calendar_progress.gif'>验证存储设备是否使用中，这将花费不少的时间去检查每一个设备。");
+				$pm->addWarning('警告：请确保只有一个用户在本页面执行交互操作，请等到操作完成后再进行下一个操作。');
 			}
 		}
 	}
 	if ($pm->state === 'Use1' && empty($pm->device_profile_list))
 	{
-		$pm->addError('Please configure a device.');
+		$pm->addError('请添加存储设备。');
 		return ZMC::redirectPage('ZMC_Admin_Devices', $pm);
 	}
-	$pm->addMessage('After clicking "Add/Update", ZMC will try to connect to the device. Depends on the connection, this operation may take some time to finish.');
+	$pm->addMessage('在选好存储设备点击 添加 后，系统会尝试连接存储设备，受连接速度影响，这个过程可能花费一些时间。');
 	$wherePage->getPaginator($pm);
 	if (!empty($pm->binding) && $wherePage->isTape($pm, $pm->binding))
 		ZMC_HeaderFooter::$instance->injectYuiCode('YAHOO.zmc.utils.show_lsscsi()');
@@ -52,17 +51,21 @@ public static function run(ZMC_Registry_MessageBox $pm)
 
 protected function runState(ZMC_Registry_MessageBox $pm, $state = null)
 {
+    //echo "==============>>3333333<<=====================";
 	if (!empty($state))
 		$pm->state = $state;
-
-
+    //test zhoulin 20141127
+    //$pm->state = 'Use';
+    //$pm->selected_device='dtest22222';
+    //print_r($pm);
+    //第一次点击目的地导航时依次跑了Edit->runState->Use1;
 	switch($pm->state)
 	{
 		case 'Expert':
 			reset($_POST['selected_ids']);
 			return ZMC::headerRedirect("/ZMC_Admin_Advanced?form=adminTasks&action=Apply&command=/etc/amanda/$_REQUEST[config_name]/binding-" . $_REQUEST['private:zmc_device_name'] . ".yml", __FILE__, __LINE__);
 
-		case 'Update': 
+		case 'Update':
 			if($_POST['_key_name'] === 'changer_library'){
 				$reply = ZMC_Yasumi::operation($pm, array('pathInfo' => '/Tape-Drive/discover_changers'));
 				$pm->merge($reply);
@@ -130,7 +133,7 @@ protected function runState(ZMC_Registry_MessageBox $pm, $state = null)
 
 			break;
 
-		case 'Add': 
+		case 'Add':
 			if($_POST['_key_name'] === 'changer_library'){
 				 $reply = ZMC_Yasumi::operation($pm, array('pathInfo' => '/Tape-Drive/discover_changers'));
 				 $pm->merge($reply);
@@ -153,7 +156,7 @@ protected function runState(ZMC_Registry_MessageBox $pm, $state = null)
 			{
 				$pm->selected_device = (empty($_REQUEST['private:zmc_device_name']) ? '' : $_REQUEST['private:zmc_device_name']);
 				if (	empty($pm->selected_name) || empty($pm->selected_device)
-					|| (!empty($_GET['action']) && $_GET['action'] === 'Add' && empty($_REQUEST['config_name'])))
+					|| (!empty($_GET['action']) && $_GET['action'] === '添加' && empty($_REQUEST['config_name'])))
 				{
 					$this->runState($pm, 'Use1');
 					break;
@@ -178,7 +181,7 @@ protected function runState(ZMC_Registry_MessageBox $pm, $state = null)
 					if (empty($pm->tapedev_list))
 						break;
 		
-				$pm->next_state = "Add";
+				$pm->next_state = "添加";
 				$pm->state = "Use";
 				break;
 
@@ -212,15 +215,17 @@ protected function runState(ZMC_Registry_MessageBox $pm, $state = null)
 			if ($pm->state === 'Cancel')
 			{
 				ZMC_BackupSet::cancelEdit();
-				$pm->addWarning("Edit/Add cancelled.");
+				$pm->addWarning("编辑/添加 取消.");
 			} 
 		case 'Use1':
 			$pm->state = 'Use1';
 			$adminDevice = new ZMC_Admin_Devices($pm);
+            //下面会获取所有存储设备列表，将其存入$pm->device_profile_list中
 			$adminDevice->getDeviceList($pm, empty($_REQUEST['selected_device']) ? '' : $_REQUEST['selected_device']);
+            //print_r($pm);
 			break;
 
-		case 'Use': 
+		case 'Use':
 			$pm->selected_device = (empty($_REQUEST['selected_device']) ? '' : $_REQUEST['selected_device']);
 			if (	empty($pm->selected_name) || empty($pm->selected_device)
 				|| (!empty($_GET['action']) && $_GET['action'] === 'Use' && empty($_GET['ConfigurationName'])))
@@ -249,7 +254,7 @@ protected function runState(ZMC_Registry_MessageBox $pm, $state = null)
 			}
 			if (!strncmp($pm->binding['_key_name'], 'changer', 7) || !strncmp($pm->binding['_key_name'], 'tape', 4))
 				if (empty($pm->tapedev_list))
-					$pm->addEscapedWarning('No devices found.  Please visit ' . ZMC::getPageUrl($pm, 'Admin', 'devices') . ' to configure devices.');
+					$pm->addEscapedWarning('没有存储设备，请去管理页面新建存储设备');
 			break;
 	}
 }
@@ -311,10 +316,10 @@ public function getPaginator(ZMC_Registry_MessageBox $pm)
 public function validateSlotRange($range, ZMC_Registry_MessageBox $pm, $max_slots=''){
 	if(!empty($range)){
 		if(!preg_match('/^((\d+(-\d+)?,?)?){1,}$/', $range)){
-			$pm->addError("Please specify slot range in correct format i.e 1-4,6-8,12,17,34-21,etc...");	
+			$pm->addError("请指定正确的格式 i.e 1-4,6-8,12,17,34-21,etc...");
 		}else{
 			$range = rtrim($range, " , ");
-			$err_msg = "Slot range should be within in 1-$max_slots slots.";
+			$err_msg = "范围应该介于 1-$max_slots 内.";
 			if(preg_match('/,/', $range)){
 				$spl_slot = explode(",", $range);
 				foreach($spl_slot as $key => $value){

@@ -18,8 +18,8 @@ class ZMC_Restore_Now extends ZMC_Restore
 	public static function runWrapped(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Restore', 'ZMC - Where would you like to restore to?', 'now');
-		$pm->addDefaultInstruction('Start a restore task.');
+		ZMC_HeaderFooter::$instance->header($pm, 'Restore', '云备份 - 执行还原操作', 'now');
+		$pm->addDefaultInstruction('开始执行恢复任务');
 		if (!($configName = ZMC_BackupSet::assertSelected($pm)))
 			return 'MessageBox'; 
 		if (!ZMC_BackupSet::hasBackups($pm, $configName))
@@ -36,17 +36,17 @@ class ZMC_Restore_Now extends ZMC_Restore
 
 		if (empty($job->restore_job['configured_how']) && ($job->isConflictResolutionConfigurable()))
 		{
-			$pm->addEscapedError('Before starting a restore, please configure how to perform the restore first.');
+			$pm->addEscapedError('在正式执行恢复前，请首先确认已经配置过怎样恢复。');
 			return ZMC::redirectPage('ZMC_Restore_How', $pm);
 		}
 		
 		$job->createRestoreLists();
 		$job->mergeTapeStats();
 		if ($job->restore_job['zmc_type'] === 'windowsexchange' && ($job->restore_job['target_dir_selected_type'] == ZMC_Type_AmandaApps::DIR_ORIGINAL))
-			$pm->addMessage("Before starting a restore, use the Exchange System Management Tool to manually dismount all the databases (Stores) in the Storage group selected for restoration.\n\nThen, select the option \"This database can be overwritten by a restore\" from the Store properties.\nAlso disable Circular Logging, if enabled.\n\nLastly, once the Storage group(s) are dismounted, click on the OK button.");
+			$pm->addMessage("在开始还原前, use the Exchange System Management Tool to manually dismount all the databases (Stores) in the Storage group selected for restoration.\n\nThen, select the option \"This database can be overwritten by a restore\" from the Store properties.\nAlso disable Circular Logging, if enabled.\n\nLastly, once the Storage group(s) are dismounted, click on the OK button.");
 
 		if ($job->restore_job['host_type'] !== ZMC_Type_AmandaApps::HOST_TYPE_WINDOWS)
-			$pm->addWarning('If SELinux is running on the client, SELinux will be disabled (non-enforcing) for the duration of the restoration.');
+			$pm->addWarning('如果客户端有SELinux，在恢复过程中它将会被禁用(non-enforcing)。');
 
 		$template = $job->runState($pm);
 		if (ZMC::$registry->dev_only) $pm->addDetail($pm->restore_state);
@@ -101,7 +101,7 @@ class ZMC_Restore_Now extends ZMC_Restore
 			
 			if (!empty($pm->disabled))
 			{
-				$pm->addEscapedError("The storage device '" . $pm->set['profile_name'] . "' is not covered by a valid, unexpired license.  Please visit the Zmanda Network store, or delete DLEs exceeding the allowed limits determined from the installed license.  See the "
+				$pm->addEscapedError("存储设备'" . $pm->set['profile_name'] . "的许可证已过期。"
 				. ZMC::getPageUrl($pm, 'Admin', 'licenses')
 				. ' for license details.<br />Please see the '
 				. ZMC::getPageUrl($pm, 'Backup', 'what')
@@ -111,13 +111,13 @@ class ZMC_Restore_Now extends ZMC_Restore
 
 			if (!empty($pm->set['backup_running'])) 
 			{
-				$pm->addWarning('A backup job is running now. Restores from Clouds may take longer than usual, and restores from Changer Libraries may fail, if the tape drive used is busy.');
+				$pm->addWarning('目前有备份正在运行，从云端恢复较平常而言可能会花费很长时间restores from Changer Libraries may fail, if the tape drive used is busy.');
 				
 			}
 
 			if ($pm->restore_state['running'])
 			{
-				$pm->addWarnError('Restore job already running.  Can not begin a new restore.');
+				$pm->addWarnError('恢复任务正在执行中，不能再启动新的恢复任务。');
 				if (ZMC::$registry->safe_mode) return;
 			}
 
@@ -128,9 +128,9 @@ class ZMC_Restore_Now extends ZMC_Restore
 			{
 
 				if ($this->restore_job['client'] === $this->restore_job['target_host'])
-					$pm->addMessage('Restoration to original host and original location requested.');
+					$pm->addMessage('恢复到源主机源目录的请求');
 				else
-					$pm->addWarning('Restoration to different host, but original location requested.');
+					$pm->addWarning('恢复到不同主机但是源目录的请求。');
 
 				$textKey = 'conflict_file_text';
 				$policyKey = 'conflict_file_selected';
@@ -149,7 +149,7 @@ class ZMC_Restore_Now extends ZMC_Restore
 					$policyKey = 'conflict_dir_selected';
 				}
 
-				$pm->prompt = "Restore on top of existing location$overwrite?<br />\nAre you sure?";
+				$pm->prompt = "还原到已经存在的还原路径下$overwrite?<br />\n确定?";
 				$pm->confirm_action = 'RestoreConfirm';
 				$pm->yes = 'Restore On Top of Original Location';
 				$pm->no = 'Cancel';
@@ -165,7 +165,7 @@ class ZMC_Restore_Now extends ZMC_Restore
 		if (isset($_POST['restore_ok']))
 		{
 			if (empty($this->restore_job['task_id']))
-				return $pm->addError("Cannot complete request.  Restore task unknown.");
+				return $pm->addError("无法完成请求，还原任务未知.");
 
 			$password = 'NULL';
 			if (isset($_POST['restore_password']))

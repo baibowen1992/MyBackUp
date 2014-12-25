@@ -14,22 +14,22 @@
 
 global $pm;
 if (empty($pm->zmc_type_histograms) === 0)
-	$pm->addEscapedMessage('No client licenses used.');
+	$pm->addEscapedMessage('没有任何客户端许可证');
 
 show($pm, $pm->licenses);
 ?>
 
-<div class='zmcFormWrapper' style='clear:both; padding:0'>
+<div class='wocloudFormWrapper' style='clear:both; padding:0'>
 	<?
 	if (!empty($pm->zmc_type_histograms))
 	{
-		showLicensesBy($pm, $pm->zmc_type_histograms, 'Feature', 'Hosts');
-		showLicensesBy($pm, $pm->zmc_host_histograms, 'Host', 'Features');
+		showLicensesBy($pm, $pm->zmc_type_histograms, '属性', '主机数');
+		showLicensesBy($pm, $pm->zmc_host_histograms, '主机数', '属性');
 	}
 	if (!empty($pm->zmc_device_histograms))
-		showLicensesBy($pm, $pm->zmc_device_histograms, 'Device', 'Backup Sets');
+		showLicensesBy($pm, $pm->zmc_device_histograms, '设备', '备份集');
 	?>
-	<div class="zmcButtonBar">
+	<div class="wocloudButtonBar">
 		<form>
 			<input type="button" value="OK" name="btnBack" id="btnBack" onclick="history.back()"/>
 		</form>
@@ -106,24 +106,24 @@ function show($pm, $things)
 	{
 		if (!ZMC::$registry->dev_only && ($product === 'zrm' || $product === 'nbumysql'))
 			continue;
-		$name = ($product === 'zmc' ? ZMC::$registry->name : 'Zmanda Recovery Manager for MySQL');
+		$name = ($product === 'zmc' ? ZMC::$registry->name : 'Recovery Manager for MySQL');
 		$wiki = ZMC::$registry->wiki;
 		$shopLink = ZMC::$registry->links['shopping'];
-		echo '<div class="zmcLeftWindow">';
-	    ZMC::titleHelpBar($pm, "<a href='$shopLink'>$name - Licensed Features Summary</a>", $product);
-		echo '<div class="zmcFormWrapper" style="padding:0"><form action="/Yasumi/createLicense.php" method="post">';
+		echo '<div class="wocloudLeftWindow">';
+	    ZMC::titleHelpBar($pm, "<a href='$shopLink'>云备份 - 许可证授权情况汇总</a>", $product);
+		echo '<div class="wocloudFormWrapper" style="padding:0"><form action="/Yasumi/createLicense.php" method="post">';
 		$subWindowClass = 'adminAssignPassword';
 		echo <<<EOD
 				<div class="dataTable centerHeadings">
 					<table border="0" width="633" cellspacing="0" cellpadding="0"><tbody>
 						<tr>
-							<th title='Total licensed, excluding expired (if any)' scope='col'>Licensed</th>
-							<th title='Total used' scope='col'>Used</th>
-							<th title='Total licensed remaining (not yet used)' scope='col'>Remaining</th>
-							<th title='Licensed, but expiring soon' scope='col'>Expiring</th>
-							<th title='Total expired' scope='col'>Expired</th>
-							<th title='Expires On This Date' scope='col'>Expires On</th>
-							<th title='Feature' scope='col' class="leftHeading">Feature</th>
+							<th title='总许可证数目，包含已过期。'>许可证数</th>
+							<th title='已经使用的总许可证数目'>已使用</th>
+							<th title='还剩下的许可证数目'>未使用</th>
+							<th title='即将到期的许可证'>即将过期</th>
+							<th title='已过期的许可证数'>已过期</th>
+							<th title='过期日期'>过期时间</th>
+							<th title='许可证类型' scope='col' class="leftHeading">属性</th>
 						</tr>
 EOD;
 		$i = 0;
@@ -162,12 +162,12 @@ EOD;
 			{
 				echo <<<EOD
 					<tr class='stripe$color'>
-						<td class='zmcCenterNoLeftPad' style='border-left:none'>$count[Licensed]$input</td>
-						<td class='zmcCenterNoLeftPad'>-</td>
-						<td class='zmcCenterNoLeftPad'>-</td>
-						<td class='zmcCenterNoLeftPad'>-</td>
-						<td class='zmcCenterNoLeftPad'>-</td>
-						<td class='zmcCenterNoLeftPad'>-</td>
+						<td class='wocloudCenterNoLeftPad' style='border-left:none'>$count[Licensed]$input</td>
+						<td class='wocloudCenterNoLeftPad'>-</td>
+						<td class='wocloudCenterNoLeftPad'>-</td>
+						<td class='wocloudCenterNoLeftPad'>-</td>
+						<td class='wocloudCenterNoLeftPad'>-</td>
+						<td class='wocloudCenterNoLeftPad'>-</td>
 						<td>$human</td>
 					</tr>
 EOD;
@@ -180,7 +180,7 @@ EOD;
 					'Licensed' => $count['Licensed'] > 0 ? "<img src='/images/global/calendar/icon_calendar_success.gif' title='$count[Licensed]' />" : $count['Licensed'],
 					'Used' => $count['Used'],
 					
-					'Remaining' => '<td class="zmcCenterNoLeftPad">-</td>',
+					'Remaining' => '<td class="wocloudCenterNoLeftPad">-</td>',
 					'Expiring' => ($count['Licensed'] !== '-' && ($count['Expiring'] > 0)) ? "<img src='/images/global/calendar/icon_calendar_warning.gif' title='Expiring Soon' />" : '-',
 					'Expired' => (!($count['Licensed'] > 0) && $count['Expired'] > 0) ? "<img src='/images/global/calendar/icon_calendar_failure.gif' title='Expired' />" : '-',
 					'Expires' => $count['Expires'],
@@ -192,29 +192,29 @@ EOD;
 				if ($count[$status = 'Remaining'] !== '-')
 				{
 					if ($count[$status] < '0')
-						$count[$status] = "<td class='zmcCenterNoLeftPad' style='color:#c00; background-color:#FF9; font-weight:bold;'>$count[$status]</td>";
+						$count[$status] = "<td class='wocloudCenterNoLeftPad' style='color:#c00; background-color:#FF9; font-weight:bold;'>$count[$status]</td>";
 					elseif ($count[$status] == '0')
-						$count[$status] = "<td class='zmcCenterNoLeftPad' style='color:#c00; font-weight:bold;'>$count[$status]</td>";
+						$count[$status] = "<td class='wocloudCenterNoLeftPad' style='color:#c00; font-weight:bold;'>$count[$status]</td>";
 					elseif ($count[$status] == 1)
-						$count[$status] = "<td class='zmcCenterNoLeftPad' style='color:#B24700; font-weight:bold;'>$count[$status]</td>";
+						$count[$status] = "<td class='wocloudCenterNoLeftPad' style='color:#B24700; font-weight:bold;'>$count[$status]</td>";
 					else
-						$count[$status] = "<td class='zmcCenterNoLeftPad'>$count[$status]</td>";
+						$count[$status] = "<td class='wocloudCenterNoLeftPad'>$count[$status]</td>";
 				}
 				else
-					$count['Remaining'] = '<td class="zmcCenterNoLeftPad">-</td>';
+					$count['Remaining'] = '<td class="wocloudCenterNoLeftPad">-</td>';
 
 				if ($count[$status = 'Expiring'] !== '-')
-					$count[$status] = "<span class='zmcIconWarning zmcUserErrorsText'>$count[$status]</span>";
+					$count[$status] = "<span class='wocloudIconWarning wocloudUserErrorsText'>$count[$status]</span>";
 			}
 
 			echo <<<EOD
 						<tr class='stripe$color'>
-							<td class='zmcCenterNoLeftPad' style='border-left:none'>{$count['Licensed']}$input</td>
-							<td class='zmcCenterNoLeftPad'>{$count['Used']}</td>
+							<td class='wocloudCenterNoLeftPad' style='border-left:none'>{$count['Licensed']}$input</td>
+							<td class='wocloudCenterNoLeftPad'>{$count['Used']}</td>
 							{$count['Remaining']}
-							<td class='zmcCenterNoLeftPad'>{$count['Expiring']}</td>
-							<td class='zmcCenterNoLeftPad'>{$count['Expired']}</td>
-							<td class='zmcCenterNoLeftPad' $expireStyle>{$count['Expires']}</td>
+							<td class='wocloudCenterNoLeftPad'>{$count['Expiring']}</td>
+							<td class='wocloudCenterNoLeftPad'>{$count['Expired']}</td>
+							<td class='wocloudCenterNoLeftPad' $expireStyle>{$count['Expires']}</td>
 							<td>$human</td>
 						</tr>
 EOD;
@@ -224,26 +224,26 @@ EOD;
 				</div><!-- dataTable -->\n"; 
 		if (ZMC::$registry->dev_only)
 			echo "
-				<div class='zmcButtonBar'><small>Expiration:
-					YYYY: <input class='zmcUltraShortInput' type='text' name='Y' />
-					MM:   <input class='zmcUltraShortInput' type='text' name='M' />
-					DD:   <input class='zmcUltraShortInput' type='text' name='D' /> 
+				<div class='wocloudButtonBar'><small>Expiration:
+					YYYY: <input class='wocloudUltraShortInput' type='text' name='Y' />
+					MM:   <input class='wocloudUltraShortInput' type='text' name='M' />
+					DD:   <input class='wocloudUltraShortInput' type='text' name='D' /> 
 					<input type='submit' name='submit' value='Create License' />
 					</small>
 				</div></form>
 			";
 		echo "
-			</div><!-- zmcFormWrapper -->
-		</div><!-- zmcLeftWindow -->\n";
+			</div><!-- wocloudFormWrapper -->
+		</div><!-- wocloudLeftWindow -->\n";
 	}
 }
 
 function showLicensesBy($pm, $table, $by, $for)
 {	
-	$caption = "Licenses Used by $by";
+	$caption = "$by 中已使用的许可证";
 	$licenses = $pm->licenses;
 	if ($by === 'Device'){
-		$caption = "Devices Used by Backup Sets";
+		$caption = "已被备份集使用的设备";
 	} elseif ($by === 'Feature' && $table['unix']['localhost']){ 
 		$table['backupserver']['localhost'] = $table['unix']['localhost'];
 		unset($table['unix']['localhost']);
@@ -256,15 +256,15 @@ function showLicensesBy($pm, $table, $by, $for)
 		unset($table['localhost']['unix']);
 	}
 
-    ZMC::titleHelpBar($pm, $caption, null, 'zmcTitleBarTable');
+    ZMC::titleHelpBar($pm, $caption, null, 'wocloudTitleBarTable');
 	echo <<<EOD
 		<div class="dataTable centerHeadings">
 			<table border="0" width="100%" cellspacing="0" cellpadding="0"><tbody>
 				<tr>
-					<th width='80' title='Total $for for this $by' scope='col'>$for</th>
-					<th width='155' title='License feature by $by' scope='col' class="leftHeading">$by</th>
-					<th width='80' title='Total DLEs used by this $by' scope='col'>Total DLEs</th>
-					<th title='$for using DLEs of this $by' scope='col' class="leftHeading">$for</th>
+					<th width='80' scope='col'>$for</th>
+					<th width='155' scope='col' class="leftHeading">$by</th>
+					<th width='80' scope='col'>总备份集数目</th>
+					<th t scope='col' class="leftHeading">$for</th>
 				</tr>
 EOD;
 	$i=0;
@@ -293,9 +293,9 @@ EOD;
 		$count = array_sum($hosts);
 		echo <<<EOD
 				<tr class='stripe$color'>
-					<td class='zmcCenterNoLeftPad'>$totalUsed</td>
+					<td class='wocloudCenterNoLeftPad'>$totalUsed</td>
 					<td>$humanTypeGroup</td>
-					<td class='zmcCenterNoLeftPad'>$count</td>
+					<td class='wocloudCenterNoLeftPad'>$count</td>
 					<td>$hostList</td>
 				</tr>
 EOD;

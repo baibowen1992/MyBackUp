@@ -20,13 +20,13 @@ if (!empty($pm->binding))
 {
 	$vtape = ($pm->binding['dev_meta']['media_type'] === 'vtape');
 ?>
-	<div class="zmcLeftWindow" style="<?= ($tape ? 'max-width:510px;':'') ?>">
+	<div class="wocloudLeftWindow" style="<?= ($tape ? 'max-width:510px;':'') ?>">
 <?
 		$div_attribs = 'style="border-top:1px solid #5c706e;"';
 		if (empty($pm->tapeListPm) || empty($pm->tapeListPm->rows))
 		{
 			if ($tape)
-				echo '<div class="zmcFormWrapperText">No Amanda labeled media has been used yet.</div>';
+				echo '<div class="wocloudFormWrapperText">No Amanda labeled media has been used yet.</div>';
 		}
 		else
 		{
@@ -69,12 +69,12 @@ if (!empty($pm->binding))
 			ZMC_Loader::renderTemplate('tableWhereStagingWhen', $pm->tapeListPm);
 		}
 	?>
-	</div><!-- zmcLeftWindow -->
+	</div><!-- wocloudLeftWindow -->
 
 	<?
 	if (!empty($pm->labelListPm))
 	{
-		echo '<div class="zmcRightWindow">';
+		echo '<div class="wocloudRightWindow">';
 		$pm->labelListPm->disable_onclick = true;
 		$pm->labelListPm->checkbox_qualifier = '_lm';
 		$pm->labelListPm->data_table_div_attribs = $div_attribs;
@@ -88,8 +88,8 @@ if (!empty($pm->binding))
 		elseif ($pm->binding['dev_meta']['media_type'] !== 'tape')
 		{
 			ZMC::titleHelpBar($pm, 'Unknown Media Type');
-			echo "<div class='zmcFormWrapperText'><span class='zmcUserErrorsText'>Error: Unrecognized media type.</div>";
-			echo "</div><!-- zmcRightWindow -->";
+			echo "<div class='wocloudFormWrapperText'><span class='wocloudUserErrorsText'>Error: Unrecognized media type.</div>";
+			echo "</div><!-- wocloudRightWindow -->";
 			return;
 		}
 		else
@@ -154,13 +154,13 @@ EOD;
             <p>If labeling has not completed in a long time, press the "Clear" button, check the physical drive and tape status, and try again.</p>
             <br />
             <p><a href="<? echo ZMC::$registry->wiki ?>Backup_Media#Editing_the_Tape_Label_Prefix_and_starting_number" target="_blank">Implications of these options are discussed in more detail here</a>.</p>';
-			$pm->form_type = array('advanced_form_classes' => 'zmcShortLabel zmcShortInput');
+			$pm->form_type = array('advanced_form_classes' => 'wocloudShortLabel wocloudShortInput');
 			ob_start();
 			ZMC_Loader::renderTemplate('formAdvanced', $pm);
 			$pm->labelListPm->prepend_html = ob_get_clean();
 		}
 		$pm->labelListPm->no_form_close = true;
 		ZMC_Loader::renderTemplate('tableWhereStagingWhen', $pm->labelListPm);
-		echo "</div><!-- zmcRightWindow -->";
+		echo "</div><!-- wocloudRightWindow -->";
 	}
 }

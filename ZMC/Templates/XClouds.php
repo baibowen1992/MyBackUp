@@ -19,14 +19,14 @@ if (!isset($pm->confirm_template))
 {
 ?>
 
-<div class="zmcWindow"">
+<div class="wocloudWindow"">
 	<?
 		if (empty($pm->selected))
-			ZMC::titleHelpBar($pm, 'List of Cloud Containers for ZMC device: '. $pm->zmc_device_name);
+			ZMC::titleHelpBar($pm, '列出云端所有存储设备: '. $pm->zmc_device_name);
 		else
-			ZMC::titleHelpBar($pm, 'List of Objects in Container ' . $pm->selected . ' for ZMC device: '. $pm->zmc_device_name);
+			ZMC::titleHelpBar($pm, '列出 ' . $pm->selected . ' 中存储设备 '. $pm->zmc_device_name.' 的所有对象。');
 	?>
-	<div class="zmcFormWrapperText"><?
+	<div class="wocloudFormWrapperText"><?
 		if (ZMC_A3::$nRequests)
 			echo "Total Cloud Requests Performed: " . ZMC_A3::$nRequests;
 		else
@@ -84,7 +84,7 @@ if (empty($pm->rows))
 
 $pm->buttons = array(
     'Refresh Table' => true,
-    'Edit' => false,
+    'Edit' => true,
     'List' => 'onclick="this.form.action = \'/ZMC_X_Cloud_Bucket\'; return true;"',
     'Delete' => 'onclick="this.form.action = \'/ZMC_X_Cloud_Bucket\'; return true;"',
 );

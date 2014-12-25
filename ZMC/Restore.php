@@ -1,6 +1,6 @@
 <?
-
-
+//zhoulin-restore-what 201409221424
+//zhoulin-restore-where 201409221705
 
 
 
@@ -66,7 +66,7 @@ private static $defaults = array(
 	'fpn' => '', 
 	'globable' => false,
 	'job_name' => 'default', 
-	'locale_sort' => 'C',
+	'locale_sort' => 'UTF8',
 	'media_explored' => null,
 	'media_needed' => null,
 	'occ' => 0,
@@ -115,7 +115,7 @@ protected function __construct(ZMC_Registry_MessageBox $pm, $configName, $resetC
 	$this->pm = $pm;
 	$pm->set = ZMC_BackupSet::get();
 	if (!empty($pm->set['backup_running']))
-		$pm->addMessage('Backups are running now for this backup set.');
+		$pm->addMessage('该备份集正在执行备份中.');
 
 	if ($pm->offsetExists('restore')) 
 	{
@@ -203,14 +203,13 @@ protected function __construct(ZMC_Registry_MessageBox $pm, $configName, $resetC
 
 		
 		if ($pm->restore_state['running'])
-			return $pm->addError('Restore job running.  See progress on the ' . ZMC::getPageUrl($pm, 'Restore', 'Now')
-			. '. Please wait for completion, before making any changes.');
+			return $pm->addError('正在执行恢复任务，在“恢复->执行”页面查看恢复进度，请等待恢复完成再执行其他操作');
 		elseif (!empty($pm->restore_state['timestamp_end']))
 			if (($secondsAgo = (time() - $pm->restore_state['timestamp_end'])) < 3600)
 			{
 				$mins = round($secondsAgo / 60, 0);
 				$plural = $mins > 1 ? 's' : '';
-				$pm->addMessage("A restore job for this backup set completed recently (about $mins minute$plural ago).");
+				$pm->addMessage("该备份集的一个恢复任务已完成。(约 $mins 分钟$plural前).");
 				switch($this->restore_job['zmc_type'])
 				{
 					case 'windowsss':
@@ -238,7 +237,7 @@ protected function __construct(ZMC_Registry_MessageBox $pm, $configName, $resetC
 	elseif ($pm->subnav === 'what')
 		return; 
 	elseif (!$pm->amgetindex_state['successful'] && ($this->restore_job['restore_type'] !== ZMC_Restore::EXPRESS)) 
-		$msg = 'A restore job must be configured first.  Please choose what to restore first.';
+		$msg = '要执行一个恢复任务需要先配置恢复信息，请先选择需要恢复的数据。';
 	elseif ($pm->subnav === 'where')
 	{
 		if ($this->whereNextStep())
@@ -287,10 +286,10 @@ public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		$parts = explode('/', self::$job->restore_job['element_name']);
 		$pm->folder_name = ucfirst($parts[1]);
-		ZMC_HeaderFooter::$instance->addYui('zmc-utils', array('dom', 'event', 'connection'));
-		ZMC_HeaderFooter::$instance->addYui('zmc-task', array('zmc-utils'));
-		ZMC_HeaderFooter::$instance->addYui('zmc-messagebox', array('zmc-utils'));
-		ZMC_HeaderFooter::$instance->addYui('zmc-restore-what', array('zmc-utils'));
+		ZMC_HeaderFooter::$instance->addYui('wocloud-utils', array('dom', 'event', 'connection'));
+		ZMC_HeaderFooter::$instance->addYui('wocloud-task', array('wocloud-utils'));
+		ZMC_HeaderFooter::$instance->addYui('wocloud-messagebox', array('wocloud-utils'));
+		ZMC_HeaderFooter::$instance->addYui('wocloud-restore-what', array('wocloud-utils'));
 		self::$job->installAjaxMonitor($pm->restore_state['running'] ? (ZMC::$registry->debug ? 1000:1500) : 5000); 
 		if (empty($pm->amgetindex_state)){
 			$pm->addError("Failed to proceed to the next restore state.");		
@@ -313,8 +312,14 @@ file_put_contents('/tmp/jpm' . __LINE__, print_r($pm, true));
 		));
 		if (self::$job->restore_job['restore_type'] !== ZMC_Restore::EXPRESS) 
 			ZMC_HeaderFooter::$instance->injectYuiCode('YAHOO.zmc.restore.what.loadSuccess()');
-		if (!empty(self::$job->restore_job['restore_type']))
-			$pm->addMessage("Restore Mode: <b>" . self::$buttons[self::$job->restore_job['restore_type']] . "</b>");
+		if (!empty(self::$job->restore_job['restore_type'])){
+            if (self::$buttons[self::$job->restore_job['restore_type']]=='Restore All')
+                $gci_restore_type='还原所有';
+            elseif(self::$buttons[self::$job->restore_job['restore_type']]=='Explore & Select')
+                $gci_restore_type='检索并选择';
+            elseif(self::$buttons[self::$job->restore_job['restore_type']]=='Search')
+                $gci_restore_type='搜索特定文件';
+			$pm->addMessage("恢复模式: <b>" . $gci_restore_type . "</b>");}
 		if(!empty(self::$job->restore_job['monitor_not_upto_date']))
 			$pm->addWarning(self::$job->restore_job['monitor_not_upto_date']);
 		if (!empty(self::$job->restore_job['media_explored']))
@@ -428,10 +433,10 @@ protected function countSelected()
 	if ($count = ZMC_Mysql::getOneValue('SELECT count(*) FROM ' . $this->restore_job['tableName'] . " WHERE restore <> " . ZMC_Restore_What::NO_SELECT))
 	{
 		$plural = (($count === 1) ? 'One ' . $this->restore_job['element_name'] : $count . ' ' . $this->restore_job['element_names']);
-		$this->pm->addMessage("$plural " . $this->restore_job['element_names'] . "selected for restoration.");
+		$this->pm->addMessage("已经选择 $plural 个" . $this->restore_job['element_names'] . "进行恢复。");
 	}
 	else
-		$this->pm->addWarning('No ' . $this->restore_job['element_names'] . ' selected for restoration');
+		$this->pm->addWarning('没有选择需要恢复的 ' . $this->restore_job['element_names']);
 
 	return $count;
 }
@@ -665,9 +670,9 @@ protected function filterHostname(&$hostname)
 {
 	$hostname = trim($hostname);
 	if (empty($hostname))
-		$this->pm->addError('A host name is required.');
+		$this->pm->addError('主机名不能为空。');
 	elseif (!ZMC::isValidHostName($hostname))
-		$this->pm->addWarnError("The host name provided ($hostname) is not valid.  Valid hosts naHes begin with an alphabetic character, end with an alphanumeric character, and may contain alphanumeric, '-' (hyphen), and '.' (period) characters in between.  Alterntively, IP addresses are also valid host names.");
+		$this->pm->addWarnError("输入的主机名 ($hostname) 无效，有效的主机名应该是数字字母开头和结尾，中间除数字字母外，仅允许'-' '.' 。除此之外，IP地址也是有效的。");
 }
 
 
@@ -1115,7 +1120,7 @@ protected function startRestore()
 	{
 		if (ZMC::$registry->platform === 'solaris')
 			$this->pm->addWarning('If using Solaris, then the ENTIRE backup image will be copied into tmpfs (RAM)!');
-		$this->pm->addWarning('Using default temporary directory "/tmp/".  If the partition is too small, restore will fail. After restore, backups must be copied from /tmp partition to destination (slow).');
+		$this->pm->addWarning('使用 "/tmp/" 作为默认临时目录，如果分区过小，恢复过程会失败。恢复过程结束后再将数据拷贝到目标主机的对应目录。(较慢).');
 	}
 
 	if ($this->restore_job['_key_name'] === 'ndmp')
@@ -1227,14 +1232,14 @@ protected function hostChecks()
 		$packet = pack('CCnnnNNNNNN', 7, 0, 3, 32, 1, strlen($payload), 4, 1, 0, 0, 0) . $payload;
 		$result = ZMC::socket_put_contents($sock, $packet, 32768, 'The Destintation Host did not respond.', $this->job['amclient_timelimit']);
 		if (empty($result))
-			$result = ZMC::socket_get_contents($sock, 'The Destination Host did not respond correctly.');
+			$result = ZMC::socket_get_contents($sock, '目标主机没有正确接收请求');
 		fclose($sock);
 		$start = strpos($result, 'READY FOR REQUEST', 33);
 		if ($start === false)
-			return $this->pm->addWarning("The Destination Host $host is NOT ready for a restore request.\n$result");
+			return $this->pm->addWarning("目标主机 $host 没有准备好恢复请求.\n$result");
 		$end = strpos($result, "\n", $start+1);
-		$ready = str_replace('READY FOR REQUEST', 'Zmanda Restore Client (', substr($result, $start, $end - $start));
-		$ready .= ') is ready for restore request';
+		$ready = str_replace('READY FOR REQUEST', '恢复客户端 (', substr($result, $start, $end - $start));
+		$ready .= ') 已经准备好恢复操作';
 		$this->pm->addMessage($this->restore_job['target_host'] . ": $ready");
 		$start = strpos($result, 'SELinux', $end);
 		if ($start === false)
@@ -1247,7 +1252,7 @@ protected function hostChecks()
 			$this->pm->addWarning($selinux);
 	}
 	else
-		$this->pm->addWarnError("Destination Host: Unable to open \"amanda\" port " . $this->restore_job['target_port'] . " on $host. Check firewalls and correct xinetd/inetd/Amanda client installation on Destination Host.");
+		$this->pm->addWarnError("目标主机  $host：不能打开端口 " . $this->restore_job['target_port'] . " 。请检查防火墙和xinetd服务。");
 }
 
 public static function clientStatus($job, $user_id, $username, $debug, $historyFileName = '')

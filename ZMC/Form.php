@@ -73,10 +73,24 @@ protected function buildForm(ZMC_Registry_MessageBox $pm, $form = array(), $form
 
 			if ($meta['label'] === false)
 				$field .= "\n\t\t\t\t<div style='display:inline;' id='{$fieldName}_div'>\n";
-			elseif (!empty($meta['label']))
-			{
-				$field .= "\n\t\t\t\t<div class='p' id='{$fieldName}_div'><label for='$fieldName"
-					. (strpos($meta['label'], $fieldName . '_box') ? "_box'" : "'");
+			elseif (!empty($meta['label'])) {
+                //added by zhoulin 20141123,hidden   设备扫描 位置锁定 两个参数
+                if (ZMC_User::hasRole('Administrator')){
+                    $field .= "\n\t\t\t\t<div class='p' id='{$fieldName}_div'><label for='$fieldName"
+                        . (strpos($meta['label'], $fieldName . '_box') ? "_box'" : "'");}
+                else{
+                    if (($fieldName == 'device_property_list:S3_BUCKET_LOCATION') || ($fieldName == 'taperscan:plugin')||
+                        ($fieldName == 'holdingdisk_list:zmc_default_holding:strategy')) {
+                        $field .= "\n\t\t\t\t<div class='p' style='display: none' id='{$fieldName}_div'><label for='$fieldName"
+                            . (strpos($meta['label'], $fieldName . '_box') ? "_box'" : "'");
+                    }
+                    else{
+                        $field .= "\n\t\t\t\t<div class='p' id='{$fieldName}_div'><label for='$fieldName"
+                            . (strpos($meta['label'], $fieldName . '_box') ? "_box'" : "'");}
+                    if (($fieldName == 'holdingdisk_list:zmc_default_holding:filesystem_reserved_percent')||($fieldName == 'holdingdisk_list:zmc_default_holding:directory')){
+                        $disabledAttribute = ' disabled="disabled" ';
+                    }
+                }
 				$field .= (($meta['required'] && $meta['enabled']) ? 'style=\'font-weight:bold;\'>' : '>');
 				$required = '<span class="required">*</span>:';
 				if (!($pos = strpos($meta['label'], ':')))
@@ -234,7 +248,7 @@ protected function buildForm(ZMC_Registry_MessageBox $pm, $form = array(), $form
 					$field .= '" style="float:none;" /></td>';
 					$field .= "<td><input type='text' $class id='$id' name='$id' value='$value' style='float:none;'></td>";
 					if ($other)
-						$field .= "<td><input type='text' class='zmcShortInput' name='$key' value='/dev/' />";
+						$field .= "<td><input type='text' class='wocloudShortInput' name='$key' value='/dev/' />";
 					else
 					{
 						$field .= '<td><a href="#" onclick="YAHOO.zmc.utils.show_mt(this.innerHTML); return false;">';
@@ -295,7 +309,7 @@ protected function buildForm(ZMC_Registry_MessageBox $pm, $form = array(), $form
 						value='$val'
 						$checked
 						$meta[attributes]
-						/><label class='zmcShortestLabel' for='label_{$fieldName}_$key'> " . ZMC::escape($value['label']) . "</label></div>\n";
+						/><label class='wocloudShortestLabel' for='label_{$fieldName}_$key'> " . ZMC::escape($value['label']) . "</label></div>\n";
 						
 				}
 				
@@ -337,7 +351,7 @@ protected function buildForm(ZMC_Registry_MessageBox $pm, $form = array(), $form
 				if($fieldName == 'device_property_list:MAX_RECV_SPEED'){
 					if (!preg_match('/^[0-9.]*$/', $formVals[$fieldName]))
 						$pm->addWarning("A value entered '$formVals[$fieldName]' for Max Download Speed is too large. .");
-				}   
+				}
 
 				$field .= "<input id='$fieldName'
 					$class
@@ -425,8 +439,8 @@ EOD;
 public static function thAll()
 {
 	?>
-	<th title="Select">
-		<a href="" onclick="YAHOO.zmc.utils.select_all_datatable_buttons(this); return false;">All</a>
+	<th title="选择">
+		<a href="" onclick="YAHOO.zmc.utils.select_all_datatable_buttons(this); return false;">所有</a>
 	</th>
 	<?
 }
@@ -491,7 +505,7 @@ public static function &form2array(ZMC_Registry_MessageBox $pm, ZMC_Registry $ty
 			else{
 				if(preg_match('/Slot Range/', $meta[label]))
 					$post[$field] = ' ';
-				$pm->addError("A value is required for '$meta[label]'.");
+				$pm->addError("参数 '$meta[label]' 需要一个值");
 			}
 		}
 

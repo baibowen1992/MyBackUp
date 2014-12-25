@@ -19,7 +19,7 @@ protected $s3 = null;
 
 public static function run(ZMC_Registry_MessageBox $pm)
 {
-	ZMC_HeaderFooter::$instance->header($pm, 'Admin', 'ZMC - Cloud Management', 'devices', '<base href="' . ZMC::getUrl() . '/' . get_called_class() . '">');
+	ZMC_HeaderFooter::$instance->header($pm, 'Admin', '云备份 - 云控制台', 'devices', '<base href="' . ZMC::getUrl() . '/' . get_called_class() . '">');
 	$pm->url = '/' . get_called_class();
 	if (!empty($pm->selected_ids))
 	{
@@ -31,8 +31,8 @@ public static function run(ZMC_Registry_MessageBox $pm)
 	if (empty($pm->zmc_device_name))
 		throw new ZMC_Exception("No Cloud device selected. Can not continue.");
 	$_SESSION['selected_device'] = $pm->zmc_device_name;
-	ZMC_HeaderFooter::$instance->addYui('zmc-utils', array('dom', 'event', 'connection'));
-	ZMC_HeaderFooter::$instance->addYui('zmc-messagebox', array('dom', 'event', 'connection'));
+	ZMC_HeaderFooter::$instance->addYui('wocloud-utils', array('dom', 'event', 'connection'));
+	ZMC_HeaderFooter::$instance->addYui('wocloud-messagebox', array('dom', 'event', 'connection'));
 	try
 	{
 		$cloudsPage = new static($pm);

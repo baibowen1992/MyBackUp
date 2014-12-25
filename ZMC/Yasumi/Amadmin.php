@@ -50,7 +50,7 @@ class ZMC_Yasumi_Amadmin extends ZMC_Yasumi
 				$records[$key] =& $record;
 
 		if (empty($records))
-			return $this->reply->addWarning("Found no backups matching selected host, DLE, date, and time.");
+			return $this->reply->addWarning(" 在选定的主机、备份项、日期和时间上没有找到备份记录");
 
 		unset($record);
 		$timestamp = ZMC::mktime($this->data['date'] . $this->data['time']);
@@ -162,7 +162,7 @@ class ZMC_Yasumi_Amadmin extends ZMC_Yasumi
 			if (!$holdOnly && ($this->cacheFn[0] === '/'))
 				$file = new ZMC_Sed($this->reply, $this->cacheFn);
 
-			$this->reply->addWarning("Not using amadmin cache $this->cacheFn");
+			//$this->reply->addWarning("不使用 $this->cacheFn");   comment by zhoulin 20141102
 			ZMC_ProcOpen::procOpen('amadmin', $cmd = ZMC::getAmandaCmd('amadmin'), $args, $stdout, $stderr,
 				'amadmin command failed unexpectedly', $this->getLogInfo(), null, ZMC::$registry->proc_open_short_timeout,
 				$holdOnly ? null : array($this, 'processAmadminFind'));

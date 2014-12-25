@@ -18,10 +18,10 @@ echo "\n<form method='post' action='$pm->url'>\n";
 
 <? ZMC_VaultCalendar::renderCalendar($pm, 'VaultReports'); ?>
 
-<div class="zmcWindow" style='clear:left;'>
+<div class="wocloudWindow" style='clear:left;'>
 <? ZMC::titleHelpBar($pm, 'Vault Summary', '', '', '', ZMC_Report::renderDayWeekNavigation("VaultReports")); ?>
 
-<div class="zmcSubHeadingWide">
+<div class="wocloudSubHeadingWide">
 <table  border="0" cellspacing="0" cellpadding="0">
 <?
 $html = "<tr>";
@@ -42,7 +42,7 @@ if($hasLog){
 </table>
 </div>
 
-<div class="zmcFormWrapperText" style="margin:0; border:0; min-width:724px;">
+<div class="wocloudFormWrapperText" style="margin:0; border:0; min-width:724px;">
 <?
 $i = count($pm->vault_reports);
 foreach($pm->vault_reports as $log => $contents){

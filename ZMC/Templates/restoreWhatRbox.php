@@ -1,6 +1,6 @@
 <?
-
-
+//zhoulin-restore-what 201409221624
+//右边   查看已选择的恢复文件列表
 
 
 
@@ -16,31 +16,31 @@ global $pm;
 ?>
 <input id='hack_for_ie_ff' type="hidden" name="action" value="" />
 
-<div class="zmcRightWindow" id="restoreWhatRightContainer">
-	<? ZMC::titleHelpBar($pm, 'Directories / Files to be Restored from: ' . $pm->restore['bread_crumbs']); ?>
+<div class="wocloudRightWindow" id="restoreWhatRightContainer">
+	<? ZMC::titleHelpBar($pm, '需要从目录' . $pm->restore['bread_crumbs'] . '中恢复的文件和目录：'); ?>
 	<div class="p" style="margin-top:4px; text-align:center; padding:0;">
-		<input id='submit_go' type="submit" name="action" value="Go" />					
-		<input class="zmcButtonsLeft" name="action" type="submit" value="Up" />
+		<button id='submit_go' type="submit" name="action" value="Go" />前往</button>
+		<button class="wocloudButtonsLeft" name="action" type="submit" value="Up" />上一级</button>
 		<input
 			style="width:340px"
 			type="text" 
 			name="fpn" 
-			title="Full pathname of the directory to browse" 
+			title="你想查看文件夹的绝对路径" 
 			maxlength="255"
 			value="<?= ZMC::escape($pm->restore['fpn']) ?>"
 			onkeyup="return onEnterSubmit('submit_go', event);"
 		/>
 	</div>
 
-	<div class="zmcBreadCrumbs" style='clear:left;'><? $pm->restore['bread_crumbs'] ?></div>
-	<div class="zmcSubHeadingSelect">
-		Select:
-		<a href="" onclick="YAHOO.zmc.utils.select('rbox_select_all_none_invert', 'all'); return false;">All</a>&nbsp;|&nbsp;
-		<a href="" onclick="YAHOO.zmc.utils.select('rbox_select_all_none_invert', 'none'); return false;">None</a>&nbsp;|&nbsp;
-		<a href="" onclick="YAHOO.zmc.utils.select('rbox_select_all_none_invert', 'invert'); return false;">Invert</a>
+	<div class="wocloudBreadCrumbs" style='clear:left;'><? $pm->restore['bread_crumbs'] ?></div>
+	<div class="wocloudSubHeadingSelect">
+		选择：
+		<a href="" onclick="YAHOO.zmc.utils.select('rbox_select_all_none_invert', 'all'); return false;">全选</a>&nbsp;|&nbsp;
+		<a href="" onclick="YAHOO.zmc.utils.select('rbox_select_all_none_invert', 'none'); return false;">全不选</a>&nbsp;|&nbsp;
+		<a href="" onclick="YAHOO.zmc.utils.select('rbox_select_all_none_invert', 'invert'); return false;">反选</a>
 	</div>
 		
-	<div class="zmcFormWrapperText" style="margin-top:0px; height:375px; overflow:auto;" id="rbox_select_all_none_invert">
+	<div class="wocloudFormWrapperText" style="margin-top:0px; height:375px; overflow:auto;" id="rbox_select_all_none_invert">
 		<input type='hidden' name='rbox[]' value='' type='checkbox' checked='checked' dummy='do not delete this line' />
 <?
 		if (!empty($pm->restore['rbox']) && !is_string($pm->rows))
@@ -65,12 +65,12 @@ global $pm;
 		}
 ?>
 		<div style='clear:left;'></div>
-	</div><!-- zmcFormWrapperText rbox_select_all_none_invert -->
-	<div id="nextStep" class="zmcButtonBar">
+	</div><!-- wocloudFormWrapperText rbox_select_all_none_invert -->
+	<div id="nextStep" class="wocloudButtonBar">
 		<div class="footerButtons">
-			<button type="submit" name="action" value="Next Step" />Restore Where?</button>
-			<button type="submit" name="action" value="<<" class="zmcButtonsLeft" />Remove</button>
-			<button type="submit" name="action" value="Reset" class="zmcButtonsLeft" />Reset</button>
+			<button type="submit" name="action" value="Next Step" />恢复到哪？</button>
+			<button type="submit" name="action" value="<<" class="zmcButtonsLeft" />移除</button>
+			<button type="submit" name="action" value="Reset" class="zmcButtonsLeft" />重选</button>
 		</div>
 	</div>
-</div><!-- zmcRightWindow restoreWhatRightContainer -->
+</div><!-- wocloudRightWindow restoreWhatRightContainer -->

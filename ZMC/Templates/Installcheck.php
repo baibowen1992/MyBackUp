@@ -12,7 +12,7 @@
 
 
 echo "<style> 
-.zmcMsgBox {
+.wocloudMsgBox {
 	    background-color: #CCCCCC;
 		position: relative;
 		display: none;
@@ -20,18 +20,18 @@ echo "<style>
 		width:100%;
 }
 
-.zmcMessageBox {
-    background-color: #E3EADA;
+.wocloudMessageBox {
+    background-color: #FFFFFF;
 	border: 0px solid #5C706E;
 	margin: 0px;
 	min-height: 400px;
 	max-height: 100%;
 	width: 100%;
 }
-,zmcMsgWarnErr{
+,wocloudMsgWarnErr{
 
 }
-.zmcUserMessages, .zmcUserInstructions, .zmcUserErrors, .zmcUserWarnings, .zmcUserDetails, .zmcUserInternalErrors {
+.wocloudUserMessages, .wocloudUserInstructions, .wocloudUserErrors, .wocloudUserWarnings, .wocloudUserDetails, .wocloudUserInternalErrors {
     border:dotted #666666 0px;
 	float:left;
 	margin:0px;
@@ -54,12 +54,12 @@ if(!empty($_POST) && $_POST['Begin'] === "Ok"){
 echo "\n<form method='post' action='$pm->url'>\n";
 ?>
 
-	</div><!-- zmcFormWrapper -->
-	<div class="zmcButtonBar">
+	</div><!-- wocloudFormWrapper -->
+	<div class="wocloudButtonBar">
 			<input type="hidden" name="last_page" id="last_page" value="<?=($_SESSION['last_page'] != null)? $_SESSION['last_page']: "/ZMC_Admin_BackupSets";?>" />
-			<input style="width:75px" class="zmcCenter" type="submit" name="Begin" id="begin" value="Ok" />
+			<input style="width:75px" class="wocloudCenter" type="submit" name="Begin" id="begin" value="Ok" />
 
 	</div>
-</div><!-- zmcLeftWindow -->
+</div><!-- wocloudLeftWindow -->
 
 </form>

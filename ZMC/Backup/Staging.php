@@ -19,8 +19,8 @@ class ZMC_Backup_Staging extends ZMC_Backup
 
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
-		ZMC_HeaderFooter::$instance->header($pm, 'Backup', 'ZMC - Interim Staging of Backup Data', 'staging');
-		$pm->addDefaultInstruction('Edit interim staging areas for backup data.');
+		ZMC_HeaderFooter::$instance->header($pm, 'Backup', '云备份 - 备份数据临时缓存', 'staging');
+		$pm->addDefaultInstruction('为备份数据设置临时缓存区.');
 		$stagingPage = new self($pm);
 		$stagingPage->runState($pm);
 		$stagingPage->getPaginator($pm);
@@ -31,11 +31,11 @@ class ZMC_Backup_Staging extends ZMC_Backup
 			$result = ZMC_Yasumi::operation($pm, array('pathInfo' => '/amadmin/holding_list/' . $pm->binding['config_name']));
 			$lines = explode("\n", $result['holding_list']);
 			$lines[0] = 'KiB level outdated Host      Object/Path/Directory';
-			$pm->holding_list = ((count($lines) > 1 && !empty($lines[1])) ? trim(implode("\n", $lines)) : 'The staging area of this backup<br />set is currently empty.');
+			$pm->holding_list = ((count($lines) > 1 && !empty($lines[1])) ? trim(implode("\n", $lines)) : '该备份设置的缓存空间为空。');
 		}
 		
 		if($pm->binding['dev_meta']['_key_name'] === 'changer_ndmp'){
-			$pm->addMessage("This version of ZMC does not support {$pm->binding['dev_meta']['name']} on this page.");
+			$pm->addMessage("该版本在本页暂时不支持 {$pm->binding['dev_meta']['name']} ");
 			return 'MessageBox';
 		}
 		if($pm->binding['holdingdisk_list']['zmc_default_holding']['used_space']){
@@ -118,7 +118,7 @@ class ZMC_Backup_Staging extends ZMC_Backup
 			case 'Cancel':
 				$pm->state = '';
 				ZMC_BackupSet::cancelEdit();
-				$pm->addWarning("Edit/Add cancelled.");
+				$pm->addWarning("编辑/新增  取消.");
 				break;
 		}
 	}
@@ -176,10 +176,10 @@ class ZMC_Backup_Staging extends ZMC_Backup
 			$result = ZMC_Yasumi::operation($pm, array('pathInfo' => '/amadmin/holding_list/' . $pm->binding['config_name']));
 			$lines = explode("\n", $result['holding_list']);
 			$lines[0] = 'KiB level outdated Host      Object/Path/Directory';
-			$pm->holding_list = ((count($lines) > 1 && !empty($lines[1])) ? trim(implode("\n", $lines)) : 'The staging area of this backup<br />set is currently empty.');
-			if(!preg_match("/The staging area of this backup/", $pm->holding_list)){
+			$pm->holding_list = ((count($lines) > 1 && !empty($lines[1])) ? trim(implode("\n", $lines)) : '这个备份集的缓存<br />目前为空.');
+			if(!preg_match("/这个备份集的缓存/", $pm->holding_list)){
 				if(isset($pm->form_type['form']['holdingdisk_list:zmc_default_holding:directory']['attributes']))
-					$pm->form_type['form']['holdingdisk_list:zmc_default_holding:directory']['attributes'] =  " readonly onfocus='alert(\"You are not allowed to change staging location because this staging area is not empty!\")'";
+					$pm->form_type['form']['holdingdisk_list:zmc_default_holding:directory']['attributes'] =  " readonly onfocus='alert(\"不允许改变该缓存目录，因为该目录非空！\")'";
 			}else{
 				if(isset($pm->form_type['form']['holdingdisk_list:zmc_default_holding:directory']['attributes']))
 					$pm->form_type['form']['holdingdisk_list:zmc_default_holding:directory']['attributes'] =  " ";

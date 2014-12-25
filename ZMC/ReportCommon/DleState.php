@@ -156,7 +156,7 @@ function mRenderTextColumns($subnavInfo="what", $row)
 	if ($subnavInfo === 'ReportTimeline')
 		echo '<td class=monitorTableTextCell width=50 align=center >', substr($row['backuprun_date_time'], 11), '</td>';
 
-	echo '<td class="zmcCenterNoLeftPad"><img src="', ZMC_Report::getLevelImage($row['backup_level']), '" title="Level ', $row['backup_level'], '" border=0 ></td>';
+	echo '<td class="wocloudCenterNoLeftPad"><img src="', ZMC_Report::getLevelImage($row['backup_level']), '" title="Level ', $row['backup_level'], '" border=0 ></td>';
 }
 
 function mRenderOneDLERow($subnavInfo="what", $phaseCol, $rowNum, $row)

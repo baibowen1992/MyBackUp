@@ -14,7 +14,7 @@
 
 class ZMC_Events
 {
-public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Monitor', $title = 'ZMC - View all Events', $subnav = 'events')
+public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Monitor', $title = '云备份 - 查看事件', $subnav = 'events')
 {
 	$pm->goto = null;
 	$pm->disabled = 'Disabled';
@@ -26,9 +26,9 @@ public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Monitor', 
 	self::rss($pm);
 	self::getPaginator($pm);
 	if (empty($pm->rows))
-		$pm->addWarning('No events found.');
+		$pm->addWarning('没有日志记录');
 	else
-		$pm->addMessage('Found ' . ($pm->found) . ($pm->found === 1 ? ' event.' : ' events.'));
+		$pm->addMessage('一共找到 ' . ($pm->found) . ' 项日志记录');
 
 	return 'Events';
 }
@@ -44,9 +44,9 @@ protected static function runState($pm)
 		case 'Delete':
 			$pm->confirm_template = 'ConfirmationWindow';
 			$pm->confirm_help = 'Confirm Deletion of Events';
-			$pm->addMessage('Deleting events will permanently delete these events from this page, but not text log files.');
-			$pm->addWarning('There is no undo.');
-			$pm->prompt ='Are you sure you want to DELETE these events?';
+			$pm->addMessage('删除日志记录仅是删除本页面显示的记录而不是系统日志文件内容。');
+			$pm->addWarning('操作不可恢复');
+			$pm->prompt ='确认删除这些日志记录？';
 			$pm->confirm_action = 'DeleteConfirm';
 			$pm->yes = 'Delete';
 			$pm->no = 'Cancel';
@@ -123,7 +123,7 @@ private static function rss($pm)
 	if (ZMC::useCache($pm, $cacheFn = 'rss', $cacheFn, false, 86400))
 		return;
 	$row = ZMC_Mysql::getOneRow('SELECT * FROM users WHERE network_ID NOT NULL ORDER BY user_id', null, true);
-	$latest_rss_guid = ZMC_Mysql::getOneValue("SELECT event_id FROM events WHERE subsystem = 'Zmanda Network' ORDER BY id LIMIT 1", null, true);
+	$latest_rss_guid = ZMC_Mysql::getOneValue("SELECT event_id FROM events WHERE subsystem = 'wocloud' ORDER BY id LIMIT 1", null, true);
 	ini_set('user_agent', "ZMC-" . ZMC::$registry->svn->zmc_svn_revision);
 	$stream = fopen(ZMC::$registry->rss . ($row ? "&id=$row[network_ID]" : ''), 'r');
 	if (false === ($contents = stream_get_contents($stream)))
@@ -131,7 +131,7 @@ private static function rss($pm)
 	fclose($stream);
 	for($i=strpos($contents, '<item '); $i < strlen($contents); $i = $pos)
 	{
-		$row = array('subsystem' => 'Zmanda Network');
+		$row = array('subsystem' => 'wocloud');
 		foreach(array('title' => 'summary', 'description' => 'message', 'severity' => 'severity', 'pubDate' => 'timestamp', 'guid' => 'event_id') as $tag => $key)
 			if (false === ($i = strpos($contents, "<$tag>", $i)))
 				return;

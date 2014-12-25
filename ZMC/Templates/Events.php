@@ -1,5 +1,5 @@
 <?
-
+//zhoulin-monitor-event 201409191557
 
 
 
@@ -14,19 +14,19 @@
 
 global $pm;
 echo "\n<form method='post' action='$pm->url'>\n";
-$when = 'Any Time';
+$when = '任意时间';
 if (!empty($_POST['when']) && ($_POST['when'][0] !== '-'))
 	$when = "When: $_POST[when] $_POST[days] days<br />\n";
 
 if ($pm->subnav !== 'alerts') { ?>
-<div class="zmcRightWindow" style="min-width:175px">
-	<? ZMC::titleHelpBar($pm, 'Source Histogram'); ?>
-	<div class="zmcFormWrapperText">
+<div class="wocloudRightWindow" style="min-width:175px">
+	<? ZMC::titleHelpBar($pm, '日志来源直方图'); ?>
+	<div class="wocloudFormWrapperText">
 	<?
 		if (empty($_POST['severity']))
-			echo "Any Event Type<br />\n";
+			echo "所有日志级别<br />\n";
 		else
-			echo "Event Type at least ", ZMC_Error::$severity2text[$_POST['severity']], "<br />\n";
+			echo "日志级别不低于 ", ZMC_Error::$severity2text[$_POST['severity']], "<br />\n";
 		echo "$when<hr/>";
 		foreach($pm->histograms['subsystem'] as $subsystem => $row)
 			echo "$row[mycount] : $subsystem<br />\n";
@@ -37,14 +37,14 @@ if ($pm->subnav !== 'alerts') { ?>
 
 
 
-<div class="zmcRightWindow" style="min-width:175px">
-	<? ZMC::titleHelpBar($pm, 'Severity Histogram'); ?>
-	<div class="zmcFormWrapperText">
+<div class="wocloudRightWindow" style="min-width:175px">
+	<? ZMC::titleHelpBar($pm, '日志级别直方图'); ?>
+	<div class="wocloudFormWrapperText">
 	<?
 		if (empty($_POST['subsystem']) || $_POST['subsystem'][0] === '-')
-			echo "Any Event Source<br />\n";
+			echo "所有日志来源<br />\n";
 		else
-			echo "Event Source: $_POST[subsystem]<br />\n";
+			echo "日志来源: $_POST[subsystem]<br />\n";
 		echo "$when<hr/>";
 		foreach($pm->histograms['severity'] as $severity => $row)
 			echo "$row[mycount] : ", ZMC_Error::$severity2text[$severity], "<br />\n";
@@ -55,14 +55,14 @@ if ($pm->subnav !== 'alerts') { ?>
 
 
 <? if ($pm->subnav !== 'alerts') { ?>
-<div class="zmcRightWindow" style="min-width:175px">
-	<? ZMC::titleHelpBar($pm, 'Backup Set Histogram'); ?>
-	<div class="zmcFormWrapperText">
+<div class="wocloudRightWindow" style="min-width:175px">
+	<? ZMC::titleHelpBar($pm, '备份集日志直方图'); ?>
+	<div class="wocloudFormWrapperText">
 	<?
 		if (empty($_POST['subsystem']) || $_POST['subsystem'][0] === '-')
-			echo "Any Event Source<br />\n";
+			echo "所有日志来源<br />\n";
 		else
-			echo "Event Source: $_POST[subsystem]<br />\n";
+			echo "日志来源: $_POST[subsystem]<br />\n";
 		echo "$when<hr/>";
 		foreach($pm->histograms['configuration_id'] as $id => $row)
 			echo "$row[mycount] : ", (empty($id) ? 'none' : ZMC_BackupSet::getName($id)), "<br />\n";
@@ -73,12 +73,12 @@ if ($pm->subnav !== 'alerts') { ?>
 
 
 
-<div class="zmcLeftWindow">
-	<? ZMC::titleHelpBar($pm, 'Filter ' . ucFirst($pm->subnav)); ?>
-	<div class="zmcFormWrapper">
+<div class="wocloudLeftWindow">
+	<? ZMC::titleHelpBar($pm, '筛选 ' . ucFirst($pm->subnav)); ?>
+	<div class="wocloudFormWrapper">
 	<? if ($pm->subnav !== 'alerts') { ?>
 		<div class="p">
-			<label>Event Type</label>
+			<label>日志类型</label>
 			<select name="severity">
 			<?
 				foreach(array_merge(array('--no filter--' => 0), ZMC_Error::$error2severity) as $option => $level)
@@ -88,7 +88,7 @@ if ($pm->subnav !== 'alerts') { ?>
 		</div>
 		<? } ?>
 		<div class="p">
-			<label>Event Source</label>
+			<label>日志来源</label>
 			<select name="subsystem" <?= ($pm->subnav === 'alerts') ? 'disabled="disabled"' : '' ?>>
 			<?
 				foreach(array_merge(array('--no filter--' => 0), $pm->histograms['subsystem']) as $option => $row)
@@ -97,7 +97,7 @@ if ($pm->subnav !== 'alerts') { ?>
 			</select>
 		</div>
 		<div class="p">
-			<label>When</label>
+			<label>时间</label>
 			<select name="when">
 			<?
 				foreach(array(
@@ -107,11 +107,11 @@ if ($pm->subnav !== 'alerts') { ?>
 					) as $option)
 				echo "<option ", ((isset($_POST['when']) && $_POST['when'] === $option) ? 'selected="selected"' : ''), ">$option</option>";
 			?>
-				</select><input class="zmcUltraShortInput" type="text" name="days" value="<?= empty($_POST['days']) ? 30 : intval($_POST['days']) ?>" maxlength="3" size="3" /> days
+				</select><input class="wocloudUltraShortInput" type="text" name="days" value="<?= empty($_POST['days']) ? 30 : intval($_POST['days']) ?>" maxlength="3" size="3" /> 天
 		</div>
 		<? if ($pm->subnav !== 'alerts') { ?>
 		<div class="p">
-			<label>Backup Set</label>
+			<label>备份集</label>
 			<select name="configuration_id">
 			<?
 				foreach(array_merge(array('--no filter--' => 0), ZMC_BackupSet::getMyNames()) as $name => $id)
@@ -121,23 +121,23 @@ if ($pm->subnav !== 'alerts') { ?>
 		</div>
 		<? } ?>
 		<div class="p">
-			<label for="show_descriptions">Show Descriptions?</label>
+			<label for="show_descriptions">显示摘要?</label>
 			<input type="hidden" name="show_descriptions" value="no" />
 			<input id="show_descriptions" type="checkbox" name="show_descriptions" value="yes" <?= (empty($_POST['show_descriptions']) || $_POST['show_descriptions'] !== 'no') ? 'checked="checked"' : '' ?> />
 		</div>
 		<div style='clear:left;'></div>
 	</div>
-	<div class="zmcButtonBar">
+	<div class="wocloudButtonBar">
 			<? 
 			if (!empty($pm->rows) && isset($_POST['when']) && strpos($_POST['when'], 'ld') && ($_POST['days'] > -1))
-				echo '<input type="submit" name="action" value="Delete" class="zmcButtonsLeft" />'; ?>
+				echo '<input type="submit" name="action" value="Delete" class="wocloudButtonsLeft" />'; ?>
 		<input type="submit" name="action" value="Apply" />
 	</div>
 </div>
 	
 
 <?
-$pm->tableTitle = 'Event Viewer';
+$pm->tableTitle = '显示日志';
 $pm->disable_onclick = true;
 $pm->disable_checkboxes = true;
 $pm->buttons = array('Refresh Table' => true);

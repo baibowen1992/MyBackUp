@@ -17,16 +17,16 @@ echo "\n<form method='post' action='$pm->url'>\n";
 ?>
 
 <? ZMC_BackupCalendar::renderCalendar($pm, 'ReportBackups'); ?>
-<div class="zmcLeftWindow">
-	<? ZMC::titleHelpBar($pm, 'Backup Runs'); ?>
+<div class="wocloudLeftWindow">
+	<? ZMC::titleHelpBar($pm, '备份状态统计图'); ?>
 	<img src="/images/section/report/legend_summary.gif" />
 </div>
 
 
-<div class="zmcWindow" style='clear:left;'>
-<? ZMC::titleHelpBar($pm, 'Backup Report', '', '', '', ZMC_Report::renderDayWeekNavigation("ReportBackups")); ?>
+<div class="wocloudWindow" style='clear:left;'>
+<? ZMC::titleHelpBar($pm, '备份报告', '', '', '', ZMC_Report::renderDayWeekNavigation("ReportBackups")); ?>
 
-<div class="zmcSubHeadingWide">
+<div class="wocloudSubHeadingWide">
 <table  border="0" cellspacing="0" cellpadding="0">
 <tr>
 
@@ -71,7 +71,7 @@ else if ($pm->numBackup > 1)
 </table>
 </div>
 
-<div class="zmcFormWrapperText" style="margin:0; border:0; min-width:724px;">
+<div class="wocloudFormWrapperText" style="margin:0; border:0; min-width:724px;">
 <?
 if ($pm->numBackup==0)
 	echo "<h1>&nbsp;</h1>";

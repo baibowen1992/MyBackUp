@@ -23,23 +23,23 @@ global $pm;
 
 <div class="footerPagination">
 <?
-echo '&nbsp;(', $pm->row_count, '/', $pm->found_count, ')';
+//echo '&nbsp;(', $pm->row_count, '/', $pm->found_count, ')';
 if ($pm->page_count > 1)
 {
 	if (!$pm->short)
 	{
 		if ($pm->currentPage != 1) 
 			echo '<a href="', $pm->url, '?offset_' . $pm->sortKey . '=' . ($pm->offset - $pm->rows_per_page) .
-				'&amp;np=' . $pm->page_count . '">&lt;&lt;&nbsp;Previous</a> ';
+				'&amp;np=' . $pm->page_count . '">&lt;&lt;&nbsp;前一页</a> ';
 
-		echo " (page $pm->currentPage of $pm->page_count) ";
+		echo " (页 $pm->currentPage / $pm->page_count) ";
 
 		if ($pm->currentPage != $pm->page_count) 
 			echo '<a href="', $pm->url, '?offset_' . $pm->sortKey . '=' . ($pm->offset + $pm->rows_per_page) .
-				'&amp;np=' . $pm->page_count . '">Next&nbsp;&gt;&gt;</a> ';
+				'&amp;np=' . $pm->page_count . '">下一页&nbsp;&gt;&gt;</a> ';
 	}
 ?>
-	Page:
+	页:
 	<select
 		name='goto_page_<?= $pm->sortKey ?>'
 		style='width:42px; float:none;'
@@ -56,7 +56,7 @@ if ($pm->page_count > 1)
 ?>
 	</select>
 <?}?>
-	Rows:
+	每页:
 	<select
 		name='rows_per_page_<?= $pm->sortKey ?>'
 		style='width:58px; float:none;'

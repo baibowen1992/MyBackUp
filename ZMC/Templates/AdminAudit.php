@@ -1,5 +1,5 @@
 <?
-
+//zhoulin-admin-audit 20140922201332
 
 
 
@@ -14,7 +14,7 @@
 
 global $pm;
 if (empty($pm->rows))
-	return print("No records found.");
+	return print("没有找到操作记录");
 
 $advanced_view = ( "true" === $_GET['advanced_view']) ? true : false;
 $hide_row = array('Date', 'Time', 'Get', 'Post', 'Session');
@@ -22,28 +22,28 @@ $link = ($advanced_view)? "false": "true";
 
 
 ?>
-<div class="zmcButtonBar">
-<input style="width:150px" class="zmcRight" type="submit" name="advanced_view" value="Turn <?=($link === "false")? "Off": "On" ?> Advanced View?" onclick="document.location.href='<?=$pm->url?>?advanced_view=<?=$link?>'"/>
+<div class="wocloudButtonBar">
+<input style="width:150px" class="wocloudRight" type="submit" name="advanced_view" value="Turn <?=($link === "false")? "Off": "On" ?> Advanced View?" onclick="document.location.href='<?=$pm->url?>?advanced_view=<?=$link?>'"/>
 </div>
 <?php
 
-ZMC::titleHelpBar($pm, 'Audit Records');
+ZMC::titleHelpBar($pm, '操作记录');
 ?>
 
 	<div class="dataTable">
 		<table class="maxCol200" width="100%" border="0" cellspacing="0" cellpadding="0">
-			<tr><th>User</th>
+			<tr><th>用户</th>
 				<?
 foreach($pm->rows[0] as $key => $ignored){
 	if(!$advanced_view && in_array(ucfirst($key), $hide_row))
 		continue;
 	if($key == 'request_uri')
-		$key = 'Operation';
+		$key = '动作';
 	if($key == 'pid')
-		$key = 'Process ID';
+		$key = '进程号';
 	if($key == 'apache')
-		$key = 'Server Date/Time';
-	echo ($key === 'session' ? '<th class="zmcCenterNoLeftPad">S' : "<th>".ucfirst($key).""), "</th>\n";
+		$key = '服务器日期/时间';
+	echo ($key === 'session' ? '<th class="wocloudCenterNoLeftPad">S' : "<th>".ucfirst($key).""), "</th>\n";
 }
 
 echo '</tr>';

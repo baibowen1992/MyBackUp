@@ -65,20 +65,20 @@ public static function display($icon, $type, &$messages, &$escapedMessages, $flo
 	$Type = ucfirst($type);
 	if ($type === 'Details')
 		echo <<<EOD
-			<div class="instructions" id="showDetails" style='float:right'>(<a href="javascript:
+			<div hidden="hidden" class="instructions" id="showDetails" style='float:right'>(<a href="javascript:
 				gebi('msgBox$Type').style.display='block';
 				gebi('showDetails').style.display='none';
 				void('');"
-			>Advanced Details</a>)</div>
-			<div class='zmcMessages zmcUser$Type' id='msgBox$Type' style='float:right;'>
-				<div class="zmcMsgBox" onclick="this.parentNode.style.display='none'" >X</div>
+			>详细信息</a>)</div>
+			<div class='wocloudMessages wocloudUser$Type' id='msgBox$Type' style='float:right;'>
+				<div class="wocloudMsgBox" onclick="this.parentNode.style.display='none'" >X</div>
 				$txt
 			</div>
 EOD;
 	else 
 		echo <<<EOD
-			<div class='zmcMessages zmcUser$Type' id='msgBox$Type' style='float:$float'>
-				<div class="zmcMsgBox" onclick="this.parentNode.style.display='none'" >X</div>
+			<div class='wocloudMessages wocloudUser$Type' id='msgBox$Type' style='float:$float'>
+				<div class="wocloudMsgBox" onclick="this.parentNode.style.display='none'" >X</div>
 				$txt
 			</div>
 EOD;
@@ -87,7 +87,7 @@ EOD;
 
 protected static function format($icon, $type, $msg, $escape = false)
 {
-	$onclick = "<div class='zmcMsgWarnErr'>";
+	$onclick = "<div class='wocloudMsgWarnErr'>";
 	if ($type !== 'Details')
 	{
 		if (strpos($msg, "\0"))

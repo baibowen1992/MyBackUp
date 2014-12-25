@@ -18,7 +18,7 @@ class ZMC_Vault_Jobs extends ZMC_Vault
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{	
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Vault', 'ZMC - Manage vault jobs', 'jobs');
+		ZMC_HeaderFooter::$instance->header($pm, 'Vault', '云备份 - Manage vault jobs', 'jobs');
 		$page = new self($pm);
 		
 		if (empty($pm->selected_name)) {
@@ -31,7 +31,7 @@ class ZMC_Vault_Jobs extends ZMC_Vault
 		
 		$licenses = ZMC_License::readLicenses($pm);
 		if ($licenses['licenses']['zmc']['Remaining']['vault'] <= 0) {
-			$pm->addError("You do not have the license for 'Vault' feature. Please contact Zmanda Support for more information.");
+			$pm->addError("You do not have the license for 'Vault' feature. Please contact Support for more information.");
 			return 'MessageBox';
 		}
 		
@@ -82,9 +82,9 @@ class ZMC_Vault_Jobs extends ZMC_Vault
 				$this->runstate($pm, 'Refresh Table');
 				break;
 				
-			case 'Activate':
-			case 'Deactivate':
-				$this->activate($pm, $pm->state === 'Activate' ? true : false);
+			case '激活':
+			case '反激活':
+				$this->activate($pm, $pm->state === '激活' ? true : false);
 				$this->runState($pm, 'Refresh Table');
 				break;
 	

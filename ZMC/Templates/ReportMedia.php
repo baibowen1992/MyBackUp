@@ -16,7 +16,7 @@ global $pm;
 echo "\n<form method='post' action='$pm->url'>\n";
 ?>
 
-<div class="zmcRightWindow" style="margin-left:0;">
+<div class="wocloudRightWindow" style="margin-left:0;">
 <? ZMC::titleHelpBar($pm, 'Media Chart', '', '', '', ZMC_Report::renderDayWeekNavigation("ReportMedia")); ?>
 	<div class="dataTable">
 		<table style="width:730px;">
@@ -82,7 +82,7 @@ echo "\n<form method='post' action='$pm->url'>\n";
 					$duration = explode(":",$detailRow['time_duration']);
 					$title = 'Duration: ' . $duration[0] . 'h ' . $duration[1] . 'm';
 					$percentUse = round($detailRow['percent_use'], 1);
-					echo "<td width='75' class='zmcCenterNoLeftPad'><img src=$imgLoc title=\"$title\" />".$detailRow['tape_label']."<br>".$detailRow['size']."<br>".$percentUse."%<br>".$barCode."</td>";
+					echo "<td width='75' class='wocloudCenterNoLeftPad'><img src=$imgLoc title=\"$title\" />".$detailRow['tape_label']."<br>".$detailRow['size']."<br>".$percentUse."%<br>".$barCode."</td>";
 				}
 			}
 			echo "</tr>";
@@ -98,7 +98,7 @@ echo "\n<form method='post' action='$pm->url'>\n";
 ZMC_BackupCalendar::renderCalendar($pm, 'ReportMedia');
 ?>
 
-<div class="zmcLeftWindow" style='clear:left;'>
+<div class="wocloudLeftWindow" style='clear:left;'>
 	<? ZMC::titleHelpBar($pm, 'Legend: Media'); ?>
 	<table style="text-align:center;" rules="all" width="220px"><tbody>
 		<tr><th class="calendarHeading"><div>Media Type</div></th><th class="calendarHeading">Full</th><th class="calendarHeading">Partial</th></tr>

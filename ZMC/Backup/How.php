@@ -36,7 +36,7 @@ static $param2where = array(
 
 public static function run(ZMC_Registry_MessageBox $pm)
 {
-	ZMC_HeaderFooter::$instance->header($pm, 'Backup', 'ZMC - How would you like to make a backup?', 'how');
+	ZMC_HeaderFooter::$instance->header($pm, 'Backup', '云备份 - 设置备份参数?', 'how');
 	$howPage = new self($pm);
 	$howPage->getSelectedBinding($pm);
 	$howPage->runState($pm);
@@ -63,7 +63,7 @@ public static function run(ZMC_Registry_MessageBox $pm)
 
 	if (isset($pm->conf['record']))
 		if ($pm->conf['record'] === 'off' || $pm->conf['record'] === 'No')
-			$pm->addWarning('Client hosts will not record backups for this backup set.  If another backup set asks one of the Backup|What client hosts to perform a "recorded" backup, the client will calculate which files to include in the backup without using history of backups from this backup set. The "record" feature only works for filesystem type entries on the Backup|What page.');
+			$pm->addWarning('客户端不会为这个备份集记录备份。如果一个备份集在要求 备份|来源 页面的客户端执行recorded备份，客户端将计算哪些文件将包含在备份中而不使用这个备份集的历史备份文件。 "record" 仅支持Backup|What页面提供的文件系统类型，windows文件系统除外。');
 
 	return 'BackupHow';
 }
@@ -101,16 +101,16 @@ protected function runState(ZMC_Registry_MessageBox $pm)
 					ZMC::array_move($globalParams, $dumptypeParams, array_keys(self::$param2where, 'zmc_backupset_dumptypes'));
 					ZMC::array_move($globalParams, $bindingParams, array_keys(self::$param2where, 'binding_conf'));
 					if (ZMC_BackupSet::modifyConf($pm, $pm->edit['configuration_name'], $globalParams, 'amanda.conf'))
-						$pm->addMessage($msg = "Global updates saved.");
+						$pm->addMessage($msg = "全局更新保存。");
 					else
-						$pm->addWarnError($msg = "Global updates failed.");
+						$pm->addWarnError($msg = "全局更新失败");
 
 					if (!empty($dumptypeParams))
 					{
 						if (ZMC_BackupSet::modifyConf($pm, $pm->edit['configuration_name'], array('dumptype_list' => array('zmc_backupset_dumptype' => $dumptypeParams)), 'zmc_backupset_dumptypes'))
-							$pm->addMessage($msg .= " Dumptype updates saved.");
+							$pm->addMessage($msg .= "  备份类型更新保存");
 						else
-							$pm->addWarnError($msg .= " Dumptype updates failed.");
+							$pm->addWarnError($msg .= "  备份类型更新失败");
 					}
 
 					ZMC::auditLog($msg, 0, null, ZMC_Error::NOTICE);
@@ -122,7 +122,7 @@ protected function runState(ZMC_Registry_MessageBox $pm)
 
 							if($key === "taper_parallel_write"){
 								if($val <= 0){
-									$pm->addError("Media parallel write ($val) must be greater than 0.");
+									$pm->addError("存储介质并行写参数 ($val) 必须大于 0.");
 									break;
 								}
 								if($pm->binding['_key_name'] === 'changer_library'){
@@ -133,7 +133,7 @@ protected function runState(ZMC_Registry_MessageBox $pm)
 												$fil_array[$k] = $v;
 										}
 										if(count($fil_array) < $val){
-											$pm->addError("Media parallel write ($val) should not exceeds with total number of selected tape drives (". count($fil_array).").");
+											$pm->addError("介质并行写参数 ($val) 不能超过所选定的设备参数(". count($fil_array).").");
 											break;
 										}
 									}
@@ -166,14 +166,14 @@ protected function runState(ZMC_Registry_MessageBox $pm)
 			catch (Exception $e)
 			{
 				$pm->addYasumiServiceException($e); 
-				ZMC::auditLog('Edit of backup set "' . $pm->edit['configuration_name'] . "\" failed: $e", $e->getCode(), null, ZMC_Error::ERROR);
+				ZMC::auditLog('编辑备份集 "' . $pm->edit['configuration_name'] . "\" 失败: $e", $e->getCode(), null, ZMC_Error::ERROR);
 			}
 			break;
 
 		case 'Cancel':
 			ZMC_BackupSet::cancelEdit();
 			$pm->offsetUnset('edit');
-			$pm->addWarning("Edit/Add cancelled.");
+			$pm->addWarning("编辑/新增  取消.");
 			break;
 
 		default:
@@ -215,9 +215,9 @@ protected function runState(ZMC_Registry_MessageBox $pm)
 				}
 
 			}
-			$pm->addDefaultInstruction('Fine tune advanced settings that affect how backups are done for this backup set.');
+			$pm->addDefaultInstruction('对参数进行高级调优对于该备份集中的备份如何完成有很大影响。');
 			if (empty($pm->edit))
-				return $pm->addDefaultInstruction('Choose a backup set to fine tune advanced settings that affect how backups are done for this backup set.');
+				return $pm->addDefaultInstruction('请先选择一个备份集......');
 			$_POST = null; 
 			ZMC_BackupSet::readConf($pm, $pm->selected_name, null, 'read', 'zmc_backupset_dumptypes');
 			ZMC_BackupSet::readConf($pm, $pm->selected_name);
@@ -247,33 +247,33 @@ protected function filter(ZMC_Registry_MessageBox $pm, &$post)
 		if (!ZMC::isValidIntegerInRange($post['etimeout'], 3, 3600))
 			$pm->addWarning($warn);
 		if (!ZMC::isValidIntegerInRange($post['etimeout'], 3, 259200))
-			$pm->addWarnError('Backup Estimate Time Out should be an integer between 3 and 259200 (seconds) (max 600 seconds recommended).');
+			$pm->addWarnError('备份预估时间应该是3到259200之间的整数，单位是秒 (最大推荐值600).');
 	
 		if (!ZMC::isValidIntegerInRange($post['ctimeout'], 0, 9999))
-			$pm->addWarnError('Verification Time Out should be an integer between 0 and 9999 (seconds) (max 60 seconds recommended).');
+			$pm->addWarnError('校验过期时间应该是0到9999之间的整数，单位是秒。 (最大推荐值60).');
 	
 		if (!ZMC::isValidIntegerInRange($post['dtimeout'], 0, 3600))
 			$pm->addWarning($warn);
 		if (!ZMC::isValidIntegerInRange($post['dtimeout'], 0, 259200))
-			$pm->addWarnError('Data Time Out should be an integer between 0 and 259200 (seconds) (max 1800 seconds recommended).');
+			$pm->addWarnError('数据过期时间应该是3到259200之间的整数，单位是秒 (最大推荐值1800)..');
 	
 		if (empty($post['taperalgo']))
-			$pm->addWarnError('Please enter a value for Media Utilization.');
+			$pm->addWarnError('请介质指利用输入一个整数.');
 		else
 			$post['taperalgo'] = strtolower($post['taperalgo']);
 	
 		if (!ZMC::isValidIntegerInRange($post['inparallel'], 1, 999))
-			$pm->addWarnError('Server Parallel Backups should be an integer between 1 and 999 (less than 10 recommended).');
+			$pm->addWarnError('服务器备份并行度应该是介于1和999之间的整数 (推荐小于10).');
 	
 		if (empty($post['dumporder']))
-			$pm->addWarnError('Please enter a value for Backup Order.');
+			$pm->addWarnError('请为备份顺序选择一个值');
 	
 		$pattern = '[^[sStTbB]+$]';
 		if (!preg_match($pattern, $post['dumporder']))
-			$pm->addWarnError('Invalid characters in Backup Order.  Allowable characters are \'s\', \'S\', \'t\', \'T\', \'b\' and \'B\'');
+			$pm->addWarnError('无效字符，支持的字符有 \'s\', \'S\', \'t\', \'T\', \'b\' and \'B\'');
 	
 		if (!ZMC::isValidIntegerInRange($post['maxdumps'], 1, 63))
-			$pm->addWarnError('Client Parallel Backups should be an integer between 1 and 63 (less than 10 recommended).');
+			$pm->addWarnError('服务器备份并行度应该是介于1和63之间的整数 (推荐小于10).');
 
 		if (empty($post['reserved_tcp_port']))
 			$post['reserved_tcp_port'] = '700-710';
@@ -281,7 +281,7 @@ protected function filter(ZMC_Registry_MessageBox $pm, &$post)
 		{
 			$ports = preg_split('/\D+/', trim($post['reserved_tcp_port']));
 			if (count($ports) !== 2 || empty($ports[0]) || $ports[1] < $ports[0] || $ports[0] < 1 || $ports[1] > 1023)
-				$pm->addWarnError("Port range \"$ports[0]-$ports[1]\" must specify a valid range of TCP ports (e.g. \"1000-1023\"), some of which should not be listed in /etc/services (only unlisted ports will be used).");
+				$pm->addWarnError("端口区间 \"$ports[0]-$ports[1]\" 必须是有效的TCP端口区间 (如 \"1000-1023\"), 其中的一些不应该已经存在于/etc/services 中(只有不存在的才可以使用).");
 			else
 				$post['reserved_tcp_port'] = "$ports[0],$ports[1]";
 		}
@@ -296,7 +296,7 @@ protected function filter(ZMC_Registry_MessageBox $pm, &$post)
 				if (empty($trimmed))
 					continue;
 				if(!ZMC_User::isValidAmandaEmail($trimmed))
-					$pm->addWarnError('The address '.$email.' is not a valid email address');
+					$pm->addWarnError('邮件地址 '.$email.' 不是一个有效的邮件地址');
 				$cleaned[] = $trimmed;
 			}
 			$post['mailto'] = join(' ', $cleaned);

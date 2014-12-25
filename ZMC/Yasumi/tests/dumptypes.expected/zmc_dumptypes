@@ -3,7 +3,7 @@
 # ZMC Application Tools #
 #########################
 define application_tool app_amgtar {
-	comment	"ZMC GNUTAR Application Plugin: http://wiki.zmanda.com/man/amgtar.8.html"
+	comment	"ZMC GNUTAR Application Plugin: http://wiki.wocloud.cn/man/amgtar.8.html"
 	plugin	"amgtar"
 	#property "GNUTAR-PATH" "/path/to/gtar"
 	#property "GNUTAR-LISTDIR" "/path/to/gnutar_list_dir" # Directory where gnutar stores the database it uses to generate incremental dumps.
@@ -61,7 +61,7 @@ define dumptype zmc_postgresql_app {
 }
 
 define application_tool app_amstar {
-	comment	"ZMC STAR Application Plugin: http://wiki.zmanda.com/man/amstar.8.html"
+	comment	"ZMC STAR Application Plugin: http://wiki.wocloud.cn/man/amstar.8.html"
 	plugin	"amstar"
 	# Do not allow gnutar to cross filesystem boundaries.
 	property	"ONE-FILE-SYSTEM"	"yes"
@@ -80,7 +80,7 @@ define dumptype zmc_star_app {
 }
 
 define application_tool app_amsamba {
-	comment	"CIFS/SMB compatiable Amanda plugin: http://wiki.zmanda.com/man/amsamba.8.html"
+	comment	"CIFS/SMB compatiable Amanda plugin: http://wiki.wocloud.cn/man/amsamba.8.html"
 	plugin	"amsamba"
 	#property "SMBCLIENT-PATH" "The path to the smbclient binary. The default is set when Amanda is built."
 	#property "GNUTAR-PATH" "The path to the gnutar binary. The default is set when Amanda is built. gnutar is use to create the index."
@@ -90,7 +90,7 @@ define application_tool app_amsamba {
 }
 
 define dumptype zmc_cifs_app {
-	comment	"CIFS/SMB compatiable application: http://wiki.zmanda.com/man/amsamba.8.html"
+	comment	"CIFS/SMB compatiable application: http://wiki.wocloud.cn/man/amsamba.8.html"
 	program	"APPLICATION"
 	application	"app_amsamba"
 	# currently only "server" is permitted when using app_amcifs
@@ -99,7 +99,7 @@ define dumptype zmc_cifs_app {
 }
 
 define application_tool app_amsuntar {
-	comment	"Solaris tar Amanda plugin, supporting ZFS extended attributes: http://wiki.zmanda.com/man/amsuntar.8.html"
+	comment	"Solaris tar Amanda plugin, supporting ZFS extended attributes: http://wiki.wocloud.cn/man/amsuntar.8.html"
 	plugin	"amsuntar"
 	property	"BLOCK-SIZE"	"64"
 	property	"EXTENDED-ATTRIBUTES"	"NO"
@@ -117,7 +117,7 @@ define dumptype zmc_suntar_app {
 }
 
 define application_tool app_zfssendrecv {
-	comment	"ZFS send/recv application support http://wiki.zmanda.com/man/amzfs-sendrecv.8.html"
+	comment	"ZFS send/recv application support http://wiki.wocloud.cn/man/amzfs-sendrecv.8.html"
 	plugin	"amzfs-sendrecv"
 	property	"DF-PATH"	"/usr/sbin/df"
 	property	"ZFS-PATH"	"/usr/sbin/zfs"
@@ -135,7 +135,7 @@ define dumptype zmc_zfssendrecv_app {
 }
 
 define script_tool script_amzfssnapshot {
-	comment	"ZFS snapshot application support http://wiki.zmanda.com/man/amzfs-snapshot.8.html"
+	comment	"ZFS snapshot application support http://wiki.wocloud.cn/man/amzfs-snapshot.8.html"
 	plugin	"amzfs-snapshot"
 	execute_where	client
 	execute_on	pre-dle-amcheck, post-dle-amcheck, pre-dle-estimate, post-dle-estimate, pre-dle-backup, post-dle-backup

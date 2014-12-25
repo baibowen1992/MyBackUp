@@ -16,16 +16,16 @@ global $pm;
 $action = rtrim($pm->state, '012');
 echo "<form method='post' action='$pm->url'>";
 ?>
-<div class="zmcWindow">
-<div class="zmcTitleBar">
+<div class="wocloudWindow">
+<div class="wocloudTitleBar">
 <?
 	$objectType = isset($pm->form_type) ? ' ' . $pm->form_type['name'] : '';
 	echo 'Create a new vault job';
 ?>
 </div>
-<a class="zmcHelpLink" id="zmcHelpLinkId" href="<? echo ZMC::$registry->wiki, $pm->tombstone, '+', ucFirst($pm->subnav), '#', $action, urlencode($objectType) ?>" target="_blank"></a>
+<a class="wocloudHelpLink" id="wocloudHelpLinkId" href="http://www.wocloud.cn" target="_blank"></a>
 <?
-if($pm->state === 'Create' || $pm->state === 'Cancel'){
+if($pm->state === 'New' || $pm->state === 'Cancel'){
 	$selected_vault_level = 'latest_full_backup';
 	$selected_vault_type = 'latest';
 } else {
@@ -56,7 +56,7 @@ if($selected_vault_type === 'time_frame'){
 	<label style="font-weight:bold;">Backup Run Range:</label>
 	<div style="padding-left:20px;">
 		<input type="radio" name="vault_type" value="latest" <?= $selected_vault_type === 'latest' ? 'checked' : '' ?> onchange="zmcRegistry.adjust_vault_datetime_pickers()" /> Vault the latest backup run<br style="clear:left;">
-		<input type="radio" name="vault_type" value="last_x_days" <?= $selected_vault_type === 'last_x_days' ? 'checked' : '' ?> onchange="zmcRegistry.adjust_vault_datetime_pickers()" />Vault all backup runs started in the last <input id="num_of_days" class="zmcShortestInput" type="number" name="num_of_days" style="float:none; text-align:right; width:40px;" value="31"/> days<br style="clear:left;">
+		<input type="radio" name="vault_type" value="last_x_days" <?= $selected_vault_type === 'last_x_days' ? 'checked' : '' ?> onchange="zmcRegistry.adjust_vault_datetime_pickers()" />Vault all backup runs started in the last <input id="num_of_days" class="wocloudShortestInput" type="number" name="num_of_days" style="float:none; text-align:right; width:40px;" value="31"/> days<br style="clear:left;">
 		<input type="radio" name="vault_type" id="vault_time_frame_radio_button" value="time_frame" <?= $selected_vault_type === 'time_frame' ? 'checked' : '' ?> onchange="zmcRegistry.adjust_vault_datetime_pickers()" /> Vault all backup runs started within a time frame<br style="clear:left;">
 	</div>
 	<div style="padding-left:50px;">
@@ -67,11 +67,11 @@ if($selected_vault_type === 'time_frame'){
 		<input type="date" name="vault_end_date"  id="end_date_picker" disabled="disabled" value=<?= "\"" . $endDate . "\""?>/>
 		<input type="time" name="vault_end_time" id="end_time_picker" disabled="disabled" value=<?= "\"" . $endTime . "\""?>/><br style="clear:left;">
 	</div>
-</div><!-- zmcFormWrapper -->
-<div class="zmcButtonBar zmcButtonsLeft">
+</div><!-- wocloudFormWrapper -->
+<div class="wocloudButtonBar wocloudButtonsLeft">
 	<input type="submit" name="action" value="Cancel" />
 	<input type="submit" name="action" value="Next" />
 </div>
-</div><!-- zmcWindow -->
+</div><!-- wocloudWindow -->
 
 <?echo "</form>";?>

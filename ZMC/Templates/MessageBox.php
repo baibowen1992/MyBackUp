@@ -75,9 +75,9 @@ if (!ob_get_length() || ($noErrors && $noWarnings && $noInternals && $noDefaults
 	}
 $box = str_ireplace('Yasumi', 'AGS', ob_get_clean()); 
 $id = (empty($pm->id) ? ZMC_Templates_MessageBoxHelper::$boxNumber++ : $pm->id);
-echo "\t\t<div class='zmcMessageBox' id='zmcMessageBox$id' style='$hideBox'>\n";
+echo "\t\t<div class='wocloudMessageBox' id='wocloudMessageBox$id' style='$hideBox'>\n";
 if (!empty($pm->show_yui_loader_div))
-	echo '<div id="div_yui_loading" style="position:absolute; right:20px; z-index:999; font-size:11px;">Loading <img style="vertical-align:middle;" title="..." src="/images/icons/icon_calendar_progress.gif" height="18" width="20" /></div>';
+	echo '<div id="div_yui_loading" style="position:absolute; right:20px; z-index:999; font-size:11px;">载入中 <img style="vertical-align:middle;" title="..." src="/images/icons/icon_calendar_progress.gif" height="18" width="20" /></div>';
 echo "		$box\n<div style='clear:both'></div>\n";
-echo "\t\t</div><!-- zmcMessageBox -->\n";
-echo "<div id='zmcMessageBoxPad$id' style='height:10px; $hidePadding'></div>";
+echo "\t\t</div><!-- wocloudMessageBox -->\n";
+echo "<div id='wocloudMessageBoxPad$id' style='height:10px; $hidePadding'></div>";

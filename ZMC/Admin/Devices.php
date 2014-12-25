@@ -1,5 +1,5 @@
 <?
-
+//zhoulin-admin-device
 
 
 
@@ -25,9 +25,9 @@ class ZMC_Admin_Devices extends ZMC_Form
 		}
 		$pm->rows = $pm->lsscsi = $pm->edit = $pm->goto = null;
 		ZMC_BackupSet::start($pm);
-		ZMC_HeaderFooter::$instance->header($pm, 'Admin', 'ZMC - Device Management', 'devices');
-		ZMC_HeaderFooter::$instance->addYui('zmc-utils', array('dom', 'event', 'connection'));
-		ZMC_HeaderFooter::$instance->addYui('zmc-messagebox', array('dom', 'event', 'connection'));
+		ZMC_HeaderFooter::$instance->header($pm, 'Admin', '云备份 - 设备管理', 'devices');
+		ZMC_HeaderFooter::$instance->addYui('wocloud-utils', array('dom', 'event', 'connection'));
+		ZMC_HeaderFooter::$instance->addYui('wocloud-messagebox', array('dom', 'event', 'connection'));
 		$pm->state = (empty($_REQUEST['action']) ? '' : $_REQUEST['action']);
 		if (!strncmp($pm->state, 'Refresh', 7) && !empty($_POST['_key_name']))
 			$pm->state = $_POST['pm_state'];
@@ -50,14 +50,15 @@ class ZMC_Admin_Devices extends ZMC_Form
 				reset($_POST['selected_ids']);
 				return ZMC::headerRedirect("/ZMC_Admin_Advanced?form=adminTasks&action=Apply&command=/etc/zmanda/zmc/zmc_ags/device_profiles/" . key($_POST['selected_ids']) . ".yml", __FILE__, __LINE__);
 
-			case 'Update': 
+			case 'Update':
 				$update = true;
-			case 'Add': 
-				if (!ZMC_User::hasRole('Administrator'))
-				{
-					$pm->addError('Only a ZMC administrator may ' . $pm->state . ' devices.');
-					return;
-				}
+			case 'create':
+//--edit by zhoulin,normal user can create device
+//				if (!ZMC_User::hasRole('Administrator'))
+//				{
+//					$pm->addError('Only a ZMC administrator may ' . $pm->state . ' devices.');
+//					return;
+//				}
 
 				if(isset($_POST['changer:changerdev_other']))
 					$reply = ZMC_Yasumi::operation($pm, array('pathInfo' => '/Tape-Drive/discover_changers', 'data' => array('additional_changer_device_path' => array("'" . $_POST['changer:changerdev_other'] . "'" => 1))));
@@ -65,12 +66,12 @@ class ZMC_Admin_Devices extends ZMC_Form
 				$pm->binding = ZMC_DeviceFilter::filter($pm, 'input', $_POST, 'ZMC_Type_Devices');
 				$realpath = realpath($pm->binding['changer:changerdev']);
 				if ($rw = ZMC::is_readwrite($realpath, false))
-					$pm->addError("Unable to use changerdevice at '{$pm->binding['changer:changerdev']} => $realpath' because the linkpoints to destination lacking read and/or write permissions.\n$rw");
+					$pm->addError("不能在路径'{$pm->binding['changer:changerdev']} => $realpath' 下新建设备，因为缺少读写权限.\n$rw");
 				if (!ZMC::isalnum_($pm->binding['id']))
-					$pm->addError('Use only alphanumeric characters or the underscore character for device names.  Illegal device name: ' . $pm->binding['id']);
+					$pm->addError('仅支持数字字母以及下划线给设备命名，该设备名无效: ' . $pm->binding['id']);
 
 				if (ZMC_BackupSet::getId($pm->binding['id']))
-					$pm->addWarnError('A backup set named ' . $pm->binding['id'] . ' already exists. ZMC storage devices can not have the same name as a backup set.  Please choose a different device name.');
+					$pm->addWarnError('名为 ' . $pm->binding['id'] . ' 的备份集已经存在，存储设备名不能和备份集名相同，请更换');
 
 				if($pm->binding['_key_name'] === 'changer_ndmp' && !preg_match("/^.+@.+$/", $pm->binding['changerdev']))
 					$pm->addError('Invalid "Application Location".  Must be of format &lt;IP&gt;@&lt;location&gt;.');
@@ -84,7 +85,7 @@ class ZMC_Admin_Devices extends ZMC_Form
 					$this->buildFormWrapper($pm);
 					break;
 				}
-
+                //echo "johnnytest0>>>>>>>>>".$pm;
 				try
 				{
 					$result = ZMC_Yasumi::operation($pm, array(
@@ -95,9 +96,15 @@ class ZMC_Admin_Devices extends ZMC_Form
 							'device_profile_list' => array($pm->binding['id'] => $pm->binding)
 						),
 					));
+                    //echo "<br>johnnytest1>>>>>>>>>".$result;
 					$pm->merge($result);
+                    //echo '<br>johnnytest2>>>>>>>>>'.$result;
 					ZMC_Type_Devices::addExpireWarnings($pm);
 					ZMC_DeviceFilter::filterNamedList($pm, $pm->device_profile_list);
+
+                    //插入设备拥有者表
+                    $jid = ZMC_User::insertDrivesOwner($_SESSION['user'],$pm->binding['id']);
+                    //echo '插入设备拥有者表：'.$jid;
 				}
 				catch(Exception $e)
 				{}
@@ -105,14 +112,14 @@ class ZMC_Admin_Devices extends ZMC_Form
 				if (empty($pm->fatal))
 				{
 					!$update && ZMC_Paginator_Reset::reset('last_modified_time'); 
-					$pm->addMessage($msg = "Device '" . $pm->binding['id'] . ($update ? "' updated." : "' added."));
+					$pm->addMessage($msg = ($update ? " 更新." : " 新增")." 设备 '" . $pm->binding['id'] ."‘ 成功" );
 					ZMC::auditLog($msg, 0, null, ZMC_Error::NOTICE);
 					$this->runState($pm, 'Create1');
 					break;
 				}
 
 				if (empty($e))
-					ZMC::auditLog(($update ? 'Edit' : 'Create') . ' of device "' . $pm->binding['id'] . "\" failed: " . $pm->getAllMerged(), 500, null, ZMC_Error::ERROR);
+					ZMC::auditLog(($update ? 'Edit' : 'New') . ' 设备 "' . $pm->binding['id'] . "\" 失败: " . $pm->getAllMerged(), 500, null, ZMC_Error::ERROR);
 
 				$this->buildFormWrapper($pm);
 				break;
@@ -134,15 +141,15 @@ class ZMC_Admin_Devices extends ZMC_Form
 				}
 				else
 				{
-					$pm->addError("Device '$id' does not exist.");
+					$pm->addError("设备 '$id' 不存在.");
 					$pm->state = 'Create1';
 					$this->runState($pm);
 				}
 				break;
 
 			case 'Delete':
-				if (!ZMC_User::hasRole('Administrator'))
-					$pm->addError('Only a ZMC administrator may ' . $pm->state . ' devices.');
+//				if (!ZMC_User::hasRole('Administrator'))
+//					$pm->addError('只有管理员用户才能 ' . $pm->state . ' 设备.');
 				$used = array();
 				foreach(ZMC::$userRegistry['selected_ids'] as $name => $ignore)
 					if (count(ZMC_BackupSet::getNamesUsing($name, false)))
@@ -154,13 +161,13 @@ class ZMC_Admin_Devices extends ZMC_Form
 
 				if (!empty($used))
 				{
-				   	$pm->addWarnError('Only unused devices may be deleted.  Delete all backup sets using a device, before deleting the device.  These devices are currently used by backup sets, and can not be deleted: ' . implode(', ', $used));
+				   	$pm->addWarnError('只有不在使用中的设备才能被删除，请先删除所有绑定到该设备的备份集： ' . implode(', ', $used));
 					if (empty(ZMC::$userRegistry['selected_ids'])) 
 						return $this->runState($pm, 'Refresh');
 				}
 				$pm->confirm_template = 'ConfirmationWindow';
-				$pm->addWarning('There is no undo.');
-				$pm->prompt ='Are you sure you want to DELETE the device(s)?<br /><ul>'
+				$pm->addWarning('操作不可撤销');
+				$pm->prompt ='你确定要删除这个设备吗?<br /><ul>'
 					. '<li>'
 					. implode("\n<li>", array_keys(ZMC::$userRegistry['selected_ids']))
 					. "\n</ul>\n";
@@ -172,15 +179,25 @@ class ZMC_Admin_Devices extends ZMC_Form
 			case 'DeleteConfirm':
 				
 				if (!isset($_POST['ConfirmationYes']))
-					$pm->addWarning("Edit/Add cancelled.");
+					$pm->addWarning("编辑/新增  取消");
 				else
 				{
 					try
 					{
 						$hosts = $disks = $device_profile_list = array();
-						foreach(ZMC::$userRegistry['selected_ids'] as $id => $ignore)
+                        //add by johnny 20141030,delete devices.========start========
+                        $delete_devices_name = '';
+						foreach(ZMC::$userRegistry['selected_ids'] as $id => $ignore){
+                            //echo $id.'< -------johnny test-------- >'.$ignore;
+                            $delete_devices_name .= "'".$id."',";
 							$device_profile_list[$id] = null;
-	
+                        }
+                        //echo '<br>'.$delete_devices_name.' -------- > johnny test2';
+                        $delete_devices_name=substr($delete_devices_name,0,strlen($delete_devices_name)-1);
+                        //echo '<br>'.$delete_devices_name.' -------- > delete space johnny test3';
+                        //add by johnny 20141030,delete devices.========end========
+
+
 						$names = implode(', ', array_keys($device_profile_list));
 						$result = ZMC_Yasumi::operation($pm, array(
 							'pathInfo' => '/Device-Profile/delete',
@@ -191,6 +208,11 @@ class ZMC_Admin_Devices extends ZMC_Form
 							),
 						));
 						$pm->merge($result);
+
+                        //执行删除操作  开始   johnny
+                        ZMC_User::deleteDrivesOwner($delete_devices_name,$_SESSION['user']);
+                        //执行删除操作  结束   johnny
+
 						ZMC::auditLog("Deleted device(s) $names", 0, null, ZMC_Error::NOTICE);
 					}
 					catch (Exception $e)
@@ -201,18 +223,18 @@ class ZMC_Admin_Devices extends ZMC_Form
 				
 
 			case 'Cancel':
-				if ($pm->state === 'Cancel') 
-					$pm->addWarning("Edit/Add cancelled.");
+				if ($pm->state === 'Cancel')
+					$pm->addWarning("编辑/新增  取消");
 			default:
 			case 'Refresh':
 			case 'Refresh Table':
 			case '': 
 				$pm->state = 'Create1';
 			case 'Create1':
-				$pm->addDefaultInstruction('Administer storage devices for backup sets by choosing a type of device to add, or clicking on a device below to edit an existing device.');
+				$pm->addDefaultInstruction('添加一种备份设备存储备份集需要备份的数据，或者编辑已经存在的备份设备。');
 				break;
 
-			case 'Create2': 
+			case 'Create2':
 				if (!empty($_POST['state']))
 					$pm->binding = ZMC_DeviceFilter::filter($pm, 'input', $_POST, 'ZMC_Type_Devices');
 				elseif (!empty($_REQUEST['_key_name']))
@@ -282,7 +304,7 @@ class ZMC_Admin_Devices extends ZMC_Form
 			}
 			catch(Exception $e)
 			{
-				$pm->addInternal("Unable to read device list: $e");
+				$pm->addInternal("无法读取设备列表: $e");
 				return $return;
 			}
 		}
@@ -303,21 +325,27 @@ class ZMC_Admin_Devices extends ZMC_Form
 		return self::$instance->getDeviceList($pm, $name);
 	}
 
-	
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    /*
+     * add by Johnny
+    ------------------------------------------------------
+    参数：
+    $str_cut    需要截断的字符串
+    $length     允许字符串显示的最大长度
+    程序功能：截取全角和半角（汉字和英文）混合的字符串以避免乱码
+    ------------------------------------------------------
+    */
+    public static function substr_cut($str_cut,$length)
+    {
+        if (strlen($str_cut) > $length)
+        {
+            for($i=0; $i < $length; $i++)
+                if (ord($str_cut[$i]) > 128)    $i++;
+            $str_cut = substr($str_cut,0,$i)."..";
+        }
+        return $str_cut;
+    }
 
 
 

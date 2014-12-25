@@ -159,18 +159,19 @@ private function zmrecover()
 		if (!preg_match($expect = '/VERSION AMANDA CLIENT\s*([^\n]+)\s+INFO\s+OSTYPE\s*([^<]+)/i', $payload, $matches))
 			throw new ZMC_Exception_YasumiFatal("Expecting '$expect'.  Server received unparsed packet: $payload");
 	$distro = ZMC::distro2abbreviation($matches[2]);
-	$this->setState(null, "Amanda Enterprise Client Version: $matches[1]\nDestination Host OS: $distro");
+        $matches_gci=str_replace("Zmanda", "ChinaUnicom",$matches);
+	$this->setState(null, "ChinaUnicom Cloud Backup Version: $matches_gci[1]\nDestination Host OS: $distro");
 	$found = "  Found $distro ($matches[1]).";
 	$zwc = !strncasecmp($distro, 'windows', 7);
 	if (!empty(ZMC_Type_AmandaApps::$dirTypes[$this->job['target_dir_selected_type']]['zwc_only']))
 	{
 		if (!$zwc)
-			throw new ZMC_Exception("A windows folder Destination Location was selected, but the Destination Host is not an AE Windows Client.$found");
+			throw new ZMC_Exception("输入的目录类型是windows系统下的，但是选择的还原客户端却不是windows 类型 $found");
 	}
 	elseif ($zwc && !empty(ZMC_Type_AmandaApps::$dirTypes[$this->job['target_dir_selected_type']]['unix_only']))
-		throw new ZMC_Exception("A windows folder Destination Location was *not* selected, but the Destination Host is an AE Windows Client.$found");
+		throw new ZMC_Exception("输入的目录类型不是windows系统下的，但是选择的还原客户端是windows 类型 $found");
 	if (!$this->job['zwc'] && $zwc)
-		throw new ZMC_Exception("The backup image (DLE) can not be restored to a Zmanda Windows Client Destination Host ($found). Instead, try restoring to localhost or an AE *nix Destination Host.");
+		throw new ZMC_Exception("这个备份镜像无法还原到windows客户端 ($found). 请尝试还原到 *nix 系统客户端。");
 	$this->readFromRestoreClient($this->attempt('Check version compatibility of Destination Host'), 'SUCCESS VERSION-COMPATIBLE', $this->read_timeout);
 	$this->sendToRestoreClient($this->attempt('Sending login information'), self::INFO_TYPE_MESSAGE, "<MSG>\nLOGIN USER {$this->job['user_name']}\n</MSG>\n");
 	$this->readFromRestoreClient($this->attempt('Read login response'), 'SUCCESS USER-AUTHENTICATION', $this->read_timeout);
@@ -569,7 +570,7 @@ private function fetchAll()
 			'/var/tmp', ZMC::$registry->proc_open_short_timeout, array($this, 'amfetchOneImage'));
 		if ($this->debug) $this->setState("Retrieve backup image using command:\n$command");
 		list($display_bytes, $display_unit) = $this->getDisplayInfo($this->total_bytes_sent);
-		$this->updateProgress($this->state['progress'] = "Amanda client scanned a total of $display_bytes $display_unit from " . ((count($this->job['index_files']) > 1) ? 'all backup images.' : 'the backup image.'));
+		$this->updateProgress($this->state['progress'] = "ChinaUnicom Cloud Backup client scanned a total of $display_bytes $display_unit from " . ((count($this->job['index_files']) > 1) ? 'all backup images.' : 'the backup image.'));
 		if (!$this->ndmpRestore)
 		{
 			$this->sendToRestoreClient($this->attempt("Sending $indexFileName RESTORE-DATA-SESSION END"), self::INFO_TYPE_MESSAGE,
@@ -698,7 +699,7 @@ private function copyFromAmfetch2Client($stream, &$buffer, &$total_bytes_read, &
 	{
 		$prev_reported = $total_bytes_read;
 		list($display_bytes, $display_unit) = $this->getDisplayInfo($total_bytes_read);
-		$this->updateProgress("Amanda client scanned $display_bytes $display_unit of L" . $this->level . ' backup image');
+		$this->updateProgress("ChinaUnicom Cloud Backup client scanned $display_bytes $display_unit of L" . $this->level . ' backup image');
 	}
 }
 

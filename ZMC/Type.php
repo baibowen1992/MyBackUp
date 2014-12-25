@@ -80,7 +80,7 @@ class ZMC_Type
 			if ($failureOk)
 				return false;
 			else
-				throw new ZMC_Exception("Invalid object/DLE type '$zmcType'.");
+				throw new ZMC_Exception("无效的备份项类型 '$zmcType'.");
 
 		if (empty(static::$defaultType))
 		{
@@ -218,7 +218,7 @@ class ZMC_Type
 		if (isset(static::$zmcTypes[$zmcType]))
 			return static::$zmcTypes[$zmcType]['license_group'];
 
-		ZMC::debugLog(__CLASS__ . '::' . __FUNCTION__ . "(): Invalid license type '$zmcType'");
+		ZMC::debugLog(__CLASS__ . '::' . __FUNCTION__ . "(): 非法的许可证类型 '$zmcType'");
 		return false;
 	}
 
@@ -231,7 +231,7 @@ class ZMC_Type
 			if (ZMC::$registry->debug)
 				ZMC::quit("lstats empty");
 			else
-				return $pm->addInternal("Can not add license expiration warnings.");
+				return $pm->addInternal("无法增加许可证到期警告.");
 			
 		$products =& $pm->lstats['licenses']['zmc'];
 		$expiring = array();
@@ -257,11 +257,11 @@ class ZMC_Type
 		}
 
 		$url = ZMC::getPageUrl($pm, 'Admin', 'Licenses', 'ZMC licenses');
-		if (count($expiring))
-			$pm->addEscapedWarning("$url expire soon for: " . ZMC::escape(implode(', ', $expiring)));
-
-		if (count($expired))
-			$pm->addEscapedWarning("$url have expired for: " . ZMC::escape(implode(', ', $expired)));
+//		if (count($expiring))
+//			$pm->addEscapedWarning("$url expire soon for: " . ZMC::escape(implode(', ', $expiring)));
+//
+//		if (count($expired))
+//			$pm->addEscapedWarning("$url have expired for: " . ZMC::escape(implode(', ', $expired)));
 	}
 
 	public static function getIcon(ZMC_Registry_MessageBox $pm, $type, &$disabled, $attribs = '', $css = '')
@@ -287,7 +287,12 @@ class ZMC_Type
 		return "<img title='" . ZMC::escape($type['name']). "' style='$css' src='$icon' $attribs />\n";
 	}
 
-	
+    //added by zhoulin.search if the device is in used or not
+    public static function getdeviceused($name)
+    {
+        $sql = "SELECT device FROM configurations where device='$name'";
+        return ZMC_Mysql::getAllRowsMap($sql, '无法读取数据表 "configurations" ', false, null, 'id');
+    }
 	
 	public static function mergeCreationDefaults(&$type, $convertToDisplayUnits = false)
 	{

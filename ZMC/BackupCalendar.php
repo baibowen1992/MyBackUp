@@ -233,7 +233,7 @@ public static function initReportCalendar(ZMC_Registry_MessageBox $pm)
 public static function renderCalendar($pm)
 {
 	$subnavInfo = ucfirst($pm->tombstone) . ucfirst($pm->subnav);
-	echo '<div class="zmcLeftWindow">';
+	echo '<div class="wocloudLeftWindow">';
 	ZMC::titleHelpBar($pm, '', 'Backup Date', '', '', "<div style='text-align: center;'>$GLOBALS[calCaption]</div>");
 	global $calMonth;
 	$WeekDayLabels = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
@@ -375,9 +375,9 @@ public static function renderCalendar($pm)
 	$val = date("Y-m-d",$_SESSION[$subnavInfo."DayClick"]);
 	?>
 		</table>
-		<div class="zmcButtonBar">
+		<div class="wocloudButtonBar">
 			<input type="submit" name="action" value="Go" />
-			<input style='float:right;' name='viewDate' type='text' title='Enter date in yyyy-mm-dd or yy-mm-dd format' class='zmcShortestInput' maxlength='10' value='<?= $val ?>' />
+			<input style='float:right;' name='viewDate' type='text' title='Enter date in yyyy-mm-dd or yy-mm-dd format' class='wocloudShortestInput' maxlength='10' value='<?= $val ?>' />
 		</div>
 	</div>
 	<?

@@ -23,8 +23,8 @@ protected function __construct($pm)
 	if (!empty($pm->state))
 		return $this;
 	
-	ZMC_HeaderFooter::$instance->addYui('zmc-utils', array('dom', 'event', 'connection'));
-	ZMC_HeaderFooter::$instance->addYui('zmc-messagebox', array('dom', 'event', 'connection'));
+	ZMC_HeaderFooter::$instance->addYui('wocloud-utils', array('dom', 'event', 'connection'));
+	ZMC_HeaderFooter::$instance->addYui('wocloud-messagebox', array('dom', 'event', 'connection'));
 	$pm->state = (empty($_REQUEST['action']) ? '' : $_REQUEST['action']);
 	if($pm->state === 'DuplicateConfirm')
 		$pm['duplicate_backupset_name'] = $_REQUEST['duplicate_backupset_name'];
@@ -36,7 +36,7 @@ protected function __construct($pm)
 		$pm->edit = ZMC_BackupSet::getByName($pm->selected_name);
 	if ((!$creatingNewSet && empty($pm->edit) && ZMC_BackupSet::count())
 		&& (($pm->state === 'Delete') && (count($_REQUEST['selected_ids']) < 2)))
-			$pm->addMessage('Choose a backup set to continue.');
+			$pm->addMessage('请选择一个备份集');
 	$pm->goto = null;
 	if ($pm->state === 'Refresh Table' || $pm->state === 'Refresh') 
 		$pm->state = (empty($_POST['pm_state']) ? 'Refresh' : $_POST['pm_state']);
@@ -235,7 +235,7 @@ protected function updateAdd(ZMC_Registry_MessageBox $pm, $update)
 
 	if (!empty($pm->fatal) || $pm->isErrors())
 	{
-		$pm->addError($msg = $pm->selected_name . ': ' . ($update ? 'Update' : 'Create') . " $pm->subnav settings failed for device \"" . $pm->binding['private:zmc_device_name'] . "\": $e");
+		$pm->addError('备份集'. $msg = $pm->selected_name . '' . ($update ? '更新' : '新建') . '配置设备' . $pm->binding['private:zmc_device_name'] . "失败: $e");
 		return $this->buildFormWrapper($pm);
 	}
 
@@ -246,7 +246,7 @@ protected function updateAdd(ZMC_Registry_MessageBox $pm, $update)
 	if (!$update)
 		ZMC_Paginator_Reset::reset('last_modified_time'); 
 
-	$pm->addMessage($msg = $pm->selected_name . ': ' . ($update ? 'Updated' : 'Added') . ' "' . ucfirst($pm->subnav) . '" settings for device "' . $pm->binding['private']['zmc_device_name'] . '".');
+	$pm->addMessage('备份集'. $msg = $pm->selected_name . ''. ($update ? '更新' : '创建') .'设备"' . $pm->binding['private']['zmc_device_name'] . '"的配置.');
 	ZMC::auditLog($msg, 0, null, ZMC_Error::NOTICE);
 }
 

@@ -38,7 +38,7 @@ class ZMC_Loader
 		elseif ($presentationModel instanceof ArrayObject)
 			$pm = $presentationModel; 
 		else
-			throw new ZMC_Exception_Loader("Template '$filename': presentationModel is neither an array nor ArrayObject ("
+			throw new ZMC_Exception_Loader("模板 '$filename': 展示模型既不时一个array也不是ArrayObject类型 ("
 											. print_r($presentationModel, true) . ')', __LINE__, $filename);
 
 		$return = self::loadFile("$filename.php", 'ZMC/Templates');

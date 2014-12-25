@@ -1,5 +1,5 @@
 <?
-
+//zhoulin-admin-audit 201409172103
 
 
 
@@ -17,11 +17,11 @@ class ZMC_Admin_Audit
 public static function run(ZMC_Registry_MessageBox $pm)
 {
 	$pm->skip_backupset_start = true;
-	ZMC_HeaderFooter::$instance->header($pm, 'Admin', 'ZMC - Audit', 'audit'); 
-	$pm->addDefaultInstruction('View timeline of ZMC users\' actions, including details of edits and changes. Hover over the "i" icons to see the details of the corresponding action listed in the "action" column.');
+	ZMC_HeaderFooter::$instance->header($pm, 'Admin', '云备份 - 审计', 'audit'); 
+	$pm->addDefaultInstruction('按时间线查看用户操作记录，包含详细的编辑和更改。在开启详细记录之后，鼠标悬停在紫色圆圈内的“i”图标可以查看相关的详细记录。.');
 	if (!ZMC_User::hasRole('Administrator'))
 	{
-		$pm->addError('Only ZMC administrators may perform this action.');
+		$pm->addError('仅允许管理员进行该操作.');
 		return 'AdminAudit';
 	}
 

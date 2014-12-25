@@ -17,7 +17,7 @@ class ZMC_Report_Data
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Report', 'ZMC - Backed up data report', 'Data');
+		ZMC_HeaderFooter::$instance->header($pm, 'Report', '云备份 - Backed up data report', 'Data');
 		$pm->addDefaultInstruction('View reports about data in previous backups.');
 		if (!ZMC_BackupSet::assertSelected($pm))
 			return 'MessageBox'; 

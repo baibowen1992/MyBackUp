@@ -76,7 +76,7 @@ class ZMC_Report_Custom
 		'program',
 	);
 
-	public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Report', $title = 'ZMC - View and Customize Reports', $subnav = 'custom')
+	public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Report', $title = '云备份 - 查看并自定义报告', $subnav = 'custom')
 	{
 		$pm->goto = null;
 		$pm->disabled = 'Disabled';
@@ -204,7 +204,7 @@ class ZMC_Report_Custom
 
 			case 'DeleteConfirm':
 				if (!isset($_POST['ConfirmationYes']))
-					return $pm->addWarning("Edit/Add cancelled.");
+					return $pm->addWarning("编辑/新增  取消.");
 
 				unset(ZMC::$registry->CustomReports[$_SESSION['custom']['report']]);
 				ZMC::$registry->setOverrides(array('CustomReports' => ZMC::$registry->CustomReports));

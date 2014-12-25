@@ -14,31 +14,31 @@
 
 class ZMC_ZmandaNetwork
 {
-	
+	/*
 	protected static $registry = array(
 		
 	   	
-		'curl_connectivity' => '<a target="ZmandaInfo" href="https://network.zmanda.com/">Zmanda Network</a> user name and/or password could not be validated (potentially a connectivity/server issue). ',
+		'curl_connectivity' => '<a target="ZmandaInfo" href="https://network.wocloud.cn/">wocloud</a> user name and/or password could not be validated (potentially a connectivity/server issue). ',
 
-		'connectivity' => '<a target="ZmandaInfo" href="https://network.zmanda.com/">Zmanda Network</a> user name and/or password could not be validated.',
-		'help_connectivity' => 'ZMC was not able to connect to the Zmanda Network and won\'t be able to alert you for any updates, including security fixes. While this does not impact immediate functionality of @NAME@, we recommend that you check if there is a firewall or other network issue preventing this authentication from the Amanda server to https://network.zmanda.com.',
+		'connectivity' => '<a target="ZmandaInfo" href="https://network.wocloud.cn/">wocloud</a> user name and/or password could not be validated.',
+		'help_connectivity' => 'ZMC was not able to connect to the wocloud and won\'t be able to alert you for any updates, including security fixes. While this does not impact immediate functionality of @NAME@, we recommend that you check if there is a firewall or other network issue preventing this authentication from the Amanda server to https://network.wocloud.cn.',
 
-		'zn_internal_error' => '<a target="ZmandaInfo" href="https://network.zmanda.com/">Zmanda Network</a> user name and/or password could not be validated (internal error).',
+		'zn_internal_error' => '<a target="ZmandaInfo" href="https://network.wocloud.cn/">wocloud</a> user name and/or password could not be validated (internal error).',
 
-		'auth_invalid' => '<a target="ZmandaInfo" href="https://network.zmanda.com/">Zmanda Network</a> user name and/or password is not valid. Zmanda Network won\'t be able to alert you for any updates, including security fixes. While this does not impact immediate functionality of @NAME@, we recommend that you register your Zmanda Network account with ZMC.',
+		'auth_invalid' => '<a target="ZmandaInfo" href="https://network.wocloud.cn/">wocloud</a> user name and/or password is not valid. wocloud won\'t be able to alert you for any updates, including security fixes. While this does not impact immediate functionality of @NAME@, we recommend that you register your wocloud account with ZMC.',
 
-		'auth_missing' => 'It appears that you have not entered either the user name or the password for your <a target="ZmandaInfo" href="https://network.zmanda.com/">Zmanda Network</a> account. While this does not impact immediate functionality of @NAME@, we recommend that you register your Zmanda Network account with ZMC.',
+		'auth_missing' => 'It appears that you have not entered either the user name or the password for your <a target="ZmandaInfo" href="https://network.wocloud.cn/">wocloud</a> account. While this does not impact immediate functionality of @NAME@, we recommend that you register your wocloud account with ZMC.',
 
 		'need_different_text' => 'Please enter the correct user name and password.',
 
 		'need_different_link' => '<a href="?zn">Please enter a different name and password</a>. ',
 
 		'help_missing' =>
-			'<a href="?zn">Please enter</a> your <a target="ZmandaInfo" href="https://network.zmanda.com/">Zmanda Network</a> user name and password to connect to the Zmanda Network and receive update alerts, including security fixes.',
+			'<a href="?zn">Please enter</a> your <a target="ZmandaInfo" href="https://network.wocloud.cn/">wocloud</a> user name and password to connect to the wocloud and receive update alerts, including security fixes.',
 
-		'help_network' =>'<a href="?zn=1">Please try again later</a>. If this condition persists please check internet connectivity between your Amanda Server and <a target="ZmandaInfo" href="https://network.zmanda.com/">Zmanda Network</a> or contact Zmanda Customer Support at <a href="mailto:support@zmanda.com">support@zmanda.com</a>.',
+		'help_network' =>'<a href="?zn=1">Please try again later</a>. If this condition persists please check internet connectivity between your Amanda Server and <a target="ZmandaInfo" href="https://network.wocloud.cn/">wocloud</a> or contact Zmanda Customer Support at <a href="mailto:support@wocloud.cn">support@wocloud.cn</a>.',
 
-		'help_later' =>'<a href="?zn=1">Please try again later<a/>. If this condition persists please contact Zmanda Customer Support at <a href="mailto:support@zmanda.com">support@zmanda.com</a>.',
+		'help_later' =>'<a href="?zn=1">Please try again later<a/>. If this condition persists please contact Zmanda Customer Support at <a href="mailto:support@wocloud.cn">support@wocloud.cn</a>.',
 
 		'' => ''
 		);
@@ -190,7 +190,7 @@ class ZMC_ZmandaNetwork
 		$crypt = crypt($networkPassword, substr($networkId, 0, 2));
 		ZMC_Mysql::query($sql = "UPDATE users SET network_ID='" . ZMC_Mysql::escape($networkId)
 			. "', network_sessionID='" . ZMC_Mysql::escape($crypt)
-			. "' WHERE user_id =   $userId", $msg = 'Unable to save Zmanda Network information.');
+			. "' WHERE user_id =   $userId", $msg = 'Unable to save wocloud information.');
 		ZMC::debugLog("verifyAndSave($networkId, " . (ZMC::$registry->dev_only ? $networkPassword : '***') . ", $userId)");
 
 		if (!empty(ZMC::$registry->url_zn_auth))
@@ -245,7 +245,7 @@ class ZMC_ZmandaNetwork
 
 	protected static function get($userId = 1)
 	{
-		return ZMC_Mysql::getOneRow("SELECT network_ID, network_sessionID FROM users WHERE user_id = $userId", 'Unable to retrieve Zmanda Network settings from DB.');
+		return ZMC_Mysql::getOneRow("SELECT network_ID, network_sessionID FROM users WHERE user_id = $userId", 'Unable to retrieve wocloud settings from DB.');
 	}
 
 	public static function getNetworkId()
@@ -357,9 +357,9 @@ class ZMC_ZmandaNetwork
 			$pm->addDetail($curlErr . ':' . curl_error($ch) . '; ');
 		}
 		curl_close($ch);
-		ZMC::auditLog( __FUNCTION__ . "($networkId, " . ((ZMC::$registry->debug) ? $cryptedPassword : '***')
-			. ", $userId) - $zn?" . preg_replace('/strPassword=[^\&]*/', 'strPassword=***', $post) . "; error:$pm->details; raw result:$rawResult",
-			$curlErr, array('facility' => __CLASS__, 'tags' => array('ZN' => true, 'external' => true))
+		ZMC::auditLog( __FUNCTION__ . "($networkId, " . ((ZMC::$registry->debug) ? $cryptedPassword : '***')*/
+//			. ", $userId) - $zn?" . preg_replace('/strPassword=[^\&]*/', 'strPassword=***', $post) . "; error:$pm->details; raw result:$rawResult",
+/*			$curlErr, array('facility' => __CLASS__, 'tags' => array('ZN' => true, 'external' => true))
 		);
 
 		if (empty($pm->details))
@@ -416,12 +416,12 @@ class ZMC_ZmandaNetwork
 					{
 						self::setResult($pm, ($where === 'page' ? 'invalid_username_or_password_page' : 'invalid_username_or_password_popup'));
 						if (isset($codes[6]) && stripos('vader', $zn))
-							$pm->addDetail(' (shown only to Zmanda devs: Are you sure you have a ZN account on Vader.zmanda.com?)');
+							$pm->addDetail(' (shown only to Zmanda devs: Are you sure you have a ZN account on Vader.wocloud.cn?)');
 					}
 					elseif (in_array(0, $codes))
 					{
 						$pm->zn_status = true;
-						$pm->addEscapedMessage('Zmanda Network: now authenticated as <b>' . ZMC::escape(ZMC_User::get('user', $userId)) . '</b>');
+						$pm->addEscapedMessage('wocloud: now authenticated as <b>' . ZMC::escape(ZMC_User::get('user', $userId)) . '</b>');
 					}
 				}
 			}
@@ -452,4 +452,5 @@ class ZMC_ZmandaNetwork
 			ZMC::debugLog('config "zn_quiet" override, so ignoring: ' . $msg);
 		}
 	}
+	*/
 }

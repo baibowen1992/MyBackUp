@@ -16,12 +16,12 @@ class ZMC_Backup_When extends ZMC_Backup
 {
 public static function run(ZMC_Registry_MessageBox $pm)
 {
-	ZMC_HeaderFooter::$instance->header($pm, 'Backup', 'ZMC - Schedule Backups', 'when');
+	ZMC_HeaderFooter::$instance->header($pm, 'Backup', '云备份 - 备份计划', 'when');
 	ZMC_HeaderFooter::$instance->injectYuiCode("
 		var o=gebi('zmc_schedule_type');
 		if (o) o.onchange();
 	");
-	$pm->addDefaultInstruction('Edit schedules for backups.');
+	$pm->addDefaultInstruction('为备份集编辑备份计划');
 	$whenPage = new self($pm);
 	$whenPage->runState($pm);
 	$whenPage->getPaginator($pm);
@@ -46,17 +46,17 @@ protected function runState(ZMC_Registry_MessageBox $pm, $state = null)
 				ZMC_Mysql::update('configurations',	array('schedule_type' => $pm->binding['schedule']['schedule_type']), "configuration_name='{$pm->binding['config_name']}'");
 
 			if (!ZMC_BackupSet::isActivated())
-				$pm->addEscapedWarning("This backup set is not active.  Use the " . ZMC::getPageUrl($pm, 'Backup', 'now') . ' to install the schedule using your host system\'s cron daemon.');
+				$pm->addEscapedWarning("该备份集还没有被激活，请在 备份|计划 中使用系统的任务计划为备份集添加备份计划。");
 			break;
 
 		case 'Delete':
-			$pm->addEscapedError('All backup sets always have a schedule. ' . ZMC::getPageUrl($pm, 'Backup', 'now')
-				. ' enables and disables schedules.  Schedules can not be deleted, but backup sets can be deleted on the Admin|backup sets page.');
+			$pm->addEscapedError('所有备份集总是有一个备份计划。在' . ZMC::getPageUrl($pm, 'Backup', 'now')
+				. ' 启用或者取消备份计划。备份计划不能被删除，但是备份集可以在页面 Admin|backup 删除。');
 			break;
 
 		case 'Cancel':
 			ZMC_BackupSet::cancelEdit();
-			$pm->addWarning("Edit/Add cancelled.");
+			$pm->addWarning("取消了 编辑/添加 操作.");
 			break;
 
 		case '':
@@ -154,18 +154,18 @@ protected function inputFilter(ZMC_Registry_MessageBox $pm)
 	ZMC::array_move($_POST, $binding, array('config_name', '_key_name', 'private'));
 	if (false === array_search('1', $_POST['hours']))
 	{
-		$pm->addError('Please select at least one hour for "Backup Start Time".  Midnight has been selected by default.');
+		$pm->addError('请在 “备份开始时间” 中至少选择一个。默认时间是凌晨。');
 		$_POST['hours'] = array('0' => '1');
 	}
 	$_POST['minute'] = filter_var(filter_input(INPUT_POST, 'minute', FILTER_SANITIZE_NUMBER_INT), FILTER_VALIDATE_INT, array('default' => 0, 'min_range' => 0, 'max_range' => 60));
 	if ($_POST['minute'] < 0 || $_POST['minute']>  59)
 	{
-		$pm->addError('Please enter a value (0-59) for "Minutes". ');
+		$pm->addError('请为 “分钟” 输入一个有效值 (0-59)。');
 	}
 	if ($_POST['minute'] === false || $_POST['minute'] === null)
 	{
 		$_POST['minute'] = 0;
-		$pm->addError('Please enter a value (0-59) for "Backup Start Time / Minutes".  Start of the hour has been selected by default.');
+		$pm->addError('请问 “备份开始时间”下的“分钟”输入一个有效值(0-59)。开始小时已经默认选择');
 	}
 	if (false === array_search('1', $_POST['full_hours']))
 		$_POST['full_hours'] = $_POST['hours'];

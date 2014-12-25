@@ -1,6 +1,6 @@
 <?
-
-
+//zhoulin-restore-what 201409221624
+//左边 查看备份文件列表
 
 
 
@@ -14,25 +14,25 @@
 
 global $pm;
 ?>
-<div class="zmcLeftWindow" style='clear:left; width:460px;'><?
-	ZMC::titleHelpBar($pm, 'Select Directories / Files to Restore from: ' . $pm->restore['config']);
+<div class="wocloudLeftWindow" style='clear:left; width:460px;'><?
+	ZMC::titleHelpBar($pm, '选择需要从备份集' . $pm->restore['config'] .'中恢复的目录和文件');
 	ob_start(); ?>
 	<div class="zmcSubHeadingSelect">
-		Select:
-		<a href="" onclick="YAHOO.zmc.utils.select('restoreWhatLeftInteriorContainer', 'all'); return false;">All</a>&nbsp;|&nbsp;
-		<a href="" onclick="YAHOO.zmc.utils.select('restoreWhatLeftInteriorContainer', 'none'); return false;">None</a>&nbsp;|&nbsp;
-		<a href="" onclick="YAHOO.zmc.utils.select('restoreWhatLeftInteriorContainer', 'invert'); return false;">Invert</a>
+		选择：
+		<a href="" onclick="YAHOO.zmc.utils.select('restoreWhatLeftInteriorContainer', 'all'); return false;">全选</a>&nbsp;|&nbsp;
+		<a href="" onclick="YAHOO.zmc.utils.select('restoreWhatLeftInteriorContainer', 'none'); return false;">取消已选</a>&nbsp;|&nbsp;
+		<a href="" onclick="YAHOO.zmc.utils.select('restoreWhatLeftInteriorContainer', 'invert'); return false;">反选</a>
 	</div>
 
 	<div class="zmcFormWrapperText" id="restoreLoaderID" style="margin-top:0px; max-height:205px;<? if (!$pm->exploring) echo ' display:none; '; ?>">
 		<p class="instructions">
-			<b>Retrieving file list ...</b><img src="/images/icons/icon_fetch.gif" border="0" title="Loading.." alt="Loading.." /> <br />&nbsp;&nbsp;&nbsp; <a href="" onClick="YAHOO.zmc.restore.what.abort(); return false;">abort</a>
+			<b>检索文件列表 ...</b><img src="/images/icons/icon_fetch.gif" border="0" title="Loading.." alt="Loading.." /> <br />&nbsp;&nbsp;&nbsp; <a href="" onClick="YAHOO.zmc.restore.what.abort(); return false;">取消</a>
 		</p>
 	</div>
 
 	<input type='hidden' name='lbox[]' value='' type='checkbox' checked='checked' dummy='do not delete this line' />
 
-	<div class="zmcFormWrapperText" id="restoreWhatLeftInteriorContainer"
+	<div class="wocloudFormWrapperText" id="restoreWhatLeftInteriorContainer"
 		style="margin-top:0px; max-height:255px; overflow:auto; <? if ($pm->exploring) echo ' display:none; '; ?>"><?
 
 
@@ -41,14 +41,14 @@ global $pm;
 		if(!empty($pm->warnings) && empty($pm->rows)){
 			$error_message = implode( " ", array_values($pm->warnings));
 			if(preg_match("/Maximum Files to Display/", $error_message))
-				echo "<small><div class='zmcUserErrorsText'>". $error_message ."</div></small>"; 
+				echo "<small><div class='wocloudUserErrorsText'>". $error_message ."</div></small>"; 
 		}
 		if (empty($pm->rows))
 			echo 'Empty Directory';
 		elseif (is_string($pm->rows))
-			echo "<div class='zmcUserErrorsText'>" . ZMC::escape($pm->rows) . '</div>';
+			echo "<div class='wocloudUserErrorsText'>" . ZMC::escape($pm->rows) . '</div>';
 		elseif (!is_array($pm->rows))
-				echo "<div class='zmcUserErrorsText'>Found {$pm->restoring} object/files to restore.
+				echo "<div class='wocloudUserErrorsText'>Found {$pm->restoring} object/files to restore.
 					File list exceeds ZMC limits.</div><p>Please use &quot;", ZMC_Restore::$buttons[ZMC_Restore::EXPRESS], "&quot; above, or the command line utility <a href='",
 					ZMC::$registry->wiki, "406' target='_blank'>amrecover</a> when restoring from very large sets of files.</p>";
 		else
@@ -87,18 +87,18 @@ global $pm;
 			}
 		?>
 		<div style='clear:left;'></div>
-	</div><!-- zmcFormWrapperText -->
+	</div><!-- wocloudFormWrapperText -->
 	<?
 		$out = ob_get_clean();
-		echo '<div class="zmcBreadCrumbs">', $pm->restore['bread_crumbs'], "<div style='float:right'>($totalUnique)", "</div></div>\n";
+		echo '<div class="wocloudBreadCrumbs">', $pm->restore['bread_crumbs'], "<div style='float:right'>($totalUnique)", "</div></div>\n";
 		echo $out;
 	if(!empty($pm->rows )){
 	?>
 
-	<div class="zmcButtonBar">
+	<div class="wocloudButtonBar">
 		<div class="footerButtons">
-			<button type="submit" name="action" value=">>" />Add</button>
+			<button type="submit" name="action" value=">>" />添加</button>
 		</div>
 	</div>
 	<?php } ?>
-</div><!-- zmcLeftWindow restoreWhatLeftContainer -->
+</div><!-- wocloudLeftWindow restoreWhatLeftContainer -->

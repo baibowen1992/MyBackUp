@@ -25,30 +25,30 @@ class ZMC_Type_AmandaApps
 
 	
 	public static $default_options = array(
-		self::KEEP_EXISTING => 'zmcIconSuccess',
-		self::RENAME_RESTORED => 'zmcIconSuccess',
-		self::RENAME_RESTORED_N => 'zmcIconSuccess',
-		self::RENAME_EXISTING => 'zmcIconWarning',
-		self::REMOVE_EXISTING => 'zmcIconWarning', 
-		self::OVERWRITE_EXISTING => 'zmcIconWarning', 
+		self::KEEP_EXISTING => 'wocloudIconSuccess',
+		self::RENAME_RESTORED => 'wocloudIconSuccess',
+		self::RENAME_RESTORED_N => 'wocloudIconSuccess',
+		self::RENAME_EXISTING => 'wocloudIconWarning',
+		self::REMOVE_EXISTING => 'wocloudIconWarning', 
+		self::OVERWRITE_EXISTING => 'wocloudIconWarning', 
 	);
 
 	public static function conflict2text($policy, $destination, $isFile = true)
 	{
 		if ($policy == self::KEEP_EXISTING)
-			return "Do not restore the file.";
+			return "不恢复任何文件.";
 		if ($policy == self::RENAME_RESTORED)
-			return "Rename the restored file by appending the date.";
+			return "重命名恢复文件并追加数据.";
 		if ($policy == self::RENAME_RESTORED_N)
-			return "Rename the restored file by appending a digit.";
+			return "重命名恢复文件并追加数字.";
 		if ($policy == self::RENAME_EXISTING)
-			return "Rename the existing file by appending the date.";
+			return "重命名已存在文件并追加数据.";
 		if ($policy == self::OVERWRITE_EXISTING)
-			return "Overwrite existing files/directories.";
+			return "覆盖现有文件/目录.";
 		if ($policy == self::REMOVE_EXISTING) 
-			return "Delete the existing file and contents.";
+			return "删除现有文件和内容";
 		if ($policy == self::NA)
-			return "Not Applicable for file at $destination.";
+			return "不适用目录 $destination  下的文件.";
 		throw new ZMC_Exception("Invalid policy: $policy");
 	}
 
@@ -510,29 +510,29 @@ class ZMC_Type_AmandaApps
 			'zwc_only' => true),
 		self::DIR_ORIGINAL => array(
 			'code' => 'ORIGINAL',
-			'field' => 'Original Location',
-			'description' => 'Restores/replaces original data'),
+			'field' => '原路径',
+			'description' => '还原并替换原始文件'),
 		self::DIR_UNIX => array(
 			'code' => 'UNIX',
-			'field' => 'Destination Directory',
-			'description' => 'Full *nix directory path on destination client',
+			'field' => '目的目录',
+			'description' => ' *nix 下客户端全路径',
 			'unix_only' => true),
 		self::DIR_WINDOWS => array(
 			'code' => 'WINDOWS',
-			'field' => 'Windows Folder',
+			'field' => 'Windows目录',
 			'description' => '<drive letter>:\\folder[\\folder]*',
 			'zwc_only' => true),
 		self::DIR_WINDOWS_SHARE => array(
 			'code' => 'SHARE',
-			'field' => 'Windows Network Share',
-			'description' => '\\\\server\\share[\\folder]* (recommend: \\\\127.0.0.1\share\folder)',
+			'field' => 'Windows共享目录',
+			'description' => '\\\\server\\share[\\folder]* (推荐: \\\\127.0.0.1\share\folder)',
 			'zwc_only' => true),
 		self::DIR_CIFS => array(
 			'code' => 'CIFS',
-			'field' => 'Network/CIFS Share',
-			'description' => 'share[\\path]* (Exported directory path of network share on destination client.)',
+			'field' => 'Network/CIFS共享',
+			'description' => 'share[\\path]* (目标节点的网络共享目录.)',
 			'dhn' => 'Amanda Client Host Name',
-			'dhnHelp' => '&quot;localhost&quot; recommended. Fully qualified host name of machine (running Amanda CIFS client) with access to the destination network share',
+			'dhnHelp' => '&quot;localhost&quot; 推荐. 运行云备份CIFS客户端主机的FQDN ，需要拥有目标网络共享的使用权限',
 			'unix_only' => true),
 		self::DIR_VMWARE => array(
 			'code' => 'VMWARE',
@@ -546,23 +546,23 @@ class ZMC_Type_AmandaApps
 			'unix_only' => true),
 		self::DIR_UNKNOWN => array(
 			'code' => 'UNKNOWN',
-			'field' => 'Unknown Location Type',
-			'description' => 'Unknown Location Type',
+			'field' => '未知目的地类型',
+			'description' => '未知目的地类型',
 			'unix_only' => true),
 		self::DIR_RAW_IMAGE => array(
 			'code' => 'RAW_IMAGE',
-			'field' => 'Raw Image Path',
-			'description' => 'Restores backup image only',
+			'field' => 'Raw 镜像地址',
+			'description' => '仅仅还原备份镜像',
 			'unix_only' => true),
 		self::DIR_MS_SQLSERVER_ALTERNATE_PATH => array(
 				'code' => 'SQL_ALT_SERVER',
-				'field' => 'Alternate Path',
-				'description' => 'Restore to new location and overwrite original database(s)',
+				'field' => '备用路径',
+				'description' => '还原到新位置，覆盖原始数据库',
 				'zwc_only' => true),
 		self::DIR_MS_SQLSERVER_ALTERNATE_NAME => array(
 				'code' => 'SQL_ALT_LOCATION',
-				'field' => 'Alternate Name and Path',
-				'description' => 'Restore a copy of database(s) to original or new location',
+				'field' => '备用名称和路径',
+				'description' => '还原数据库到原路径或者新路径',
 				'zwc_only' => true),
 	);
 
@@ -692,7 +692,7 @@ class ZMC_Type_AmandaApps
 		if (empty($helpMsg))
 			$helpMsg = $dir;
 		elseif (empty($dir))
-			$helpMsg .= ' missing';
+			$helpMsg .= ' 为空';
 		else
 			$helpMsg .= ' "' . $dir . '"';
 
@@ -703,7 +703,7 @@ class ZMC_Type_AmandaApps
 				return $dir;
 			if (count($okDirTypes) === 1) 
 			{
-				$pm->addWarnError("Invalid $field: $helpMsg\n$field must match: " . self::$dirTypes[self::DIR_NDMP]['description']);
+				$pm->addWarnError("无效的 $field: $helpMsg\n$field 必须匹配: " . self::$dirTypes[self::DIR_NDMP]['description']);
 				return $dir;
 			}
 			unset($okDirTypes[self::DIR_NDMP]);
@@ -713,7 +713,7 @@ class ZMC_Type_AmandaApps
 		{
 			$field = self::$dirTypes[self::DIR_MS_EXCHANGE]['field'];
 			if(preg_match('/[\\/:\*\?"<>|]+/', substr($dir, strlen($prefix))))
-				$pm->addWarnError("Invalid $field: $helpMsg\nExchange DB name must not contain \\, /, :, *, ?, \", <, >, and |");
+				$pm->addWarnError("无效的 $field: $helpMsg\nExchange DB 名必须包含 \\, /, :, *, ?, \", <, >, and |");
 			return $dir;
 		}
 
@@ -722,7 +722,7 @@ class ZMC_Type_AmandaApps
 			$field = self::$dirTypes[self::DIR_UNIX]['field'];
 			if (!strncmp($dir, '/dev/', 5) || $dir === '/dev')
 			{
-				$pm->addWarnError("Invalid $field: *NIX directory/path must not be a device. Use the mount point instead.");
+				$pm->addWarnError("无效的 $field: *NIX 路径不能是一个设备，请使用挂载点替代。");
 				return $dir;
 			}
 			if (strlen($dir) && $dir[0] === '/') 
@@ -738,7 +738,7 @@ class ZMC_Type_AmandaApps
 						return $dir;
 				if (preg_match("/zfssendrecv|zfssnapshot/", $_POST['property_list:zmc_custom_app']))
 					return $dir;
-				$pm->addWarnError("Invalid $field: $helpMsg\nDirectories must begin with a forward slash \"/\".");
+				$pm->addWarnError("无效 $field: $helpMsg\n目录必须是以反斜杠 \"/\" 开头.");
 				return $dir;
 			}
 			unset($okDirTypes[self::DIR_UNIX]);
@@ -752,7 +752,7 @@ class ZMC_Type_AmandaApps
 
 			if (count($okDirTypes) === 1) 
 			{
-				$pm->addWarnError("Invalid $field: $helpMsg\n$field must match: " . self::$dirTypes[self::DIR_WINDOWS_SHARE]['description']);
+				$pm->addWarnError("无效 $field: $helpMsg\n$field 必须匹配： " . self::$dirTypes[self::DIR_WINDOWS_SHARE]['description']);
 				return $dir;
 			}
 			unset($okDirTypes[self::DIR_WINDOWS_SHARE]);
@@ -766,7 +766,7 @@ class ZMC_Type_AmandaApps
 
 			if (count($okDirTypes) === 1) 
 			{
-				$pm->addWarnError("Invalid $field: $helpMsg\n$field must match: " . self::$dirTypes[self::DIR_VMWARE]['description']);
+				$pm->addWarnError("无效的 $field: $helpMsg\n$field 必须匹配： " . self::$dirTypes[self::DIR_VMWARE]['description']);
 				return $dir;
 			}
 			unset($okDirTypes[self::DIR_VMWARE]);
@@ -780,7 +780,7 @@ class ZMC_Type_AmandaApps
 
 			if (count($okDirTypes) === 1) 
 			{
-				$pm->addWarnError("Invalid $field: $helpMsg\n$field must match: " . self::$dirTypes[self::DIR_CIFS]['description']);
+				$pm->addWarnError("无效的 $field: $helpMsg\n$field 必须匹配： " . self::$dirTypes[self::DIR_CIFS]['description']);
 				return $dir;
 			}
 			unset($okDirTypes[self::DIR_CIFS]);
@@ -795,16 +795,16 @@ class ZMC_Type_AmandaApps
 				|| $dir[1] !== ':'
 				|| ($dir[2] !== '/' && $dir[2] !== '\\'))
 			{
-				$pm->addWarnError("Invalid $field: $helpMsg\n$field must match: " . self::$dirTypes[self::DIR_WINDOWS]['description'] . ' or ' . self::$dirTypes[self::DIR_WINDOWS_SHARE]['description']);
-				$pm->addWarning('Windows directory paths must begin with [letter]:\\ or [letter]:/');
+				$pm->addWarnError("无效的 $field: $helpMsg\n$field 必须匹配： " . self::$dirTypes[self::DIR_WINDOWS]['description'] . ' or ' . self::$dirTypes[self::DIR_WINDOWS_SHARE]['description']);
+				$pm->addWarning('Windows目录必须以[分区符]:\\ 或者 [分区符]:/ 开头');
 			}
 
 			if (false !== strpbrk(substr($dir, 3), $badChars = ':*?"<>|')) 
 			{
-				$pm->addWarnError("Invalid $field: $helpMsg");
-				$pm->addEscapedWarning('Windows folder and file names can not contain any of the following characters:  '
+				$pm->addWarnError("无效的 $field: $helpMsg");
+				$pm->addEscapedWarning('Windows目录和文件名不能包含下列符号： '
 					. ZMC::escape($badChars) 
-					. ' See <a target="_blank" href="http://en.wikipedia.org/wiki/NTFS">http://en.wikipedia.org/wiki/NTFS</a>.');
+					. ' See <a target="_blank" href="http://localhost</a>.');
 				$dir = $dir[0] . $dir[1] . $dir[2] . str_replace(array(':', '*', '?', '"', '<', '>', '|'), array(), substr($dir, 3));
 			}
 		}

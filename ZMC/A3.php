@@ -200,7 +200,7 @@ public function useBucketEndpoint($bucket)
 	if ($this->bucketList === null) $this->getBucketList();
 	if (empty($this->bucketList['buckets'][$bucket]))
 	{
-		$this->pm->addError("Bucket/Container not found: $bucket (code #" . __LINE__ . ")"); 
+		$this->pm->addError("Bucket 找不到: $bucket (code #" . __LINE__ . ")");
 		
 		return false;
 	}
@@ -210,7 +210,7 @@ public function useBucketEndpoint($bucket)
 
 	$this->setRegionInfo($this->regionInfo, $this->bucketList['buckets'][$bucket]['location_constraint']);
 	if ($this->bucketList['buckets'][$bucket]['endpoint'] !== $this->regionInfo['endpoint'])
-		$this->pm->addWarnError('Endpoint for bucket was ' . $this->bucketList['buckets'][$bucket]['endpoint'] . ', but now we are using ' . $this->regionInfo['endpoint']);
+		$this->pm->addWarnError('当前bucket的主机名是 ' . $this->bucketList['buckets'][$bucket]['endpoint'] . ', 但是我们使用的是 ' . $this->regionInfo['endpoint']);
 	$this->setEndPoint($this->regionInfo['endpoint']);
 	return $this->regionInfo;
 }
@@ -297,11 +297,11 @@ public function delete_bucket($bucket, $force = false, $opt = null)
 			try { parent::deleteBucket($bucket, false, $opts); } 
 			catch(Exception $e)
 			{
-				$this->pm->addWarnError(($this->pm->deleted_objects ? 'Deleted ' . $this->pm->deleted_objects . ' objects, before ' : '') . "An unknown error occurred during bucket deletion.". ZMC::dump($this->return, null, 'pretty'));
+				$this->pm->addWarnError(($this->pm->deleted_objects ? '删除 ' . $this->pm->deleted_objects . ' 对象, before ' : '') . "删除bucket时发生未知错误.". ZMC::dump($this->return, null, 'pretty'));
 				return false;
 			}
 		}
-		$this->pm->addWarnError("Bucket container deletion failed: $e");
+		$this->pm->addWarnError("Bucket删除失败: $e");
 		return false;
 	}
 	$this->opt['query_string'] = $qs;
@@ -315,7 +315,7 @@ private function listBuckets($opt = null)
 	try{ parent::list_buckets($this->getOpts($opt)); }
 	catch(Exception $e)
 	{
-		$this->pm->addWarning("Using cached results, because ZMC did not receive a usable response from the Cloud Service. $e");
+		$this->pm->addWarning("是用缓存数据, 因为云备份系统没有从对象存储系统收到可用连接. $e");
 		return false;
 	}
 
@@ -578,7 +578,7 @@ private function getSwiftAuthToken()
 			elseif (!empty($props['S3_ACCESS_KEY']) && !empty($props['S3_SECRET_KEY']))
 				$auth['auth']['apiAccessKeyCredentials'] =	array("accessKey" => $props['S3_ACCESS_KEY'], "secretKey" => $props['S3_SECRET_KEY']);
 			else
-				throw new ZMC_Exception('Missing API Access Key and Secret Key', 499);
+				throw new ZMC_Exception('缺少API验证的Access Key 和 Secret Key', 499);
 
 			
 			
@@ -743,7 +743,7 @@ public function listBucket($bucket, $returnFalseIfNotExist = false)
 			if ($returnFalseIfNotExist)
 				return false;
 			else
-				$this->pm->addError("Bucket/Container not found: $bucket (code #" . __LINE__ . ")"); 
+				$this->pm->addError("Bucket不存在: $bucket (code #" . __LINE__ . ")");
 
 		$this->useBucketEndpoint($bucket);
 		do
@@ -753,7 +753,7 @@ public function listBucket($bucket, $returnFalseIfNotExist = false)
 
 			if (empty($body['Contents']))
 			{
-				$this->pm->addMessage('Bucket is empty.');
+				$this->pm->addMessage('Bucket已清空');
 				break;
 			}
 			foreach($body['Contents'] as $object)
@@ -778,7 +778,7 @@ public function listBucket($bucket, $returnFalseIfNotExist = false)
 			$this->pm->total_objects_in_bucket = ($this->is_truncated ? 'more than ' : '') . count($objects);
 	}
 	catch(Exception $e)
-	{	$this->pm->addInternal("Unable to read contents of cloud device (#".__LINE__."): $e"); }
+	{	$this->pm->addInternal("无法读取云设备 (#".__LINE__.") 的内容: $e"); }
 
 	file_put_contents($cacheFn, var_export(array(
 		'total_objects_in_bucket' => $this->pm->total_objects_in_bucket,
@@ -807,7 +807,7 @@ public function deleteBuckets($buckets, $isVault)
 		$this->pm->setPrefix($name);
 		if (!isset($this->bucketList['buckets'][$name]) && $isVault && !isset($bucketNames[$name])) 
 		{
-			$this->pm->addError("Bucket $name not found. Already deleted?");
+			$this->pm->addError("Bucket $name 不存在. 已删除?");
 			continue;
 		}
 
@@ -822,7 +822,7 @@ public function deleteBuckets($buckets, $isVault)
 		}
 	}
 
-	$this->pm->addWarning("Deleted a total of $deleted_buckets bucket(s) from ZMC Cloud device " . $this->zmc_device_name . '.');
+	$this->pm->addWarning("从云存储设备中删除 $deleted_buckets 个备份集 " . $this->zmc_device_name . '.');
 	ZMC::auditLog("Deleted ZMC Cloud device " . $this->zmc_device_name . " buckets: " . implode(', ', array_keys($buckets)));
 	return $result;
 }
@@ -852,7 +852,7 @@ protected function deleteAllObjects($bucket, $deleteBucket = false, $statFn)
 						$result = $this->delete_object($bucket, $object['Key']);
 						if (!is_object($result) || !$result->isOK())
 						{
-							$this->pm->addInternal("Unable to delete some or all objects in bucket.". ZMC::dump($result, null, 'pretty'));
+							$this->pm->addInternal("无法删除 bucket.". ZMC::dump($result, null, 'pretty')." 中的部分/所有对象");
 							break;
 						}
 					}
@@ -900,14 +900,14 @@ protected function deleteAllObjects($bucket, $deleteBucket = false, $statFn)
 		if ($this->deleteBucket($bucket) === false)
 			return false;
 		if ($this->pm->deleted_objects === 0)
-			$this->pm->addMessage("Deleted the empty bucket.");
+			$this->pm->addMessage("删除空 bucket.");
 		else
-			$this->pm->addMessage("Deleted bucket and all " . $this->pm->deleted_objects . " objects in the bucket.");
+			$this->pm->addMessage("删除 bucket 及其所有 " . $this->pm->deleted_objects . " 对象.");
 		return true;
 	}
 
 	if ($this->pm->deleted_objects === 0)
-		return $this->pm->addError("Bucket is already empty.");
+		return $this->pm->addError("Bucket 已经清空.");
 
 	$this->pm->addMessage($deletedMsg);
 	return false;

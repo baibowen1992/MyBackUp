@@ -15,13 +15,13 @@
 global $pm;
 echo "\n<form method='post' action='$pm->url'>\n";
 ?>
-<div class="zmcContentContainer" style="background-color:#E3EADA">
+<div class="wocloudContentContainer" style="background-color:#E3EADA">
 	<? ZMC::titleHelpBar($pm, 'Getting started with Amanda Enterprise', 'Backup_Set-the_Backbone_of_ZMC"'); ?>
-	<div id='zmcLoginContent' class="zmcContentContainer">
+	<div id='wocloudLoginContent' class="wocloudContentContainer">
 		<center>
 		<div pane12 style="width:525px; margin:0; float:left; border-right: 1px solid #ADAA9C;">
 			<div pane1 style="padding:15px;">
-				<fieldset style='margin:20px;'><legend>Create a Storage Device</legend>
+				<fieldset style='margin:20px;'><legend>创建存储设备</legend>
 					<img src="/images/starter/admin_devices_navigation_aee.png"
 						alt="Backup What"
 						width="400"
@@ -38,7 +38,7 @@ echo "\n<form method='post' action='$pm->url'>\n";
 							style="padding-right:15px;"
 						/>
 					</div>
-					<p>Create or use an existing device.<br />Backup sets use storage devices to save backups.</p>
+					<p>创建或者使用一个已经存在的设备。<br />备份集使用该存储设备存储备份数据。</p>
 				</fieldset>
 				<div style='clear:left;'></div>
 			</div><!-- pane1 -->
@@ -52,7 +52,7 @@ echo "\n<form method='post' action='$pm->url'>\n";
 						style="padding:10px;"
 					/>
 
-					<p>The next step in the backup process requires creating an Amanda backup set.</p>
+					<p>备份过程的下一步需要创建一个备份集。</p>
 					<img src="/images/starter/starter-step1.png"
 						alt="Create backup set" 
 						width="356" 
@@ -124,15 +124,15 @@ echo "\n<form method='post' action='$pm->url'>\n";
 	
   		</div><!-- pane3 -->
 
-		<div class="zmcButtonBar">
+		<div class="wocloudButtonBar">
 			<div style="position:absolute; left:10px; top:7px;">
 				<input name="Dismiss" type="checkbox" value="Dismiss" id="dismissstarter" <? if ($pm->show) echo 'checked="checked"'; ?> />
 				<label accesskey="b" for="dismissstarter">Show this dialog at startup</label>
 			</div>
 			<!-- width is workaround for bug in IE8 -->
-			<input style="width:75px" class="zmcCenter" type="submit" name="Begin" id="begin" value="Begin" />
+			<input style="width:75px" class="wocloudCenter" type="submit" name="Begin" id="begin" value="Begin" />
 		</div>
 	 	</center>
-	</div><!-- innerContent zmcContentContainer -->
-</div><!-- outerContent zmcContentContainer -->
+	</div><!-- innerContent wocloudContentContainer -->
+</div><!-- outerContent wocloudContentContainer -->
 </form>

@@ -1,0 +1,406 @@
+#!/bin/bash
+#
+# zmc_aee		This starts and stops Amanda Enterprise Server GUI
+#
+# chkconfig: 235 98 02
+# description: ZMC provides extensions and a GUI for the Amanda Enterprise Server.
+#
+# processname: /usr/sbin/xinetd
+# config: /etc/zmanda/zmc_aee/zmc_aee.cnf
+# config: /etc/zmanda/zmc_aee/zmc.php
+# pidfile: /var/run/xinetd.pid
+
+# Copyright (C) 2009-2013 Zmanda Incorporated.
+# All Rights Reserved.
+#
+# The software you have just accessed, its contents, output and underlying
+# programming code are the proprietary and confidential information of Zmanda
+# Incorporated.  Only specially authorized employees, agents or licensees of
+# Zmanda may access and use this software.  If you have not been given
+# specific written permission by Zmanda, any attempt to access, use, decode,
+# modify or otherwise tamper with this software will subject you to civil
+# liability and/or criminal prosecution to the fullest extent of the law.
+# $Id: zmc_aee 39625 2014-04-08 18:19:26Z qtran $
+# $URL: svn+ssh://gavin@natasha/home/cvs/svn/zmanda-ui/branches/3_3/opt/zmanda/amanda/bin/amfetchdump_ndmp $
+
+### BEGIN INIT INFO
+# Provides: zmc_aee
+# Required-Start: $ALL
+# Required-Stop: $local_fs $network $named crontab
+# Should-Start: 
+# Should-Stop: 
+# Default-Start: 2 3 4 5 
+# Default-Stop: 0 1 6 
+# Short-Description: start and stop Amanda Enterprise ZMC
+# Description: ZMC provides extensions and a GUI for the Amanda Enterprise Server.
+### END INIT INFO
+
+PATH=/sbin:/bin:/usr/bin:/usr/sbin
+
+if [ -f /etc/fedora-release ]; then
+	#Fix fedora 18 absolute/relative path issue from bug #19282
+	if [[ "$0" = /* ]]
+	then
+		cd "/etc/init.d";
+		./zmc_aee $1
+		exit 0;
+	fi
+fi
+
+
+echo_success() { echo "[  OK  ]"; }
+echo_failure() { echo "[FAILED]"; }
+# http://wiki.debian.org/LSBInitScripts
+if [ -f /etc/init.d/functions ]; then
+	. /etc/init.d/functions
+elif [ -f /etc/rc.d/init.d/functions ]; then
+	. /etc/rc.d/init.d/functions
+elif [ -f /lib/lsb/init-functions ]; then
+	. /lib/lsb/init-functions
+fi
+#@TODO: use suse rc_status on SUSE platform
+[ -f /etc/rc.status ] && . /etc/rc.status
+
+prog=$0
+RETVAL=1
+zmc_pkg_base=/opt/zmanda/amanda
+if [ -e $zmc_pkg_base/bin/zmc_functions.sh ];then
+	. $zmc_pkg_base/bin/zmc_functions.sh
+else # workaround for damaged/corrupt/partial install of ZMC
+	export PATH=/opt/zmanda/amanda/bin:/opt/zmanda/amanda/common/bin:/opt/zmanda/amanda/perl/bin:/opt/zmanda/amanda/mysql/bin:/opt/zmanda/amanda/bin/:/sbin:/bin:/usr/sbin:/usr/bin
+	zmc_build_version='$URL: svn+ssh://gavin@natasha/home/cvs/svn/zmanda-ui/branches/3_3/opt/zmanda/amanda/bin/amfetchdump_ndmp $'
+	zmc_build_version=${zmc_build_version#*branches/}
+	zmc_build_version=${zmc_build_version#*tags/}
+	zmc_build_version=${zmc_build_version#*trunk/}
+	zmc_build_version=${zmc_build_version%%/*}
+	zmc_build_version=${zmc_build_version/_/.}
+	zmc_svn_revision='$Id: zmc_aee 39625 2014-04-08 18:19:26Z qtran $'
+	zmc_svn_revision=${zmc_svn_revision#*zmc_aee }
+	zmc_svn_revision=${zmc_svn_revision%% *}
+	ETC_ZMANDA=/etc/zmanda/zmc
+	amanda_user=amandabackup
+	zmc_tmp_path=$ETC_ZMANDA/zmc_aee/tmp/
+	zmc_data_path=$ETC_ZMANDA/zmc_aee/data/
+	zmc_log_dir=$zmc_pkg_base/logs/
+	zmc_server_log=${zmc_log_dir}zmc_server.log
+	mysql_path=$zmc_pkg_base/mysql
+	mysql_sock_file=$mysql_path/tmp/mysql.sock
+	datenow=`date '+%Y%m%d%H%M'`
+	
+	zmc_mysql_stop()
+	{
+		shopt -s nullglob
+		for pidfile in $mysql_path/*/*.pid
+		do
+			pid=$(<$pidfile)
+			if [ -n "$pid" ]; then
+				if [ -d /proc/$pid ]; then
+					kill -s SIGTERM $pid
+					sleep 3
+					if [ -d /proc/$pid ]; then
+						zlogger -p ERR -s 'ZMC database refuses to stop after SIGKILL.  Repeating kill using SIGTERM.'
+						kill -s SIGKILL $pid
+						sleep 1
+						[ -d /proc/$pid ] && return myerror "ZMC MySQL Database process $pid noted in pidfile $pidfile refuses to stop after SIGKILL.  A server reboot may be required, but read $mysql_path/data/mysqld.log first."
+					fi
+				fi
+			fi
+		done
+		shopt -u nullglob
+		zlogger $* 'ZMC Database Stopped.'
+	}
+
+	zlogger()
+	{
+		local copy2err=$copy2stderr
+		zlogger_pri=info
+		while getopts "p:sn" option; do
+			case $option in
+				p) zlogger_pri=$OPTARG;;
+				s) copy2err='-s';;
+				n) copy2err='';;
+			esac
+		done
+		((OPTIND--))
+		shift $OPTIND
+		if [ "$copy2err" = "-s" ]; then
+			logger -p $zlogger_pri -t ZMC -s "$datenow:$*" 2>&1 | tee -a ${zmc_server_log:-/opt/zmanda/amanda/logs/zmc_server.log}
+		else
+			logger -p $zlogger_pri -t ZMC -s "$datenow:$*" 2>&1 >> ${zmc_server_log:-/opt/zmanda/amanda/logs/zmc_server.log}
+		fi
+	}
+fi
+
+distro_type=Linux
+[ `uname -s` = "SunOS" ] && distro_type=Solaris
+
+# startproc is the LSB compliant utility for SUSE, but Bitrock perl wrappper problem requires:
+command="su ${amanda_user} -c"
+if test -x /sbin/runuser ; then
+	# runuser is trimmed down version of su which is availabel on RHEL/FC 
+	command="/sbin/runuser -l ${amanda_user} -c" # RedHat
+fi
+
+start()
+{
+	zlogger "Starting ZMC $zmc_build_version.$zmc_svn_revision: "
+	if [ ! -e $zmc_pkg_base/bin/zmc_functions.sh ];then
+		zlogger "FAILED: Corrupt ZMC installation"
+		RETVAL=1
+		return $RETVAL
+	fi
+	# md5sum --version > /dev/null 2>&1
+	# have_md5sum=$?
+	# zlogger 'Checking ZMC Installation:'
+	# manifest_fn=$ETC_ZMANDA/zmc_aee-$zmc_build_version.$zmc_svn_revision.manifest.md5
+	# if [ -s $manifest_fn ]; then
+	# 	if [ $have_md5sum -eq 0 ]; then
+	# 		#md5sum -c --quiet $manifest_fn #Works everywhere, except SUSE .. sigh
+	# 		md5sum -c $manifest_fn | awk 'BEGIN {code=0} $0 !~ /: OK$/ {code=1;print} END {exit code}'
+	# 		[ $? -eq 0 ] && zlogger "ZMC Installation OK"
+	# 	else
+	# 		zlogger 'WARNING: md5sum program not found.  Please install. Unable to check ZMC installation.'
+	# 	fi
+	# else
+	# 	zlogger "FAILED: Did not find ZMC manifest at $manifest_fn"
+	# 	RETVAL=1
+	# 	return $RETVAL
+	# fi
+
+	if [ "$distro_type" = 'Linux' ]; then
+		if [ ! -f /etc/init.d/xinetd ]; then
+			if [ -f /etc/fedora-release ]; then
+				`/bin/systemctl restart xinetd.service`
+				[ $? -eq 0 ] && zlogger 'Xinetd service OK'
+				[ $? -ne 0 ] && zlogger 'Failed: xinetd service not found or failed to start.'
+				if [ ! -d /etc/xinetd.d ]; then
+					zlogger 'FAILED: xinetd directory not found. Please configure it.'
+				else
+					xinetd_amandaserver='/etc/xinetd.d/amandaserver'
+					xinetd_default_amandaserver='/var/lib/amanda/example/xinetd.amandaserver'
+					if [ ! -f $xinetd_amandaserver ]; then
+						[ -f $xinetd_default_amandaserver ] && cp -fr $xinetd_default_amandaserver $xinetd_amandaserver
+						if [ ! -f $xinetd_amandaserver ]; then
+							zlogger 'WARNING: amandaserver configuration file not found under /etc/xinetd.d directory'
+						fi
+					fi	
+				
+					xinetd_zmrecover='/etc/xinetd.d/zmrecover'
+					xinetd_default_zmrecover='/var/lib/amanda/example/xinetd.zmrecover'
+					if [ ! -f $xinetd_zmrecover ]; then
+						[ -f $xinetd_default_zmrecover ] && cp -fr $xinetd_default_zmrecover $xinetd_zmrecover
+						if [ ! -f $xinetd_zmrecover ]; then
+							zlogger 'WARNING: zmrecover configuration file not found under /etc/xinetd.d directory'
+						fi
+					fi	
+				fi
+
+			else 
+				zlogger 'FAILED: xinetd service not found. Please install.'
+			fi
+		else
+			if [ -f /etc/fedora-release ]; then
+				`/bin/systemctl restart xinetd.service`
+				[ $? -eq 0 ] && zlogger 'Xinetd service OK'
+				[ $? -ne 0 ] && zlogger 'Failed: xinetd service not found or failed to start.'
+			fi
+			if [ ! -d /etc/xinetd.d ]; then
+				zlogger 'FAILED: xinetd directory not found. Please configure it.'
+			else
+				xinetd_amandaserver='/etc/xinetd.d/amandaserver'
+				xinetd_default_amandaserver='/var/lib/amanda/example/xinetd.amandaserver'
+				if [ ! -f $xinetd_amandaserver ]; then
+					[ -f $xinetd_default_amandaserver ] && cp -fr $xinetd_default_amandaserver $xinetd_amandaserver
+					if [ ! -f $xinetd_amandaserver ]; then
+						zlogger 'WARNING: amandaserver configuration file not found under /etc/xinetd.d directory'
+					fi
+				fi	
+			
+				xinetd_zmrecover='/etc/xinetd.d/zmrecover'
+				xinetd_default_zmrecover='/var/lib/amanda/example/xinetd.zmrecover'
+				if [ ! -f $xinetd_zmrecover ]; then
+					[ -f $xinetd_default_zmrecover ] && cp -fr $xinetd_default_zmrecover $xinetd_zmrecover
+					if [ ! -f $xinetd_zmrecover ]; then
+						zlogger 'WARNING: zmrecover configuration file not found under /etc/xinetd.d directory'
+					fi
+				fi	
+			fi
+		fi
+	fi
+	if [ ! -f /etc/zmanda/zmanda_license ]; then
+		for file in ~/zmanda_license ~/Download*/zmanda_license ./zmanda_license ~amandabackup/zmanda_license
+		do
+			if [ -f $file ]; then
+				cp $file /etc/zmanda/zmanda_license
+				zlogger "Installed Zmanda license from $file"
+				break
+			fi
+		done
+	fi
+	[ -f /etc/zmanda/zmanda_license ] || zlogger "*WARNING*: Zmanda License not found. Please install the license file to the location: /etc/zmanda/zmanda_license.  Download your license from http://network.zmanda.com/"
+	# Purge ZMC "cached" data:
+	rm -rf $zmc_tmp_path $zmc_data_path $ETC_ZMANDA/zmc_ags/data $zmc_pkg_base/ZMC/debug $mysql_path/tmp/*.{sql,files} > /dev/null 2>&1
+	mkdir -p $zmc_tmp_path $zmc_data_path $ETC_ZMANDA/zmc_ags/{device_profiles,data} $zmc_pkg_base/ZMC/debug/logs /var/run/zmc /etc/amanda /etc/amanda /var/log/amanda/client
+	chown -R $amanda_user:root $ETC_ZMANDA/zmc_ags /etc/amanda $ETC_ZMANDA/zmc_aee $zmc_pkg_base/ZMC/debug /var/run/zmc /var/log/amanda /var/log/amanda/client
+	chmod 770 $ETC_ZMANDA/zmc_ags $ETC_ZMANDA/zmc_aee /etc/amanda
+	chown $amanda_user:disk /etc/amanda
+	chmod 750 /etc/amanda
+	[ -f ${zmc_server_log} ] || touch ${zmc_server_log}
+	[ -f /etc/amandates ] || touch /etc/amandates
+	[ -h ${zmc_server_log} ] || chown ${amanda_user} ${zmc_server_log}
+	hostname=`/bin/hostname`
+	resolveip="$mysql_path/bin/resolveip"
+	resolved=`$resolveip $hostname`
+	if test $? -ne 0; then
+		echo "WARNING: The host '$hostname' could not be looked up with: $resolveip. Please configure the 'hostname' command to return a correct hostname." >> $zmc_tmp_path/zmc_sticky_errors
+		zlogger "WARNING: The host '$hostname' could not be looked up with:"
+		zlogger "	$resolveip"
+		zlogger "Please configure the 'hostname' command to return a correct hostname."
+	fi
+	resolved=`$resolveip localhost`
+	if test $? -ne 0; then
+		echo  "WARNING: The host 'localhost' could be looked up with: $resolveip" >> $zmc_tmp_path/zmc_sticky_errors
+		zlogger "WARNING: The host 'localhost' could be looked up with:"
+		zlogger "	$resolveip"
+	fi
+
+	shopt -s nullglob
+	if [ -e $ETC_ZMANDA/zmc_aee/zmc_dumptypes ]; then #if ZMC setup was completed
+		for confpath in /etc/amanda/*/amanda.conf
+		do
+			conf="${confpath#/etc/amanda/}"
+			conf="${conf%/amanda.conf}"
+			[ "$conf" = "${conf#\.}" ] || continue
+			zlogger "/usr/sbin/amcleanup -p -r $conf" >> ${zmc_server_log}
+			${command} "/usr/sbin/amcleanup -p -r $conf" >> ${zmc_server_log} 2>&1
+		done
+	fi
+	shopt -u nullglob
+
+	locale -a > $ETC_ZMANDA/zmc_aee/locales.available
+	zlogger "Initializing ZMC"
+	ln -snf $zmc_pkg_base/bin/zmrecover /usr/sbin/zmrecover
+	${command} "$php $phpopts $zmc_bin_path/zmc_startup.php pre >> ${zmc_server_log} 2>&1"
+	RETVAL=$?
+	if [ $RETVAL -ne 0 ]; then
+		echo "FAILED: $php $phpopts $zmc_bin_path/zmc_startup.php" >> ${zmc_server_log}
+		return $RETVAL
+	fi
+
+	zmc_mysql_start
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] || return $RETVAL
+
+	${command} "$php $phpopts $zmc_bin_path/zmc_startup.php post >> ${zmc_server_log} 2>&1"
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] || return $RETVAL
+
+	#K<script> will only be called if lock file exists. 
+	touch /var/lock/subsys/zmc_aee > /dev/null 2>&1
+
+	if [ -e $ETC_ZMANDA/zmc_aee/zmc_dumptypes ]; then #if ZMC setup was completed
+		zlogger "ZMC amreport_wrapper.sh started"
+		${command} "$zmc_bin_path/amreport_wrapper.sh"
+	fi
+
+	# ZMC started, so ignore less critical success/failure of amreport_wrapper instead of using: RETVAL=$?
+	zlogger "Starting ZMC Web Interface"
+	ht=$zmc_pkg_base/ZMC/.htaccess
+	if [ ! -f $ht ]; then
+		if [ -f $ht.production ]; then
+			cp $ht.production $ht
+		else
+			zlogger "Corrupt installation. Missing $ht file."
+			RETVAL=1
+			return $RETVAL
+		fi
+	fi
+	htpasswd=$ETC_ZMANDA/zmc_aee/.htpasswd
+	$zmc_pkg_base/apache2/bin/htpasswd -bcs $htpasswd rest "$zmc_yasumi_passwd" >> $zmc_server_log 2>&1
+	RETVAL=$?
+	if [ $RETVAL -ne 0 ]; then
+		zlogger "Unable to update $htpasswd file."
+		return $RETVAL
+	fi
+	env - PATH=$PATH $zmc_pkg_base/apache2/bin/apachectl start >> $zmc_server_log 2>&1
+	RETVAL=$?
+	if [ $RETVAL -ne 0 ]; then
+		zlogger "Unable to start ZMC Web server."
+		return $RETVAL
+	fi
+	zlogger "ZMC Started."
+}
+
+stop()
+{
+	zlogger "Stopping ZMC: "
+	zlogger "Stopping ZMC Web Interface"
+	# Bitrock's stop script aborts on various conditions, but we really want to shutdown ZMC Apache & PHP, so do it right now:
+	$zmc_pkg_base/apache2/bin/apachectl stop >> ${zmc_server_log} 2>&1
+	[ -x /usr/bin/killall ] && /usr/bin/killall -s SIGKILL /opt/zmanda/amanda/php/bin/php-cgi.bin > /dev/null 2>&1
+	rm -rf /etc/amanda/zmc_test*
+	rm -f /etc/amanda/*/disklist.tmp.*
+	zmc_mysql_stop
+	RETVAL=$?
+	if [ "$distro_type" = 'Linux' ]; then
+		#Also kills amdump and taper processes:
+		#killall -e -v $zmc_pkg_base/perl/bin/.perl.bin >> ${zmc_server_log} 2>&1
+		RETVAL=0
+	fi
+	rm -f /var/lock/subsys/zmc_aee
+	#@TODO report if backup_monitor or zmc_parser still running ..
+	zlogger "ZMC Stopped."
+}
+
+case "$1" in
+	start)
+		start
+		if [ $RETVAL -ne 0 ]; then
+			echo_failure
+			echo -e "\nERROR: Unable to $1 all ZMC components. See ${zmc_server_log} for details."
+			stop
+		else
+			echo_success
+			echo ''
+		fi
+		;;
+	stop)
+		stop
+		if [ $RETVAL -ne 0 ]; then
+			echo_failure
+			echo -e "\nERROR: Unable to $1 all ZMC components. See ${zmc_server_log} for details."
+		else
+			echo_success
+			echo ''
+		fi
+		;;
+	status)
+		if [ -S $mysql_sock_file ]; then
+			pidfile=$mysql_path/data/mysqld.pid
+			if [ -f $pidfile ]; then
+				if [ -d /proc/$(<$pidfile) ]; then
+					zlogger 'ZMC database running: ' `$zmc_bin_path/zmc_mysql.sh  admin status`
+				else
+					zlogger -p ERR "ZMC database crashed (pid file exists, but process gone)."
+				fi
+			else
+				zlogger -p ERR "ZMC database crashed (socket exists, but no pidfile)."
+			fi
+		else
+			zlogger "ZMC database not running ($mysql_sock_file does not exist)"
+		fi
+		LD_LIBRARY_PATH=/opt/zmanda/amanda/common/lib:$LD_LIBRARY_PATH $zmc_pkg_base/common/bin/curl -s --insecure 'https://127.0.0.1/server-status'  | awk '/Server Version|uptime|processed/' | awk '{gsub("<[^>]*>", "")}1'
+		RETVAL=0
+		;;
+	restart)
+		stop
+		sleep 5
+		start
+		;;
+	*)
+		echo "Usage: $prog {start|stop|restart|status|help}"
+		RETVAL=1
+		;;
+esac
+
+exit $RETVAL

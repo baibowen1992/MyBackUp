@@ -1,0 +1,169 @@
+# Edit this file to append Amanda parameters to existing ZMC dumptypes.
+# Edits take effect immediately, so consider the effects of changes on
+# Amanda processes already running (if any).
+# All ZMC backup sets use the dumptypes below.
+# All ZMC DLEs inherit from exactly one dumptype of each (4 total):
+# * global
+# * category (filesystem, DB, application)
+# * object type
+# * authentication type
+# Each dumptype below affects a set of ZMC DLEs having the same platform,
+# or the same category (e.g. all database DLEs or all filesystems DLEs),
+# or the same ZMC object type (e.g. PostgreSQL, CIFS, etc.).
+# All ZMC DLEs inherit from this dumptype:
+define dumptype zmc_global_base {
+	# adding things here will affect all ZMC DLEs
+	index	on
+	# Device dumptype used by DLEs. Defined in device-specific binding file in each backup set.
+	zmc_default_dev
+}
+
+##########################
+# ZMC Platform Dumptypes #
+##########################
+# All ZMC dumptypes inherit exactly one platform dumptype (below):
+# All ZMC non-Windows DLEs inherit from this dumptype:
+define dumptype zmc_nixglobal_base {
+	zmc_global_base
+	# adding things here will affect all non-Windows ZMC DLEs
+}
+
+# All ZMC Windows DLEs inherit from this dumptype:
+define dumptype zmc_winglobal_base {
+	zmc_global_base
+	# adding things here will affect all Windows ZMC DLEs
+}
+
+#########################
+# ZMC Object Categories #
+#########################
+# All ZMC dumptypes inherit exactly one category dumptype (below):
+# All ZMC Application type DLEs inherit from this dumptype:
+define dumptype zmc_application_base {
+	# adding things here will affect all application type ZMC DLEs
+}
+
+# All ZMC DLEs for Databases inherit from this dumptype:
+define dumptype zmc_db_base {
+	# adding things here will affect all DB related ZMC DLEs
+}
+
+# All ZMC filesystem DLEs inherit from this dumptype:
+define dumptype zmc_filesystem_base {
+	# adding things here will affect all filesystem type ZMC DLEs
+}
+
+#############################
+# ZMC Object Type Dumptypes #
+#############################
+# All ZMC dumptypes inherit exactly one object type dumptype (below):
+define dumptype zmc_cifs_user {
+}
+
+define dumptype zmc_linuxoracle_user {
+}
+
+define dumptype zmc_postgresql_user {
+}
+
+define dumptype zmc_solaris_user {
+}
+
+define dumptype zmc_unix_user {
+}
+
+define dumptype zmc_windows_user {
+}
+
+define dumptype zmc_windowsexchange_user {
+}
+
+define dumptype zmc_windowsoracle_user {
+}
+
+define dumptype zmc_windowssharepoint_user {
+}
+
+define dumptype zmc_windowssqlserver_user {
+}
+
+define dumptype zmc_windowsss_user {
+}
+
+define dumptype zmc_windowstemplate_user {
+}
+
+############################
+# Authentication Dumptypes #
+############################
+# authentication dumptype included by default for all ZMC DLEs
+define dumptype zmc_bsdtcp_auth {
+	auth	"bsdtcp"
+}
+
+#########################
+# Application Dumptypes #
+#########################
+# All ZMC application dumptypes inherit exactly one application dumptype (below):
+define dumptype zmc_gtar_userapp {
+}
+
+define dumptype zmc_oracle_userapp {
+}
+
+define dumptype zmc_rman_userapp {
+}
+
+define dumptype zmc_postgresql_userapp {
+}
+
+define dumptype zmc_star_userapp {
+}
+
+define dumptype zmc_cifs_userapp {
+}
+
+define dumptype zmc_suntar_userapp {
+}
+
+define dumptype zmc_zfssendrecv_userapp {
+}
+
+define dumptype zmc_zfssnapshot_userapp {
+}
+
+define dumptype zmc_windowsdump_userapp {
+}
+
+#####################
+# Application Tools #
+#####################
+define application_tool "app_amgtar_user" {
+	#	property "NO-UNQUOTE" "yes" # Allow backslashes (and certain other characters) in filenames. Requires tar 1.16+.
+}
+
+define application_tool "app_amstar_user" {
+}
+
+define application_tool "app_amoracle_user" {
+}
+
+define application_tool "app_amrman_user" {
+}
+
+define application_tool "app_ampgsql_user" {
+}
+
+define application_tool "app_amsamba_user" {
+	property	"ALLOW-ANONYMOUS"	"guest"
+}
+
+define application_tool "app_amsuntar_user" {
+}
+
+define application_tool "app_zfssendrecv_user" {
+}
+
+define script_tool "script_amzfssnapshot_user" {
+}
+

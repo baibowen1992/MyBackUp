@@ -1,0 +1,809 @@
+<?
+/*
+ *		Copyright (C) 2006-2013 Zmanda Incorporated.
+ *			     All Rights Reserved.
+ *
+ * The software you have just accessed, its contents, output and underlying
+ * programming code are the proprietary and confidential information of Zmanda
+ * Incorporated.  Only specially authorized employees, agents or licensees of
+ * Zmanda may access and use this software.  If you have not been given
+ * specific written permission by Zmanda, any attempt to access, use, decode,
+ * modify or otherwise tamper with this software will subject you to civil
+ * liability and/or criminal prosecution to the fullest extent of the law.
+  */
+
+
+
+/*
+ * Yasumi_Parser - Flyweight psuedo-parser for global device confs found in /etc/zmanda/zmc_aee/devices / * / *.conf
+ * Allows reading of device confs without introducing length latencies into the ZMC GUI.
+ * Syntax check need not be comprehensive, since regular Amanda C parser will report such errors.
+ * Thus, we only need to glean the information and return a structured result suitable for use by ZMC.
+ *
+ * Requirements:
+ * 1) Given valid Amanda configuration files, parse them into data structure suitable for use by ZMC
+ * 2) Given the aforementioned data structure, write valid Amanda configuration files
+ * 3) Not a requirement: reject invalid Amanda configuration files (requirement delegated to Amanda C parser)
+ *
+ * Notes:
+ * DLE: http://wiki.zmanda.com/index.php/Backup_server - Custom Compression 
+ * http://wiki.zmanda.com/index.php/Special:Search?search=appending+to+tape&go=Go
+ * All DLE properties containing numbers should be manipulated as strings using:
+ *		http://us2.php.net/manual/en/ref.bc.php
+ * Quick tests:
+ * /Yasumi/index.php/conf/readwrite?amanda_configuration_name=gtest&what=disklist.conf&debug=8&user_name=me&user_id=2&human=1&where=disklist.test.conf
+ */
+
+class ZMC_Yasumi_Parser # extends ZMC_Yasumi
+{
+	//@const boolean  Amanda lacks support for defining a "storage device", so device_property must be defined at the global scope
+	const GLOBAL_DEVICE_PROPS = true;
+
+	//@var boolean Whether or not to render comments when generating Amanda configuration files
+	public static $comments = true;
+
+	/*
+	 * Read Amanda conf file into associative array, suitable for use by ZMC and exchanging with ZMC via JSON
+	 * @throws ZMC_Exception_YasumiFatal
+	 */
+	public static function parse($filename, &$result, ZMC_Yasumi $yasumi)
+	{
+		if (false === ($lines = file($filename)))
+			throw new ZMC_Exception_YasumiFatal("Unable to read file: '$filename'");
+		self::parseLines($filename, $lines, $result, $yasumi);
+		#echo "filename=$filename"; print_r($result); exit;
+	}
+
+	private static function parseLines($filename, array $lines, &$result, ZMC_Yasumi $yasumi)
+	{
+		$block =& $result;
+		$comment = '';
+		$state = 'outside';
+		$disklist = !strncasecmp(basename($filename), 'disklist', 8); // files named disklist* are parsed differently ..
+		$config = basename(dirname($filename));
+
+		foreach($lines as $key => $line)
+		{
+			$lineno = $key + 1;
+			if (!empty($appLines))
+			{
+				if (false === strpos($line, '}'))
+				{
+					$appLines[$lineno -1] = $line;
+					continue;
+				}
+				$pieces = explode('}', $line);
+				$appLines[$lineno -1] = $pieces[0];
+				$line = $pieces[1];
+#echo "this->parseLines($filename, $appLines, block['application'], yasumi); appLines="; print_r($appLines);
+				self::parseLines($filename . '/application', $appLines, $block, $yasumi);
+				unset($appLines);
+#echo "\nBlock:\n"; print_r($block); #echo "Result"; print_r($result);
+			}
+
+			$trimmed = trim($line);
+			if ($state === 'need_open_curly')
+			{
+				if (false !== strpos($trimmed, '{'))
+				{
+					$trimmed = str_replace('{', '', $trimmed);
+					$state = 'inside';
+				}
+			}
+
+			if (empty($trimmed))
+			{
+				if (!empty($comment) && isset($dumptypeDefsComment))
+				{
+					self::append($dumptypeDefsPlace, $dumptypeDefsComment, $comment, "\n");
+					$comment = '';
+				}
+				continue;
+			}
+
+			if ($trimmed[0] === '#')
+			{
+				$comment = (empty($comment) ? $trimmed : "$comment\n$trimmed");
+				continue;
+			}
+			$line = $trimmed;
+			if (($state === 'inside') && strncmp($line, 'property', 8) && (false !== ($pos = strpos($line, '}')))) // handle a close curly (end of a definition)
+			{
+				unset($dumptypeDefsComment);
+				$state = 'outside';
+				if ($disklist)
+				{
+					$spindle = strtok(substr($line, $pos + 1), " \t"); // normalize the messy spindle/interface definitions
+					if ($spindle !== false)
+					{
+						$block['spindle'] = $spindle; // spindle and interface have no line number (they are appended to trailing '}' of DLE def)
+						$interface = strtok(" \t");
+						if ($interface !== false)
+							$block['interface'] = $interface;
+					}
+					$key = "$config|$block[host_name]|$block[disk_name]";
+					if (isset($dleKeys[$key]))
+						throw new ZMC_Exception_YasumiFatal("Found duplicate key '$key' in another DLE. See $filename");
+					$dleKeys[$key] = true;
+					$result[$type][$key] =& $block;
+					$dumptypeDefsPlace =& $block;
+					if (!array_key_exists('_tmp', $result[$type])) // should never happen
+					{
+					#	print_r($result[$type]);exit;
+						error_log(__FUNCTION__ . ':' . __LINE__ . " _tmp key missing!\n");
+					}
+					unset($result[$type]['_tmp']);
+				}
+#echo "key=$key; type=$type\n"; print_r($result[$type]); echo "\n---\n", __LINE__; print_r($block);exit;
+				$type = '';
+				unset($block); // reset current "append" location to top-level
+				$block =& $result;
+				continue;
+			}
+
+			if (!strncasecmp($line, 'holdingdisk', 11))
+			{
+				$hdValue = trim(substr($line, 12));
+				if (empty($hdValue) || $hdValue[0] === '{') // i.e. if "holdingdisk { ... }"
+				{
+					$appLines = array(($lineno -1) => "define $line");
+					continue;
+				}
+			}
+
+			if (!strncasecmp($line, 'application', 11) && (false === strpos($line, '"', 12))) // i.e. if "application { ... }"
+			{
+				$appLines = array(($lineno -1) => "define $line");
+				continue;
+			}
+
+			if ($disklist && $state !== 'inside')
+				$line = 'define dle ' . $line; // pretend Amanda disklists use a standardized syntax consistent with other files
+
+			if (!strncasecmp($line, 'define ', 7) || !strncasecmp($line, "define\t", 7))
+			{
+				strtok($line, " \t");
+				if ($state === 'inside')
+					throw new ZMC_Exception_YasumiFatal("Line #$lineno ($line) improper nested 'define' in: $filename");
+				$state = strpos($line, '{') ? 'inside' : 'need_open_curly';
+				$type = str_replace('-', '_', strtok(" \t{") . '_list'); // normalize to underscores!
+				$name = strtok(" \t{");
+				if ($disklist)
+				{
+					$dumptypeDefsPlace =& $result[$type]['_tmp']; // why _tmp: must read DLE to find zmc_uuid (the key name expected by ZMC)
+					$dumptypeDefsPlace['_line'] = $lineno;
+					$dumptypeDefsPlace['host_name'] = $name;
+					$parts = self::quoteStrings(strtok('{'), $comment, $count);
+					$dumptypeDefsPlace['disk_name'] = self::unquote($parts[1]);
+					$dumptypeDefsPlace['disk_device'] = (empty($parts[2]) ? $dumptypeDefsPlace['disk_name'] : self::unquote($parts[2]));
+				}
+				elseif ($name === false) // inline definition without a name identifier
+				{
+					$dumptypeDefsPlace =& $result[$type]; // set current "append" location to current object
+					$dumptypeDefsPlace = array('_line' => $lineno);
+				}
+				else
+				{
+					$dumptypeDefsPlace =& $result[$type][$name]; // set current "append" location to current object
+					$dumptypeDefsPlace = array('name' => $name, '_line' => $lineno);
+				}
+				$block =& $dumptypeDefsPlace;
+				if (!empty($comment))
+					self::append($dumptypeDefsPlace, '_comment', $comment, "\n");
+				$comment = '';
+#echo __LINE__, "line=$line\nstate=$state; type=$type; name=$name"; print_r($result); exit;
+				continue;
+			}
+
+			$prop = false;
+			if (!strncasecmp($line, 'device_property', 15))
+			{
+				$line = ltrim(substr($line, 16));
+				$prop = 'device_property_list';
+			}
+			elseif (!strncasecmp($line, 'property', 8))
+			{
+				$line = ltrim(substr($line, 9));
+				$prop = 'property_list';
+			}
+			elseif (!strncasecmp($line, 'script', 6))
+			{
+				$line = ltrim(substr($line, 7));
+				$prop = 'script_list';
+			}
+
+$i = 0;
+			$values = array();
+			while (!empty($line))
+			{
+				$space = strpos($line, ' ');
+				$tab = strpos($line, "\t");
+				if ($space === false && $tab === false)
+				{
+					$unquoted = self::unquote($line);
+					self::warnIfNotDefined($yasumi, $type, $unquoted, $result, $filename, $lineno, $line);
+					$param = ($prop === 'script_list') ? 'append' : 'inherits';
+					$values[] = $unquoted;
+					break;
+				}
+				else
+				{
+					$param = substr($line, 0, $pos = min($space ? $space:$tab, $tab ? $tab:$space));
+					$value = ltrim(substr($line, $pos));
+
+					if (   $param === 'exclude' // do NOT use comment characters on lines with these parameters
+						|| $param === 'include' // Amanda's "exclude" behaves inconsistently
+						|| $param === 'exclude_list_a_file'
+						|| $param === 'include_list_a_file')
+					{
+						$values[] = $value;
+						break;
+					}
+
+					if ($value[0] === '"')
+					{
+						$curpos = 1;
+						while($qpos = strpos($value, '"', $curpos))
+							if ($value[$qpos -1] !== '\\')
+								break;
+
+						if ($qpos === false)
+							throw new ZMC_Exception_YasumiFatal("Line #$lineno missing trailing '\"' in: $filename;qpos=$qpos;value=$value;cpos=$cpos;param=$param;line=$line;space=$space;tab=$tab;");
+
+						$values[] = substr($value, 0, $qpos);
+						$line = trim(substr($value, $qpos +1));
+						continue;
+					}
+
+					if (empty($values) && $value === '')
+						throw new ZMC_Exception_YasumiFatal("Line #$lineno missing value for $param in $filename."); 
+					elseif ($value[0] === '#')
+					{
+						if (empty($values))
+						{
+							$block['inherits'][$param . '_comment'] = $value;
+							$values[] = $param;
+							$param = 'inherits';
+							self::warnIfNotDefined($yasumi, $type, $line, $result, $filename, $lineno, $line);
+							break;
+						}
+						if (!empty($comment))
+							$comment .= "\n";
+						$comment .= substr($value, $cpos);
+					}
+					else
+						$values[] = $value;
+					break;
+				}
+			}
+			$value = implode(' ', $values); // @TODO: smarter handling of parameters with multiple values
+
+			unset($dumptypeDefsPlace);
+			$append = false;
+			if ($prop)
+			{
+				if ($param === 'append')
+				{
+					$param = strtok($value, " \t");
+					$value = strtok('');
+					$append = true;
+				}
+				$param = self::unquote($param);
+				$dumptypeDefsPlace =& $block[$prop];
+			}
+			else
+				$dumptypeDefsPlace =& $block;
+
+			if (!strcasecmp($param, 'includefile'))
+				$dumptypeDefsPlace['includefiles'][self::unquote($value)] = $lineno; // convenience list (for internal use only by Yasumi)
+			elseif ($param === 'inherits') // dumptypes are case-insensitive, so key is lc, but value is original case
+				$dumptypeDefsPlace['inherits'][self::unquote(strtolower($value))] = $lineno; #$lineno; see ZMC_Yasumi_Conf::normalizeDle()
+			else
+			{
+				if ($prop || !strcasecmp($param, 'exclude') || !strcasecmp($param, 'include'))# || !strcasecmp($param, 'ignore'))
+				{
+					$word = strtok($value, " \t");
+					if ($word === 'list') // amanda speak for "argument is a file containing exclude list"
+						$param = $param . '_list_a_file';
+					else
+					{
+						if ($word === 'file') // amanda speak for "argument is an exclude list"
+							$value = strtok(''); // 'file' qualifier is default, so strip 'file' from value
+						$word = strtok($value, " \t");
+						if ($word === 'append')
+						{
+							$value = strtok('');
+							$append = true;
+						}
+					}
+				}
+				$parts = 1;
+				if (   $prop !== 'property_list'
+					&& $param !== 'exclude'
+					&& $param !== 'include'
+					&& $param !== 'exclude_list_a_file'
+					&& $param !== 'include_list_a_file')
+					$dumptypeDefsPlace[$param] = self::unquote($value);
+				else
+				{
+					$value = implode(' ', self::quoteStrings($value, $comment, $parts));
+					if (!isset($dumptypeDefsPlace[$param]))
+						if ($prop === 'property_list' && (strpos($value, '"', 1) === (strlen($value) -1)))
+							$dumptypeDefsPlace[$param] = self::unquote($value);
+						else
+							$dumptypeDefsPlace[$param] = $value;
+					else
+					{
+						if ($prop === 'property_list' && $dumptypeDefsPlace[$param][0] !== '"')
+							$dumptypeDefsPlace[$param] = self::quote($dumptypeDefsPlace[$param]);
+						$dumptypeDefsPlace[$param] .= ' ' . $value;
+					}
+				}
+
+				$dumptypeDefsPlace[$param . '_line'] = $lineno;
+			}
+
+			$dumptypeDefsComment = $param . '_comment';
+			if (!empty($comment))
+				self::append($dumptypeDefsPlace, $dumptypeDefsComment, $comment, "\n");
+
+			$comment = '';
+		}
+	}
+
+	protected static function warnIfNotDefined(&$yasumi, &$type, &$unquoted, &$result, $filename, $lineno, $line)
+	{
+		switch($type)
+		{
+			case 'dumptype_list':
+			case 'dle_list':
+				if ((substr($unquoted, 0, 4) !== 'zmc_') && (!isset($result['dumptype_list'][$unquoted])))
+					$yasumi->errorLog("WARNING: dumptype used, but not defined in $filename on #$lineno: $line", __FILE__, __LINE__);
+				break;
+
+			case 'application_list':
+			case 'application_tool_list':
+				if ((substr($unquoted, 0, 4) !== 'zmc_') && (!isset($result['application_tool_list'][$unquoted])))
+					$yasumi->errorLog("WARNING: application used, but not defined in $filename on line #$lineno: $line", __FILE__, __LINE__);
+				break;
+
+			case 'script_list':
+			case 'script_tool_list':
+				if ((substr($unquoted, 0, 4) !== 'zmc_') && (!isset($result['script_tool_list'][$unquoted])))
+					$yasumi->errorLog("WARNING: script used, but not defined in $filename on line #$lineno: $line", __FILE__, __LINE__);
+				break;
+
+			case 'holdingdisk_list':
+				echo "unquoted=$unquoted\n";
+				print_r($result);
+				if ($unquoted === 'never')
+					break;
+
+			default:
+				$yasumi->debugLog('Parse result up to point of problem: ' . print_r($result, true), __FILE__, __LINE__);
+				throw new ZMC_Exception_YasumiFatal("Trying to parse item of type '$type' (see Yasumi debug log). In $filename , line #$lineno not understood: $line");
+				break;
+		}
+	}
+
+	public static function quoteStrings($line, &$comment, &$parts)
+	{
+		$length = strlen($line);
+		$results = array();
+		$quoting = $slash = $wantSpace = false;
+		$parts = 0;
+		for($i=0; $i<$length; $i++)
+		{
+			if (!$quoting)
+			{
+				if (ctype_space($line[$i]))
+					continue;
+
+				if ($line[$i] === '#')
+				{
+					if (!empty($comment))
+						$comment .= "\n";
+					$comment .= substr($line, $i);
+					break;
+				}
+
+				$parts++;
+				$results[$parts] = '';
+				$quoting = true;
+				if ($line[$i] !== '"')
+					$wantSpace = true; // space terminates unquoted pattern
+				$results[$parts] .= $line[$i];
+				continue;
+			}
+
+			if ($wantSpace && ctype_space($line[$i]))
+			{
+				$results[$parts] = self::quote($results[$parts]);
+				$quoting = $wantSpace = false;
+				continue;
+			}
+
+			if (!$slash && $line[$i] === '"')
+				$quoting = $wantSpace = false;
+
+			if ($line[$i] !== '\\')
+				$slash = false;
+			else
+				$slash = !$slash;
+
+			$results[$parts] .= $line[$i];
+		}
+		if ($quoting)
+			$results[$parts] = self::quote($results[$parts]);
+		return $results;
+	}
+
+	/*
+	 * write a ZMC Amanda conf data structure out as an Amanda parseable conf file
+	 * @throws ZMC_Exception_YasumiFatal
+	 */
+	public static function &data2conf($data, $indent = 0)
+	{
+		$dumptypeDefs = array();
+		if (empty($data))
+		{
+			$result = '';
+			return $result;
+		}
+		$lineAppend = 9999;
+		$listAppend = 5000;
+		$result = array();
+		$globalDeviceProps = '';
+		foreach($data as $key => $value)
+		{
+			if (self::ignoreKey($key))
+				continue;
+			$lineno = self::lineno($data, $key, $lineAppend);
+
+			#if ($key === 'dumptype_list') error_log(print_r($value, true));
+			if ($key === 'includefiles')
+				foreach($data[$key] as $filename => $includeLineNo)
+				{
+					self::append($result, $includeLineNo, 'includefile ' . self::quote($filename) . "\n");
+					if ($filename === '/etc/zmanda/zmc_aee/zmc_user_dumptypes')
+						$dumptypeFirst = true;
+				}
+			elseif ($key === 'device_property_list' || $key === 'property_list')
+				$globalDeviceProps .= self::data2proplist($result, $lineAppend, $key, $value, $indent);
+			elseif (substr($key, -5) !== '_list')
+				self::append($result, $lineno, self::data2param($data, $key, $indent));
+			elseif ($key === 'dumptype_list' && isset($value['zmc_default_dev'])) // must occur last so it can reference application/script tool definitions above
+				self::data2list($dumptypeDefs, $listAppend, "define " . substr($key, 0, -5), $value, 1);
+			else #	tapetype_list dumptype_list device_list
+				self::data2list($result, $listAppend, "define " . substr($key, 0, -5), $value, 1); // definitions added to &$result
+		}
+		ksort($result);
+		$result = implode('', $result) . $globalDeviceProps;
+		if (empty($dumptypeFirst))
+			$result .= implode('', $dumptypeDefs);
+		else
+			$result = implode('', $dumptypeDefs) . $result;
+		return $result;
+	}
+
+	/*
+	 * Amanda C parser compatible quote string
+	 * @param  string $s  string to quote
+	 * @param  boolean $raw OPTIONAL raw quoting does not append and prepend enclosing double quote characters
+	 */
+	public static function quote($s, $raw = false)
+	{
+		// boolean properties are represented as "off" and "on" in ZMC normalized format for input to Amanda
+		if ($s === false)
+			return '"off"';
+		if ($s === true)
+			return '"on"';
+
+		$raw = ($raw ? '' : '"');
+		return empty($s) ? $raw.$raw : $raw . str_replace(array('\\', "\n", "\r", "\t", "\f", '"'), array('\\\\', '\\n', '\\r', '\\t', '\\f', '\\"'), $s) . $raw;
+	}
+
+	/*
+	 * Amanda C parser compatible unquote string
+	 * Tested with: $s = '"\\\f\\\\oo\bar\"cat\\\nX\to\\\\\\\\\nrange\\"'; print_r($s);echo "\n";
+	 */
+	public static function unquote($s)
+	{
+		return str_replace(array('\\"', '\\\\', '\\n', '\\r', '\\t', '\\f', chr(0)), array('"', chr(0), "\n", "\r", "\t", "\f", '\\'), trim(trim($s), '"'));
+	}
+
+
+	/*
+	 * return the amanda conf line number containing the definition for $name (defaults to $lineAppend++)
+	 */
+	protected static function lineno($data, $name, &$lineAppend)
+	{
+		if (isset($data[$name . '_line']))
+			$lineno = $data[$name . '_line'];
+		else
+			$lineno = $lineAppend++;
+		return $lineno;
+	}
+	
+	/*
+	 * filter out these keys on write operations
+	 */
+	protected static function ignoreKey($key)
+	{
+		if ((substr($key, -5) === '_line') || (substr($key, -8) === '_comment') || (substr($key, -8) === '_display'))
+			return true;
+
+		switch($key)
+		{
+			case 'name':
+			case 'devicetype':
+			case 'tape_splitsize_auto':
+			case 'tape_splitsize_percent':
+				return true; // ignore convenience keys introduced by Yasumi for ZMC
+			default:
+				return false;
+		}
+	}
+
+	/*
+	 * All Amanda conf parameters are ultimately processed below, except device properties and ...
+	 */
+	protected static function data2param($data, $key, $indent)
+	{
+		switch($key)
+		{
+			case 'amrecover_changer':
+			case 'amrecover_changer':
+			case 'application':
+			case 'auth':
+			case 'changerdev':
+			case 'changerfile':
+			case 'client_custom_compress':
+			case 'client_decrypt_option':
+			case 'client_encrypt':
+			case 'client_username':
+			case 'columnspec':
+			case 'comment':
+			case 'directory':
+			case 'diskfile':
+			case 'displayunit':
+			case 'dumporder':
+			case 'dumpuser':
+			#case 'holdingdisk':
+			case 'indexdir':
+			case 'infofile':
+			case 'krb5keytab':
+			case 'krb5principal':
+			case 'label_new_tapes':
+			case 'labelstr':
+			case 'lbl_templ':
+			case 'logdir':
+			case 'mailer':
+			case 'mailto':
+			case 'org':
+			case 'plugin':
+			case 'printer':
+			case 'program':
+			case 'rawtapedev':
+			case 'script':
+			case 'server_custom_compress':
+			case 'server_decrypt_option':
+			case 'server_encrypt':
+			case 'server_encrypt':
+			case 'split_diskbuffer':
+			case 'ssh_keys':
+			case 'tapedev':
+			case 'tapelist':
+			case 'tpchanger':
+				$value = self::quote($data[$key]);
+				break;
+
+			default:
+				$value = $data[$key];
+		}
+
+		$commentKey = $key . '_comment';
+		$comment = (isset($data[$commentKey]) ? $data[$commentKey] . "\n" : '');
+		$padding = ($indent > 0) ? str_repeat("\t", $indent) : '';
+
+		if (!empty($comment))
+		{
+			$tmp = ltrim($comment);
+			if ($tmp[0] !== '#')
+				$comment = '#' . $comment;
+			$comment = "$padding$comment";
+		}
+
+		if ($key === 'exclude_list_a_file' || $key === 'include_list_a_file')
+		{
+			$key = substr($key, 0, 7);
+			if ('list' === trim(strtok($value, " \t"), '"'))
+			{
+				if ('optional' === trim($tok = strtok(" \t"), '"'))
+					$value = 'list optional ' . strtok('');
+				else
+					$value = 'list ' . $tok . strtok('');
+			}
+		}
+
+		return (self::$comments ? $comment : '' ) . "$padding$key\t$value\n";
+	}
+
+	/*
+	 * Translate a definition list into an Amanda conf parameter definition
+	 */
+	protected static function data2list(&$result, &$lineAppend, $begin, $data, $indent)
+	{
+		$lineAppend = 5000;
+		foreach($data as $name => $definition)
+		{
+			$prepend = '';
+			if (self::ignoreKey($name))
+				continue;
+
+			if (!is_array($definition))
+			{
+				$msg = "Parse problem with '$begin $name' definition '$definition' (should be a list)";
+				if (ZMC::$registry->debug)
+					$msg .= "\n" . print_r(debug_backtrace(), true);
+				throw new ZMC_Exception_YasumiFatal($msg);
+			}
+
+			$where = $lineAppend++;
+			if (isset($definition['_line']))
+				$where = $definition['_line'];
+
+			$appendAfterCurly = '';
+			if ($begin === 'define dle') // contortions required because of asymmetric Amanda config syntax
+			{
+				$disk_device = (isset($definition['disk_device']) ? ' ' . self::quote($definition['disk_device']) : '');
+				$prepend = $definition['host_name'] . ' ' . self::quote($definition['disk_name']) . $disk_device . " {\n";
+				unset($definition['}']);
+				$appendAfterCurly .= ' ' . @$definition['spindle'] . ' ' . @$definition['interface'] . "\n";
+				unset($definition['host_name']);
+                unset($definition['disk_name']);
+                unset($definition['disk_device']);
+				unset($definition['interface']);
+				unset($definition['spindle']);
+			}
+			else
+			{
+				if (ctype_digit($name[0]))
+					$name = "_$name";
+				$prepend = "$begin $name {\n";
+			}
+			$tabIndent = str_repeat("\t", $indent -1);
+			if (!empty($definition['_comment']))
+				$prepend = $tabIndent . str_replace("\n", "\n" . $tabIndent,  $definition['_comment']) . "\n$prepend";
+			if (!empty($data[$name . '_comment']))
+				$prepend = $tabIndent . str_replace("\n", "\n" . $tabIndent, $data[$name . '_comment']) . "\n$prepend";
+			self::append($result, $where, $prepend . self::list2conf($lineAppend, $definition, $indent, $appendAfterCurly));
+		}
+	}
+			
+	protected static function list2conf(&$lineAppend, &$definition, $indent, $appendAfterCurly)
+	{
+		$body = array();
+		$appendBeforeCurly = $dumptypes = $deviceProps = '';
+		$tabsClose = $indent ? str_repeat("\t", $indent -1) : '';
+		$tabs = $tabsClose . "\t";
+		foreach($definition as $key => $value)
+		{
+			if (self::ignoreKey($key))
+				continue;
+
+			$lineno = self::lineno($definition, $key, $lineAppend);
+
+			switch($key)
+			{
+				case 'inherits': // i.e. processing a dle definition
+					$comment = '';
+					if (!empty($definition[$key . '_comment']))
+						$comment = $tabs . $definition[$key . '_comment'];
+
+					foreach($value as $inherit => $i)
+					{
+						if (self::ignoreKey($inherit))
+							continue;
+
+						if (!empty($value[$inherit . '_comment']))
+							$comment .= $tabs . $value[$inherit . '_comment'];
+						if (!empty($comment))
+							$comment = str_replace("\n", "\n$tabs", $comment) . "\n";
+
+						if (!ctype_alnum(str_replace('_', '', $inherit))) 
+							$quoted = self::quote($inherit);
+						else
+							$quoted = $inherit;
+
+						if (ctype_digit("$i"))
+						{
+							self::append($body, $i, (self::$comments ? $comment : '' ) . "$tabs$inherit\n");
+							$comment = '';
+							continue;
+						}
+
+						$parts = explode('_', $inherit);
+						if ($parts[0] === 'zmc' && ($parts[2] === 'base' || $parts[2] === 'auth'))
+							$dumptypes .= (self::$comments ? $comment : '' ) . "$tabs$inherit\n";
+						else // zmc_*_app contain overrides for a specific Amanda application plugin
+							$appendBeforeCurly = (self::$comments ? $comment : '' ) . "$tabs$inherit\n$appendBeforeCurly";
+						$comment = '';
+					}
+					break;
+
+				case 'application_tool_list':
+				case 'application_list':
+					$begin = (($key === 'application_list') ? 'application' : 'define application_tool');
+					$appendBeforeCurly = "$appendBeforeCurly$tabs$begin {\n" . self::list2conf($lineAppend, $value, $indent +1, '');
+					#echo "appendBeforeCurly=$appendBeforeCurly\n";
+					break;
+
+				case 'property_list':
+				case 'device_property_list':
+					$deviceProps .= self::data2proplist($body, $lineAppend, $key, $value, $indent);
+					break;
+
+				case 'exclude':
+				case 'include':
+					self::append($body, $lineno, "$tabs$key\t" . implode(' ', self::quoteStrings($value, $comment, $parts)) . "\n");
+					break;
+
+				default: // nested "define" support via:
+					if ($key === 'script_list')
+						self::data2proplist($body, $lineAppend, $key, $value, $indent);
+					elseif (substr($key, -5) === '_list') #	tapetype_list dumptype_list device_list
+						self::append($body, $lineno, $tabs . 'define ' . substr($key, 0, -5) . " {\n" . self::data2conf($value, $indent +1) . "$tabs}\n");
+					else
+						self::append($body, $lineno, self::data2param($definition, $key, $indent));
+					break;
+			}
+		}
+		ksort($body);
+		return $dumptypes . implode('', $body) . "$appendBeforeCurly$tabsClose}$appendAfterCurly\n$deviceProps\n";
+	}
+
+	// process property lists - properties in application {...}, dumptype {...}, and device {...}
+	protected static function data2proplist(&$body, &$lineAppend, $key, $value, $indent)
+	{
+		$deviceProps = '';
+		foreach($value as $prop => $val)
+		{
+			$lineno = self::lineno($value, $prop, $lineAppend);
+			if (self::ignoreKey($prop))
+				continue;
+			$tabs = str_repeat("\t", $indent);
+			$comment = '';
+			if (!empty($value[$prop . '_comment']))
+			{
+				$comment = trim($value[$prop . '_comment']);
+				if ($comment[0] !== '#')
+					$comment = '#' . $comment;
+				if (!empty($comment))
+					$comment = "$tabs$comment";
+			}
+			if (!empty($comment))
+				$comment = str_replace("\n", "\n" . $tabs, $comment) . "\n";
+			if (strlen($val))
+				$quoted = (($val[0] === '"') ? $val : self::quote($val));
+			elseif ($key === 'script_list')
+				$quoted = '';
+			else
+				$quoted = '""';
+			$propVal = (self::$comments ? $comment : '') . $tabs . substr($key, 0, -5) . "\t" . self::quote($prop) . "\t$quoted\n";
+			if (self::GLOBAL_DEVICE_PROPS && $key === 'device_property_list')
+				$deviceProps .= $propVal;
+			else
+				self::append($body, $lineno, $propVal);
+		}
+		return $deviceProps;
+	}
+
+	protected static function append(&$array, $key, $value, $sep = '')
+	{
+		if (isset($array[$key]))
+			$array[$key] .= $sep . $value;
+		else
+			$array[$key] = $value;
+	}
+}

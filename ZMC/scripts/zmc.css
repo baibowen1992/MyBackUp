@@ -1,0 +1,983 @@
+/*
+ *		Copyright (C) 2006-2013 Zmanda Incorporated.
+ *			     All Rights Reserved.
+ *
+ * The software you have just accessed, its contents, output and underlying
+ * programming code are the proprietary and confidential information of Zmanda
+ * Incorporated.  Only specially authorized employees, agents or licensees of
+ * Zmanda may access and use this software.  If you have not been given
+ * specific written permission by Zmanda, any attempt to access, use, decode,
+ * modify or otherwise tamper with this software will subject you to civil
+ * liability and/or criminal prosecution to the fullest extent of the law.
+ * $Id: zmc.css 39108 2014-02-11 00:20:13Z anuj $ */
+
+/*  KEY REFERENCES:
+ *  CSS Compatibility and Internet Explorer: http://msdn.microsoft.com/en-us/library/cc351024(VS.85).aspx
+ *  http://www.quirksmode.org/css/contents.html
+ *  http://www.w3.org/TR/css3-selectors/
+ *  Please keep attributes alphabetized, and prefix new styles with 'zmc'.
+ */
+
+html {
+	color:black;
+	background:#B6BCA6;
+}
+ 
+.wait, .wait * { cursor: wait !important; }
+
+blockquote,body,code,dd,div,dl,dt,fieldset,form,h1,h2,h3,h4,input,legend,li,ol,p,pre,td,textarea,th,ul {
+	margin:0;
+	padding:0;
+}
+
+#subNav {
+	color:#1a1a1a;
+	height:22px;
+	left:49px;
+	position:absolute;
+	top:59px;
+}
+
+#subNav ol {
+	list-style:none;
+	margin:-2px 0px 0px 0px;
+	padding:0px 135px 0px;
+}
+
+#subNav li {
+	float:left;
+	margin:0px;
+	padding:0px 0px 0px 9px;
+}
+
+#subNav a {
+	color:#1a1a1a;
+	display:block;
+	float:left;
+	padding:3px 6px 0px 6px;
+	text-decoration:none;
+	voice-family: "\"}\"";
+	voice-family:inherit;
+}
+
+#subNav a:hover { color:#ffffff; }
+
+#subNav #current {
+	color:#1a1a1a;
+	font-weight:bold;
+	padding:3px 6px 0px 13px;
+}
+
+#subNav li.disabled {
+	/* color:#4B4B4B; */
+	font-weight:normal;
+	padding:3px 6px 0px 13px;
+}
+
+
+.tabbedNavigation {
+	background:url("/images/navigation/in-body-tabs/nav-background.gif") repeat-x bottom;
+	background-color:#ececc8;
+	padding:0px 0px 0px 3px;
+}
+
+.tabbedNavigation ul {
+	display:block;
+	list-style:none;
+	margin:0px;
+}
+
+.tabbedNavigation li {
+	background:url("/images/navigation/in-body-tabs/navbtn_left_up.gif") no-repeat left bottom;
+	float:left;
+	margin:0;
+	padding:0px 3px 0px 9px;
+}
+
+.tabbedNavigation a {
+	background:url("/images/navigation/in-body-tabs/navbtn_right_up.gif") no-repeat right bottom;
+	color:#0000ff;
+	display:block;
+	float:left;
+	padding:5px 15px 0px 6px;
+}
+
+.tabbedNavigation a:hover {
+	color:#1a1a1a;
+	text-decoration:none;
+}
+
+.tabbedNavigation .current {
+	background-image:url("/images/navigation/in-body-tabs/navbtn_left_down.gif");
+	padding-right:3px;
+}
+
+.tabbedNavigation .current a {
+	background-image:url("/images/navigation/in-body-tabs/navbtn_right_down.gif");
+	color:#1a1a1a;
+	cursor:default;
+	font-weight:bold;
+	padding-bottom:0px;
+	text-decoration:none;
+}
+
+.tabbedNavigation .disabled {
+	background:url("/images/navigation/in-body-tabs/navbtn_left_disabled.gif") no-repeat left bottom;
+	filter:alpha(opacity=60);
+	float:left;
+	margin:0;
+	opacity:0.6;
+	padding:0px 3px 0px 9px;
+}
+
+.tabbedNavigation .disabled a {
+	background:url("/images/navigation/in-body-tabs/navbtn_disabled.gif") no-repeat right bottom;
+	color:#ccc;
+	cursor:default;
+	display:block;
+	float:left;
+	padding:5px 15px 0px 6px;
+}
+
+.links {
+	font:bold 12px Arial, sans-serif, Helvetica;
+	padding:0px 4px;
+	text-align:right;
+	position:absolute;
+	top: 10px;
+	left: -120px;
+	float:right;
+}
+
+.links a {
+	color:#1a1a1a;
+	text-decoration:none;
+}
+
+.links a:hover {
+	color:#83b1c8;
+	text-decoration:none;
+}
+
+.headerLinks a {
+	color:#1a1a1a;
+	font-size:11px;
+	text-decoration:none;
+}
+
+.headerLinks a:hover {
+	color:#ffffff;
+	text-decoration:none;
+}
+
+.dataTable {
+	background-color:#ffffff;
+	clear:left;
+	color:#1a1a1a;
+	font-size:12px;
+	margin:0px;
+	position:relative;
+}
+
+.dataTable tr td {
+	border-left:1px solid #d9d9d9;
+	border-top:1px solid #dce2c6;
+	padding:2px 5px 2px 5px;
+	vertical-align:top;
+}
+
+.dataTable tr.topbar td { border-top:3px solid black; }
+.infoTable td { border: 1px solid #dce2c6; }
+.dataTable tr:hover { background-color:#ccd3ba; }
+.dataTable tr:active { background-color:#ffff99; }
+.dataTable th, .zmcSubHeadingSelect, .zmcSubHeadingWide {
+	background:#ececc8;
+	color: #1a1a1a;
+	font-weight:bold;
+	padding-left:5px;
+	padding-right:5px;
+	text-align:left;
+}
+
+.maxCol200 td, .maxCol200 th { max-width:200px; }
+
+.zmcSubHeadingSelect {
+	border:1px solid #5c706e;
+	border-bottom-width:0;
+	height:20px;
+	margin:0 10px;
+}
+
+.zmcSubHeadingSelect a:visited {
+	color:#000fff;
+	text-decoration:none;
+}
+
+.zmcSubHeadingWide {
+	border-bottom:1px solid #5c706e;
+	padding:2px;
+}
+
+.centerHeadings th {
+	padding:0px;
+	text-align:center;
+}
+
+th.leftHeading {
+	padding:0 5px 0 5px;
+	text-align:left;
+}
+
+.stripeWhite {
+	background-color:#ffffff;
+	width:100%;
+}
+
+.stripeWhiteSkip {
+	background-color:#ffff99;
+	width:100%;
+}
+
+.stripeDeleted td { text-decoration: line-through; }
+
+.stripeGray {
+	background-color:#eaece7;
+	width:100%;
+}
+
+.stripeGraySkip {
+	background-color:#eaec66;
+	width:100%;
+}
+
+.stripeGrayDeleted {
+	background-color:#eaece7;
+}
+
+.stripeGrayDeleted td {
+	text-decoration: line-through;
+}
+
+.stripeGreen {
+	background-color:#cdd2bb;
+	width:100%;
+}
+
+.stripeBrightYellow {
+	background-color:#ffff33;
+	width:100%;
+}
+.stripeYellow {
+	background-color:#ffff99;
+	width:100%;
+}
+
+.stripeRed {
+	background-color:#ffbbbb;
+	width:100%;
+}
+
+.center { text-align:center; }
+
+.alertsHeadingExpanded {
+	background-repeat:no-repeat;
+	background:url(/images/global/backup_set_heading_expanded.png);
+	height:36px;
+	left:700px;
+	position:absolute;
+	top:43px;
+	width:308px;
+	z-index:450;
+}
+
+.alertsHeadingTitle {
+	font-weight:bold;
+	left:10px;
+	position:absolute;
+	top:9px;
+	width:305px;
+}
+
+.alertsHeadingTitle a:link {
+	color:#000fff;
+	text-decoration:none;
+}
+
+.alertsHeadingTitle a:visited {
+	color:#663399;
+	text-decoration:none;
+}
+
+.alertsHeadingTitle a:hover { text-decoration:underline; }
+
+.contentHeadingHelp {
+	height:18px;
+	position:absolute;
+	right:10px;
+	top:6px;
+	width:18px;
+}
+
+.contextualInfo {
+	background-color:#dcdfe8;
+	border:1px solid #5b716f;
+	display:none;
+	filter:alpha(opacity=95);
+	margin:0 0 0 -2px;
+	opacity:0.95;
+	padding:5px;
+	position:absolute;
+	width:300px;
+	z-index:1015;
+}
+
+.contextualInfoImage { float:right; }
+.contextualInfoImage:hover .contextualInfo { display:block; }
+.required { color:#ff0000; }
+
+.confirmationWindow {
+	background-color:#cccccc;
+	filter:alpha(opacity=60);
+	height:100%;
+	left:0px;
+	opacity:0.6;
+	position:absolute;
+	top:0px;
+	width:100%;
+	z-index:1000;
+}
+
+ul {
+	list-style-type:square;
+	list-style-position:inside;
+	font-weight:bold;
+}
+
+ul ul {
+	list-style-type:disc;
+	list-style-position:inside;
+	font-weight:normal;
+}
+
+ul ul ul {
+	list-style-type:none;
+	list-style-position:inside;
+}
+
+hr {
+	background-color:#5c706e; /* this is used because Firefox uses "background-color" tag to colorize hr */
+	color:#5c706e; /* this is because IE uses "color" tag to colorize hr */
+	height:1px;
+	width:100%;
+}
+
+caption {
+	font-weight:bold;
+	text-align:center;
+}
+
+form { display:inline; }
+
+form p, form .p { /* used for any paragraph within a form */
+	clear:left;
+	margin:2px 2px 2px 0;
+	padding:7px 2px 0px 0px;
+}
+
+form p label, form .p label, .label { /* used for any label within a paragraph found in a form */
+	float:left;
+	/* margin-top:2px; */
+	white-space:nowrap;
+}
+
+form .p .wrap { white-space:normal; }
+
+label, .label { color:#1a1a1a; }
+
+.longLabel { width:160px; }
+
+textarea.textBox { width:200px; }
+
+textarea.textBoxDisabled {
+	/* color:#4B4B4B; */
+	background-color:#D4D0C8!important;
+	width:200px;
+}
+
+legend {
+	color:#006699;
+	margin-left:5px;
+}
+
+.headingBackground {
+	background:url(/images/global/main_heading_background.gif);
+	background-repeat:repeat-x;
+	height:29px;
+	position:relative;
+}
+
+.monitorTableTextCell {
+	border-right:1px solid #d9d9d9;
+	border-top:1px solid #dce2c6;
+	line-height:.9em;
+	padding:2px 3px;
+	vertical-align:middle;
+}
+
+.outOfBounds {
+	background-image:url(/images/global/out_of_bounds.png);
+	background-repeat:no-repeat;
+}
+
+.footer {
+	clear:both;
+	position:relative;
+	width:100%;
+}
+
+.footerPagination {
+	font-size:11px;
+	float:right;
+	text-align:right;
+	margin:-5px 15px 0px 0px;
+	z-index:15;
+}
+
+.footerBackground {
+	background-repeat:repeat-x;
+	background:url(/images/global/footer_background.gif);
+	border-right:1px solid #5c706e;
+	height:28px;
+	position:absolute;
+	width:100%;
+}
+
+.zmcWindowBackgroundimageRight {
+	bottom:5px;
+	position:absolute;
+	right:10px;
+}
+
+.zmcWindowBackgroundimage {
+	bottom:5px;
+	left:10px;
+	position:absolute;
+}
+
+.zmcTitleBar {
+	background:#ccd3ba url(/images/global/title_bar.png) repeat-x;
+	font-weight:bold;
+	height:21px;
+	overflow:hidden;
+	padding:7px 28px 0px 10px;
+	position:relative;
+}
+
+.zmcTitleBar a:link {
+	color:#000fff;
+	text-decoration:none;
+}
+
+.zmcTitleBar a:visited {
+	color:#990066;
+	text-decoration:none;
+}
+
+.zmcTitleBar a:hover { text-decoration:underline; }
+
+.zmcTitleBarTable {
+	border-top:1px solid #5c706e;
+	clear:both;
+	height:21px;
+}
+
+div.zmcWindow div.zmcTitleBarTable, div.zmcRightWindow div.zmcTitleBarTable, div.zmcLeftWindow div.zmcTitleBarTable {
+	border-top:0px;
+}
+
+div.zmcAfter {
+	float:left;
+	padding-left:7px;
+}
+
+.zmcContentContainer { position:relative; }
+
+.zmcButtonBar {
+	background:url(/images/global/button-bar.gif) repeat-x;
+	bottom:0px;
+	clear:both;
+	height:26px;
+	padding:2px 7px 0 7px;
+	position:relative;
+	z-index:5;
+}
+
+.zmcButtonBar input { margin:2px; }
+
+.zmcButtonBar .zmcCenter {
+	display:block;
+	float:none;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.zmcWindow, .zmcRightWindow, .zmcLeftWindow, .zmcConfirmWindow {
+	background-color:#E3EADA;
+	border:1px solid #5c706e;
+	margin:0px 10px 10px 10px;
+	/* overflow:hidden; */
+	position:relative;
+	width:auto;
+}
+
+.zmcRightWindow {
+	float:right;
+	margin-left:0;
+}
+
+.zmcLeftWindow { float:left; }
+
+.zmcFormWrapper {
+	min-height:80px;
+	padding:10px;
+	position:relative;
+}
+
+.zmcAdvancedForm {
+	background-color:#FFFFFF;
+	border-top:1px solid #5c706e;
+	color: #1a1a1a;
+	cursor:pointer;
+	font:bold 11px Arial, sans-serif, Helvetica;
+	padding:3px 0px 3px 10px;
+	position:relative;
+}
+
+.zmcFormWrapperLeft, .zmcFormWrapperText {
+	min-height:80px;
+	padding:10px 10px 10px 100px;
+	position:relative;
+}
+
+.zmcFormWrapperText {
+	background-color:white;
+	border:1px solid #5C706E;
+	margin:10px;
+	padding:10px;
+}
+
+.zmcFormWrapperRight {
+	min-height:80px;
+	padding:10px 100px 10px 10px;
+	position:relative;
+}
+
+input[type=radio],
+input[type=checkbox] {
+	vertical-align:middle;
+	margin:2px 8px 2px 3px;
+}
+
+label[for] { cursor:pointer; }
+
+.zmcFormWrapper label, .zmcFormWrapperRight label, .zmcFormWrapperLeft label {
+	line-height:1.3em!important;
+	width:130px;
+}
+
+.zmcAutoLabel label,	div label.zmcAutoLabel		{ width:auto; }
+.zmcShortestLabel label,div label.zmcShortestLabel	{ width:80px; }
+.zmcShortLabel label,	div label.zmcShortLabel		{ width:120px; }
+.zmcLongLabel label,	div label.zmcLongLabel		{ width:160px; }
+.zmcLongerLabel label,	div label.zmcLongerLabel	{ width:180px; }
+.zmcLongestLabel label,	div label.zmcLongestLabel	{ width:195px; }
+
+div select.zmcUltraShortInput, .zmcUltraShortInput select { width:65px; }
+div input.zmcUltraShortInput[type=text],
+div input.zmcUltraShortInput[type=checkbox],
+.zmcUltraShortInput input[type=text],
+.zmcUltraShortInput input[type=checkbox] { width:45px; }
+
+div input.zmcShortestInput[type=text], .zmcShortestInput input[type=text] { width:95px; }
+div select.zmcShortestInput, .zmcShortestInput select { width:102px; }
+div input.zmcShorterInput[type=text],
+div input.zmcShorterInput[type=password],
+.zmcShorterInput input[type=text],
+.zmcShorterInput input[type=password] { width:125px; }
+
+div select.zmcShorterInput, .zmcShorterInput select { width:133px; }
+div input.zmcShortInput[type=text],
+div input.zmcShortInput[type=password],
+.zmcShortInput input[type=text],
+.zmcShortInput input[type=password] { width:150px; }
+
+div select.zmcShortInput, .zmcShortInput select { width:158px; }
+
+input[type=text], input[type=password], textarea { width:175px; }
+
+select { width:183px; }
+
+div input.zmcLongInput[type=text],
+div input.zmcLongInput[type=password],
+div textarea.zmcLongInput,
+.zmcLongInput input[type=text],
+.zmcLongInput input[type=password],
+.zmcLongInput textarea { width:200px; }
+div select.zmcLongInput, .zmcLongInput select { width:208px; }
+
+div input.zmcLongerInput[type=text],
+div input.zmcLongerInput[type=password],
+div textarea.zmcLongerInput,
+.zmcLongerInput input[type=text],
+.zmcLongerInput input[type=password],
+.zmcLongerInput textarea { width:300px; }
+div select.zmcLongerInput, .zmcLongerInput select { width:308px; }
+
+div input.zmcLongestInput[type=text],
+div textarea.zmcLongestInput,
+.zmcLongestInput [type=text],
+.zmcLongestInput [type=password],
+.zmcLongestInput textarea { width:375px; }
+
+div select.zmcLongestInput, .zmcLongestInput select { width:383px; }
+
+div input.zmcVarInput[type=text], .zmcVarInput [type=text] { width:60%; }
+
+.zmcMessageBox {
+	background-color: #CCD3BA;
+	border:1px solid #5C706E;
+	margin:10px;
+	max-height:300px;
+	overflow:auto;
+	padding:5px;
+	position:relative;
+}
+
+td .zmcMessageBox { max-height:150px; }
+
+.zmcCenterNoLeftPad {
+	padding-left:2px!important;
+	text-align:center!important;
+}
+
+.zmcSuccessBar  {
+	background: url("/images/section/monitor/success.gif") repeat scroll 0 0 transparent; 
+	height:13px;
+}
+
+.zmcFailureBar  {
+	background: url("/images/section/monitor/failure.gif") repeat scroll 0 0 transparent; 
+	height:13px;
+}
+
+.zmcProgressBar {
+	background: url("/images/section/monitor/progress.gif") repeat scroll 0 0 transparent;
+	height:13px;
+}
+
+.zmcIconSuccess {
+	background:url(/images/global/calendar/icon_calendar_success.gif) no-repeat 0px 2px;
+	padding:0 0 2px 16px;
+}
+
+.zmcIconWarning {
+	background:url(/images/global/calendar/icon_calendar_warning.gif) no-repeat 0px 2px;
+	padding:0 0 2px 16px;
+}
+
+.zmcIconError {
+	background:url(/images/global/calendar/icon_calendar_failure.gif) no-repeat 0px 2px;
+	padding:0 0 2px 16px;
+}
+
+.zmcLabelSuccess { background:url(/images/global/calendar/icon_calendar_success.gif) no-repeat right center; }
+
+.zmcLabelWarning { background:url(/images/global/calendar/icon_calendar_warning.gif) no-repeat right center; }
+
+.zmcLabelError { background:url(/images/global/calendar/icon_calendar_failure.gif) no-repeat right center; }
+
+/*** Errors, Warnings, Messages, Instructions, etc. ***/
+
+.zmcMsgBox {
+	background-color:#ccc;
+	border:solid 1px;
+	color:#006600;
+	/* cursor:pointer; Why? interferes with browser's "wait" cursor after submitting a form */
+	font-size:10px;
+	font-weight:bold;
+	margin:1px 1px 1px 5px;
+	padding:0 2px;
+	position:absolute;
+	right:0px;
+}
+
+.zmcUserMessages, .zmcUserInstructions, .zmcUserErrors, .zmcUserWarnings, .zmcUserDetails, .zmcUserInternalErrors {
+	border:dotted #666666 1px;
+	float:left;
+	margin:2px;
+	position:relative;
+	width:49%;
+}
+
+.zmcConfirmWindow .zmcMessages, #zmcLoginMessageBox .zmcMessages{
+	width:99%;
+	float:none!important;
+}
+
+.zmcUserInternalErrors { border:2px solid red; }
+
+.zmcMsgWarnErr {
+	padding:4px 16px 4px 4px;
+	background-color: #E3EADA;
+}
+
+.zmcUserMessages, .zmcUserMessagesText, .zmcUserInstructions, .zmcUserInstructionsText, .instructions { color:#003000; }
+
+.zmcUserErrors, .zmcUserErrorsText {
+	color:#CC0000;
+	font-weight:bold;
+}
+
+.zmcUserWarnings, .zmcUserWarningsText { color:#800000; }
+
+.zmcUserDetails { display:none; }
+
+.zmcUserErrors a:link,   .zmcUserErrorsText a:link   { text-decoration:underline; }
+.zmcUserWarnings a:link, .zmcUserWarningsText a:link { text-decoration:underline; }
+.zmcUserMessages a:link, .zmcUserMessagesText a:link, .zmcUserInstructions a:link, .zmcUserInstructionsText a:link, .instructions a:link { text-decoration:underline; }
+
+.zmcUserDetails a:link { text-decoration:underline; }
+.zmcUserErrors a:visited,   .zmcUserErrorsText a:visited { text-decoration:underline; }
+.zmcUserWarnings a:visited, .zmcUserWarningsText a:visited { text-decoration:underline; }
+.zmcUserMessages a:visited, .zmcUserMessagesText a:visited, .zmcUserInstructions a:visited, .zmcUserInstructionsText a:visited, .instructions a:visited { text-decoration:underline; }
+
+.zmcUserDetails a:visited, .zmcUserDetailsText a:visited { text-decoration:none; }
+.zmcUserMessages a:hover, .zmcUserInstructions a:hover, .zmcUserErrors a:hover, .zmcUserWarnings a:hover, .zmcUserDetails a:hover, .zmcUserMessagesText a:hover, .zmcUserErrorsText a:hover, .zmcUserWarningsText a:hover, .instructions a:hover {
+	text-decoration:underline;
+	color:blue;
+}
+
+#zmcLoginContent p { text-align:justify; }
+
+#zmcEstimateClient {
+	position:absolute;
+	left:140px;
+}
+
+#zmcEstimateCalcsize {
+	position:absolute;
+	left:320px;
+}
+
+#zmcEstimateServer {
+	position:absolute;
+	left:665px;
+}
+
+.zmcBackupWhereCreateTable td, .zmcBackupWhereCreateTable th {
+	background:#E3EADA;
+	padding:5px 15px 5px 15px;
+}
+
+.zmcBackupWhereCreateTable th {
+	background:#ececc8;
+	border:0;
+	color: #1a1a1a;
+	font-weight:bold;
+	text-align:center;
+}
+
+table.zmcLoginCellCenter td { text-align:center; }
+
+.zmcLoginCellCenter {
+	background-color: #E3EADA;
+	width:161px;
+	height:168px;
+	display:table-cell;
+	vertical-align:middle;
+}
+
+.zmcBreadCrumbs {
+	padding:5px 10px 5px 10px;
+	min-height:17px;
+	height:auto;
+	font-size:12px;
+}
+
+.zmcBreadCrumbs a:visited { color:#000fff; }
+
+/*** HTML TAGS ***/
+body {
+	background-color:#B6BCA6;
+	border:1px solid #5C706E;
+	border-width:0 0px 0px 0;
+	color:#1a1a1a;
+	font:normal 13px Arial, sans-serif, Helvetica;
+	line-height:1.3em;
+	margin:0px;
+	min-height:350px;
+	padding:0px;
+	text-decoration:none;
+	/* width:1000px; */
+}
+
+.zmcBorder { border:1px solid #5c706e; }
+
+a:link, a:visited { text-decoration:none; }
+a:hover           { text-decoration:underline; }
+
+h1, h2, h3 { margin:0px; }
+
+h1 {
+	font-size:120%;
+	font-weight:bold;
+	padding:12px 0px 8px 0px;
+}
+
+h2 {
+	font-size:114%;
+	font-weight:bold;
+	padding:10px 0px 6px 0px;
+}
+
+h3 {
+	font-size:100%;
+	font-weight:bold;
+	padding:8px 0 4px 0;
+}
+
+div > h1:first-of-type, div > h2:first-of-type, div > h3:first-of-type { padding-top:0; }
+
+input, select, textarea {
+	float:left;
+	padding:1px;
+}
+
+table{ border-spacing:0; }
+
+table > tbody {
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+
+textarea {
+	overflow:auto;
+	padding-left:2px;
+	position:relative;
+}
+
+select, textarea, [type=text], [type=password] {
+	background-color:#DBDBDB;
+	margin-right:5px;
+}
+
+[type=submit], [type=cancel], [type=reset], [type=button] {
+	background-color:lightgrey;
+	float:right;
+	padding:0 2px;
+	margin:0px 7px;
+	vertical-align:top;
+}
+
+input.zmcButtonsLeft, button.zmcButtonsLeft,
+.zmcButtonsLeft [type=submit],
+.zmcButtonsLeft [type=cancel],
+.zmcButtonsLeft [type=reset],
+.zmcButtonsLeft [type=button] {
+	background-color:lightgrey;
+	float:left;
+	vertical-align:top;
+}
+
+/* select:hover does not work in IE8: https://connect.microsoft.com/IE/feedback/ViewFeedback.aspx?FeedbackID=416378 */
+button:focus, button:hover, input:focus, input:hover, textarea:focus, textarea:hover, select:focus, select:hover { background-color:#FFFFFF; }
+
+button[DISABLED], input[DISABLED], select[DISABLED], textarea[DISABLED] {
+	cursor:default;
+	background-color:#BBB;
+	background: #BBB;
+	color: #000;
+}
+
+[type=submit][DISABLED], [type=cancel][DISABLED], [type=reset][DISABLED], [type=button][DISABLED] {
+	background-color:darkgray!important;
+	color:#D1D1D1;
+}
+
+[type=image]:hover { background-color:inherit; }
+
+.ieonly :disabled { background-color:graytext; }
+
+.zmcHoverHighlight:hover { background-color:#FFFF00; }
+
+#conflict_file_selected, #file_conflict_div input[type=radio]:checked+label {
+	background-color:#F0F000;
+	width:auto;
+}
+
+pre,.pre, .zmcUserDetails zmcMsgBox {
+	color:black;
+	font:11px/12px "Courier New", Courier, monospace; /* http://www.codestyle.org/css/font-family/sampler-Monospace.shtml */
+	overflow:auto;
+	padding:1px; /* workaround for chrome bug */
+	white-space: -moz-pre-wrap;	/* Mozilla, since 1999 */
+	white-space: -o-pre-wrap;	/* Opera 7 */
+	white-space: pre-wrap;	/* css-3 */
+	white-space: -pre-wrap;		/* Opera 4-6 */
+	word-wrap:break-word;		/* http://www.w3.org/TR/css3-text/#text-wrap */
+}
+
+legend {
+	font-weight:bold;
+	color:#1A1A1A;
+	margin-left:10px;
+	margin: 0 0 3px 15px;
+	padding: 2px;
+	background: #ECECC8;
+	border: 1px solid white;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+fieldset {
+	background-color:#EBF2E2;
+	color:#1a1a1a;
+	border:1px dotted #5C706E;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	padding:5px 8px 5px 5px;
+	margin:8px;
+}
+
+.zmcFormWrapper fieldset {
+	margin-top:9px;
+	float:left;
+}
+
+img, hr { border:none; }
+
+small { font-size:11px; }
+
+a.zmcHelpLink {
+	background:transparent url(/images/icons/icon_help.png) no-repeat center center;
+	display:block;
+	height:18px;
+	position:absolute;
+	right:5px;
+	text-decoration:none;
+	top:5px;
+	width:18px;
+	z-index:5;
+}
+
+a.zmcHelpLink:hover {
+	background:transparent url(/images/icons/icon_help_hover.png) no-repeat center center;
+}
+
+a.zmcHelpLinkHug {
+	float:left;
+	position:relative;
+	top:0;
+}

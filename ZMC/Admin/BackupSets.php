@@ -160,7 +160,7 @@ class ZMC_Admin_BackupSets extends ZMC_Backup
                     // $resultx = ZMC_User::http_post_data($url, $data);
 
                     //        /instance/obs/getObsUser
-                    $url  = "http://172.66.6.113:8082/instance/obs/getObsUser";
+                    $url  = "http://172.66.6.113:8082/portal/instance/obs/getObsUser";
                     session_start();
                     $token= $_SESSION['token'];
 

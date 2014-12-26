@@ -305,49 +305,49 @@ EOD;
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-                            echo "		<li class='disabled'>来源</li>\n";
+                            echo "		<li id='step1' class='disabled'>备份项目</li>\n";
                         else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">备份项目</a></li>\n";
+                            echo "		<li id='step1'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">来源</a></li>\n";
                     }
                     elseif ( $description =='where' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-                            echo "		<li class='disabled'>目的地</li>\n";
+                            echo "		<li id='step2' class='disabled'>目的地</li>\n";
                         else
-                            echo "		<li hidden='hidden'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">目的地</a></li>\n";
+                            echo "		<li id='step2'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">目的地</a></li>\n";
                     }
                     elseif ( $description =='staging' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-                            echo "		<li class='disabled'>缓存</li>\n";
+                            echo "		<li id='step3' class='disabled'>缓存</li>\n";
                         else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">缓存</a></li>\n";
+                            echo "		<li  id='step3'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">缓存</a></li>\n";
                     }
                     elseif ( $description =='how' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-                            echo "		<li class='disabled'>策略</li>\n";
+                            echo "		<li id='step4' class='disabled'>策略</li>\n";
                         else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">策略</a></li>\n";
+                            echo "		<li id='step4'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">策略</a></li>\n";
                     }
                     elseif ( $description =='when' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-                            echo "		<li class='disabled'>计划</li>\n";
+                            echo "		<li id='step5' class='disabled'>计划</li>\n";
                         else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">计划</a></li>\n";
+                            echo "		<li id='step5'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">计划</a></li>\n";
                     }
                     elseif ( $description =='now' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-                            echo "		<li class='disabled'>执行</li>\n";
+                            echo "		<li id='step6' class='disabled'>执行</li>\n";
                         else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">执行</a></li>\n";
+                            echo "		<li id='step6'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">执行</a></li>\n";
                     }
                 }
                 elseif( $Tab == 'Monitor' )
@@ -380,9 +380,9 @@ EOD;
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-                            echo "		<li class='disabled'>备份集</li>\n";
+                            echo "		<li data-step='1' data-intro='先在“管理 >> 备份集”页面，创建备份集。' data-position='right' class='disabled'>备份集</li>\n";
                         else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">备份集</a></li>\n";
+                            echo "		<li data-step='1' data-intro='先在“管理 >> 备份集”页面，创建备份集。' data-position='right'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">备份集</a></li>\n";
                     }
                     elseif ( $description =='devices' )
                     {
@@ -437,13 +437,11 @@ EOD;
                     }
                 }
             }
+
 		echo <<<EOD
 	</ol>
 </div><!-- subNav -->
 </div><!-- header -->
-
-
-
 
 EOD;
 		if(preg_match('/\/ZMC_Installcheck/', $this->pm->url)){
@@ -495,11 +493,65 @@ EOD;
 			?>
 			<input type="hidden" name="form1Submitted" value="TRUE" />
 		</form>
+
 		&nbsp;
 	</div>
 </div><!-- alertsHeadingExpanded -->
 <?
 		}
+        if($_GET['multipage']==true){
+            echo <<<EOD
+<script type="text/javascript" src="/scripts/introjs/intro.js"></script>
+    <script type="text/javascript">
+        var intro = introJs();
+          intro.setOptions({
+            steps: [
+              //{
+                //intro: "云备份项目操作提醒： 第一步，安装客户端安装云备份客户端完成后，填写备份服务器名。相关详细操作请看这里。第二步，进入备份通过界面对您的重要数据进行安全备份，界面操作步骤请看这里。"
+              //},
+              {
+                element: document.querySelector('#step0'),
+                intro: "第一步：选择备份集",
+                position: 'bottom'
+              },
+              {
+                element: document.querySelector('#step1'),
+                intro: "第一步：选择备份项目",
+                position: 'right'
+              },
+              {
+                element: document.querySelectorAll('#step2')[0],
+                intro: "第二步：选择备份到哪里，也就是来源",
+                position: 'right'
+              },
+              {
+                element: '#step3',
+                intro: '第三步：缓存策略',
+                position: 'right'
+              },
+              {
+                element: '#step4',
+                intro: "第四步：备份策略的选择.",
+                position: 'right'
+              },
+              {
+                element: '#step5',
+                intro: '第五步：选择备份的计划',
+                position: 'right'
+              },
+              {
+                element: '#step6',
+                intro: '第六步：执行备份操作',
+                position: 'right'
+              }
+            ]
+          });
+
+          intro.start();
+    </script>
+EOD;
+        }
 		parent::footerCode();
 	}
 }
+

@@ -75,9 +75,16 @@ else {
 </div><!-- headerLinks -->
 
 <div style='position:absolute; top:8px; right:8px;'>
-
 	<div class="links">
+    <a id="startButton"  href="javascript:void(0);">操作提醒</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 	<? echo '<a href="', $pm->admin_users_url, '?edit_id=', $_SESSION['user_id'], '&amp;action=edit">', $_SESSION['user'], '</a>',
 		'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="', $pm->login_url ?>?logout=1&login=<?= $pm->short_name ?>">退出</a>
 	</div>
+    <script type="text/javascript" src="/scripts/introjs/intro.js"></script>
+    <script type="text/javascript">
+        document.getElementById('startButton').onclick = function() {
+            //window.location.href = 'ZMC_Backup_What?multipage=true';
+            window.location.href = 'ZMC_Admin_BackupSets?yanshi=true';
+        };
+    </script>
 </div>

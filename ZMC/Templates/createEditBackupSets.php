@@ -13,13 +13,13 @@
 
 ?>
 
-<div class="wocloudWindow">
+<div class="wocloudWindow" >
 	<? ZMC::titleHelpBar($pm, ($pm->state === 'Edit' ? '编辑备份集: ' . $pm->edit['configuration_name'] : '新建备份集'), $pm->state); ?>
 	<div class="wocloudFormWrapperLeft wocloudLongInput">
 		<img class="wocloudWindowBackgroundimage" src="/images/3.1/<?= ($pm->edit ? 'edit' : 'add') ?>.png" />
 		<div class="wocloudShorterInput" style="float:right;">
 			<div class="p">
-				<label>简要说明:</label>
+				<label data-step="5" data-intro="简要说明填写，以便在报告邮件中显示。" data-position='left'>简要说明:</label>
 				<input
 					type="text"
 					name="org"
@@ -31,7 +31,7 @@
 					value='<?= (empty($pm->edit) || empty($pm->edit['org'])) ? '' : ZMC::escape($pm->edit['org']);?>'
 				>
 			</div><div class="p">
-				<label>显示文件大小单位:</label>
+				<label data-step="6" data-intro="选择备份报告中显示的文件大小单位，默认为MB" data-position='left'>显示文件大小单位:</label>
 				<select
 					name="display_unit"
 					title="选择备份报告中显示的文件大小单位"
@@ -114,7 +114,7 @@
         */
 ?>
         <div class="p">
-            <label>资源池选择:<span class="required">*</span></label>
+            <label data-step="2" data-intro="选择资源池" data-position='right'>资源池选择:<span class="required">*</span></label>
             <select name="respool" title="请选择资源池">
                 <?
                 if($pm->state === 'Edit') {
@@ -140,7 +140,7 @@
             </select>
         </div>
 		<div class="p">
-			<label>备份集名称:<span class="required">*</span></label>
+			<label data-step="3" data-intro="填写备份集名称，备份集名称必须是唯一的。允许的字符有破折号、下划线和字母数字字符" data-position='right'>备份集名称:<span class="required">*</span></label>
 			<input
 				type="text"
 				name="edit_id<? if ($pm->state === 'Edit') echo 'Disabled'; ?>"
@@ -163,7 +163,7 @@
  				/>
 		</div>
 		<div class="p">
-			<label>备注：</label>
+			<label data-step="4" data-intro="简要描述备份集。" data-position='right'>备注：</label>
 			<textarea
  				name="configuration_notes"
  				title="简要描述备份集"
@@ -186,4 +186,17 @@
 		?>
 		<button type="submit" value="Cancel" id="btnCancel1" name="action"/>取消</button>
 		<? if ($pm->state === 'Edit') echo '<button type="submit" value="New" name="action" />创建'.'</button>'; ?>
-	</div
+	</div>
+    </div>
+<?
+if($_GET['yanshi']==true) {
+    echo <<<EOD
+<script type="text/javascript" src="/scripts/introjs/intro.js"></script>
+<script type="text/javascript">
+        introJs().setOption('doneLabel', '下一页：创建备份').start().oncomplete(function() {
+            window.location.href = 'ZMC_Backup_What?multipage=true';
+        });
+</script>
+EOD;
+}
+?>

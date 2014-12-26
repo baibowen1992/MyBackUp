@@ -29,6 +29,7 @@ global $pm;
 	<title><?= $pm->title; ?></title>
 	<script src="<?= (ZMC::$registry->scripts)? ZMC::$registry->scripts: "/scripts/" ?>wocloud.js"></script>
 	<link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon" />
+    <link href="/scripts/introjs/introjs.css" rel="stylesheet">
 	<link rel="stylesheet" href="<?= (ZMC::$registry->scripts)? ZMC::$registry->scripts: "/scripts/" ?>wocloud.css" type="text/css" />
 	<?
 		

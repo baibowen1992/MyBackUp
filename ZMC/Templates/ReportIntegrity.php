@@ -16,11 +16,11 @@ global $pm;
 echo "\n<form method='post' action='$pm->url'>\n";
 ?>
 
-<div class='zmcRightWindow' style='width:650px;'>
+<div class='wocloudRightWindow' style='width:650px;'>
 	<?
 		ZMC::titleHelpBar($pm, 'Verification Results', '', '', '', (empty($_SESSION['DataIntegrityTapeLabel']) ? '' : "&nbsp; for Tape Label: $_SESSION[DataIntegrityTapeLabel]"));
 	?>
-	<div class="zmcFormWrapperText" style='min-height:324px;'>
+	<div class="wocloudFormWrapperText" style='min-height:324px;'>
 		<span id='monitor_countdown'></span>
 		<?= $pm->taskInDiv ?>
 	</div>
@@ -28,15 +28,15 @@ echo "\n<form method='post' action='$pm->url'>\n";
 
 
 
-<div class="zmcLeftWindow" style="width:<?= $pm->verifyByDate ? '216' : '284' ?>px; clear:left;">
+<div class="wocloudLeftWindow" style="width:<?= $pm->verifyByDate ? '216' : '284' ?>px; clear:left;">
 	<?
 	ZMC::titleHelpBar($pm, 'Verify Data Integrity');
 	if (false && $pm->verifyByDate)
-		echo '<div class="zmcSubHeadingWide">',
+		echo '<div class="wocloudSubHeadingWide">',
 			ZMC_Report::renderDayWeekNavigation("DataIntegrity"),
 			'</div>';
 	?>
-	<div class="zmcFormWrapper zmcShortestLabel">
+	<div class="wocloudFormWrapper wocloudShortestLabel">
 		<div class="p">
 			<select onchange='this.form.submit();'  name='mode' value=1>
 			<?

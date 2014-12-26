@@ -1498,9 +1498,9 @@ EOD;
 
 
 		echo <<<EOD
-			<div class='zmcTitleBar $class' style='position:relative; $style'>
+			<div class='wocloudTitleBar $class' style='position:relative; $style'>
 				$title
-				<a class='zmcHelpLink' target='_blank' href='$anchor'></a>
+				<a class='wocloudHelpLink' target='_blank' href='$anchor'></a>
 			</div>
 
 EOD;
@@ -1557,7 +1557,7 @@ EOD;
 	{
 		if (false !== strpbrk($path, '{}^$[*%"?'))
 		{
-			$pm->addWarnError('DLE paths (initial directory only) in amanda may not contain {, }, ^, $, [, *, %, \, ", or ?');
+			$pm->addWarnError('备份项路径中不能包含 {, }, ^, $, [, *, %, \, ", or ?');
 			return str_replace(array('{', '}', '^', '$', '[', '*', '%', '\\', '"', '?'), array(), $path);
 		}
 
@@ -1792,11 +1792,11 @@ EOD;
 		return true;
 	}
 
-	public static function testConnectivity($host = 'network.zmanda.com')
+	public static function testConnectivity($host = 'network.wocloud.cn')
 	{
 		if ($fp = fsockopen($host, 80, $errno, $errstr, 15))
 		{
-			fwrite($fp, "HEAD / HTTP/1.1\r\nHost: network.zmanda.com\r\nConnection: Close\r\n\r\n");
+			fwrite($fp, "HEAD / HTTP/1.1\r\nHost: network.wocloud.cn\r\nConnection: Close\r\n\r\n");
 			$response = '';
 			
 			while (!feof($fp))
@@ -1804,7 +1804,7 @@ EOD;
 		    fclose($fp);
 			if (strpos($response, '200 OK'))
 				return true;
-			return "Unknown error while reading response from $host.";
+			return "在接收主机 $host 响应的时候出现未知错误。";
 		}
 		
 		

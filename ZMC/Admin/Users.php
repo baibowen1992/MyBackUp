@@ -1,5 +1,5 @@
 <?
-
+//zhoulin-admin-users 201409172350
 
 
 
@@ -20,17 +20,17 @@ class ZMC_Admin_Users
 		$pm->goto = null;
 		$pm->disabled = 'Disabled';
 		$pm->skip_backupset_start = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Admin', 'ZMC - User Management', 'users');
-		ZMC_HeaderFooter::$instance->addYui('zmc-utils', array('dom', 'event', 'connection'));
+		ZMC_HeaderFooter::$instance->header($pm, 'Admin', '云备份 -  用户管理', 'users');
+		ZMC_HeaderFooter::$instance->addYui('wocloud-utils', array('dom', 'event', 'connection'));
 		self::form($pm);
 		ZMC_User::getPaginator($pm);
 		$pm->origUsername = (($pm->edit && !empty($pm->edit['origUsername'])) ? $pm->edit['origUsername'] : '');
 		if (!$pm->edit)
-			$pm->addDefaultInstruction('Administer Users - create, edit, view and delete users.');
+			$pm->addDefaultInstruction('管理用户 - 创建，编辑，查看，删除用户。.');
 		elseif (!empty($pm->edit['user_id']))
-			$pm->addInstruction('You are editing account: ' . $pm->origUsername);
+			$pm->addInstruction('你正在编辑用户 ；  ' . $pm->origUsername);
 		else
-			$pm->addInstruction('You are creating a new ZMC user account.');
+			$pm->addInstruction('你创建了一个新账户');
 
 		return 'AdminUsers';
 	}
@@ -87,11 +87,11 @@ class ZMC_Admin_Users
 		if ($admin && isset($_POST['action']) && $_POST['action'] === 'DeleteConfirm') 
 		{
 			if (!isset($_POST['ConfirmationYes']))
-				return $pm->addWarning("Edit/Add cancelled.");
+				return $pm->addWarning("编辑/新增  取消.");
 
 			foreach(ZMC::$userRegistry['selected_ids'] as $id => $ignore)
 				if (ZMC_User::deleteUser($pm, $id))
-					$pm->addMessage("Deleted user record: " . ZMC_User::get('user', $id));
+					$pm->addMessage("删除用户: " . ZMC_User::get('user', $id));
 		}
 		elseif (isset($_REQUEST['action']))
 		{
@@ -104,7 +104,7 @@ class ZMC_Admin_Users
 
 				$pm->confirm_template = 'ConfirmationWindow';
 				
-				$pm->prompt ='Are you sure you want to DELETE the user(s)?<br /><ul>'
+				$pm->prompt ='确认要删除用户?<br /><ul>'
 					. '<li style="list-style-position:inside; list-style-type:square">'
 					. implode("\n<li style='list-style-position:inside; list-style-type:square'>", $names)
 					. "\n</ul>\n";
@@ -129,7 +129,7 @@ class ZMC_Admin_Users
 
 
 
-	public static function updateZN(ZMC_Registry_MessageBox $pm, &$userId = null)
+/*	public static function updateZN(ZMC_Registry_MessageBox $pm, &$userId = null)
 	{
 		if (!ZMC_User::hasRole('Administrator')) 
 			$userId = $_SESSION['user_id'];
@@ -137,10 +137,10 @@ class ZMC_Admin_Users
 			$userId = intval($_REQUEST['edit_id']);
 
 		if(empty($userId))
-			return $pm->addError('Cannot update Zmanda Network Information as no user was given to update');
+			return $pm->addError('Cannot update wocloud Information as no user was given to update');
 
 		$networkId = trim($_POST['zmandaNetworkID']);
 		$networkPassword = @trim($_POST['zmandaNetworkPassword']);
 		ZMC_ZmandaNetwork::verifyAndSave($pm, $networkId, $networkPassword, $userId);
-	}
+	}*/
 }

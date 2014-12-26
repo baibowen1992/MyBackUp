@@ -17,18 +17,18 @@ echo "<form method='post' action='$pm->url'>";
 
 if($pm->state === 'Config_Tape_Changer'){
 ?>
-<div id="deviceFormWrapper" class="zmcLeftWindow">
+<div id="deviceFormWrapper" class="wocloudLeftWindow">
 <?	ZMC::titleHelpBar($pm, $pm->goto . 'Edit configuration for vault device', '', ''); ?>
-	<div wrappercreate2="" class="zmcFormWrapper zmcLongInput zmcLongLabel">
+	<div wrappercreate2="" class="wocloudFormWrapper wocloudLongInput wocloudLongLabel">
 		<div class="p" style="min-height:80px;">
 			<label>Device Type:</label>
-			<div class='zmcAfter'>
+			<div class='wocloudAfter'>
 				<a style="display:block; border:solid blue 1px; padding:2px; margin:2px;" href="/ZMC_Admin_Devices?action=Edit&id=<? echo urlencode($pm->vault_job['vault_device']); ?>">
 					<img title="Changer Library" style="" src="/images/icons/icon_changer_library.png">
 				</a>
 			</div>
 			<label style="clear:left;">&nbsp;</label>
-			<div class="zmcAfter">Changer Library</div>
+			<div class="wocloudAfter">Changer Library</div>
 		</div>
 
 		<div class="p" id="private:zmc_device_name_disabled_div">
@@ -39,7 +39,7 @@ if($pm->state === 'Config_Tape_Changer'){
 		<div class="p" id="autolabel_div">
 			<label for="autolabel">Auto Label Tapes:</label>
 			<input id="autolabel" name="autolabel" type="checkbox" value="on" title="">
-			<select id="autolabel_how" class="zmcLongerInput" name="autolabel_how" title="Autolabel How?">
+			<select id="autolabel_how" class="wocloudLongerInput" name="autolabel_how" title="Autolabel How?">
 				<option selected="selected" value="empty">Only if empty (read returned 0 bytes)</option>
 				<option value="empty non_amanda">Only if Amanda label not found</option>
 				<option value="other_config">Only if already labelled for a different backup set</option>
@@ -76,7 +76,7 @@ if($pm->state === 'Config_Tape_Changer'){
 			<input type="checkbox" onclick="var o = gebi('tape_drives[<? echo $drive; ?>]');if (this.checked) { o.value ='skip'; } else { o.value = <? echo $slot;?>}" style="float:none;">
 		</td>
 		<td>
-			<input type="text" class="zmcUltraShortInput" id="tape_drives[<? echo $drive; ?>]" name="tape_drives[<? echo $drive; ?>]" value="<? echo $slot; ?>" style="float:none;">
+			<input type="text" class="wocloudUltraShortInput" id="tape_drives[<? echo $drive; ?>]" name="tape_drives[<? echo $drive; ?>]" value="<? echo $slot; ?>" style="float:none;">
 		</td>
 		<td>
 			<? echo $drive; ?>
@@ -89,8 +89,8 @@ if($pm->state === 'Config_Tape_Changer'){
 				</table>
 			</fieldset>
 		</div><!-- changer:tapedev_div -->
-	</div><!-- zmcFormWrapper -->
-	<div class="zmcButtonBar">
+	</div><!-- wocloudFormWrapper -->
+	<div class="wocloudButtonBar">
 		<input type="submit" name="action" value="Next">
 		<input type="submit" value="Cancel" name="action">
 	</div>
@@ -109,27 +109,27 @@ if($pm->state === 'Config_Tape_Changer'){
 		$pm->addWarning("No devices available for vaulting.");
 		ZMC_Loader::renderTemplate('MessageBox', $pm);
 	} else {
-	ZMC::titleHelpBar($pm, $pm->goto . 'Select where to vault', '', 'zmcTitleBarTable');
+	ZMC::titleHelpBar($pm, $pm->goto . 'Select where to vault', '', 'wocloudTitleBarTable');
 ?>
 	<div class="dataTable" id="dataTable">
 		<table width="100%">
 			<tr>
 				<? ZMC_Form::thAll() ?>
-				<th title='Type'>
-					<a href='<?= $pm->colUrls['_key_name'] ?>'>Type<? if ($pm->sortImageIdx == '_key_name') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Device Name' style='min-width:200px'>
-					<a href='<?= $pm->colUrls['id'] ?>'>Device Name<? if ($pm->sortImageIdx == 'id') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Device Status' style='max-width:275px'>
-					<a href='<?= $pm->colUrls['stderr'] ?>'>Status<? if ($pm->sortImageIdx == 'stderr') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Path'>
-					<a href='<?= $pm->colUrls['changer:changerdev'] ?>'>Path<? if ($pm->sortImageIdx == 'changer:changerdev') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Comments'>
-					<a href='<?= $pm->colUrls['changer:comment'] ?>'>Comments<? if ($pm->sortImageIdx == 'changer:comment') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Last modified time'>
-					<a href='<?= $pm->colUrls['private:last_modified_time'] ?>'>Last Modified<? if ($pm->sortImageIdx == 'private:last_modified_time') echo $pm->sortImageUrl; ?></a></th>
+				<th title='类型'>
+					<a href='<?= $pm->colUrls['_key_name'] ?>'>类型<? if ($pm->sortImageIdx == '_key_name') echo $pm->sortImageUrl; ?></a></th>
+				<th title='存储设备名' style='min-width:200px'>
+					<a href='<?= $pm->colUrls['id'] ?>'>存储设备名<? if ($pm->sortImageIdx == 'id') echo $pm->sortImageUrl; ?></a></th>
+				<th title='存储设备状态' style='max-width:275px'>
+					<a href='<?= $pm->colUrls['stderr'] ?>'>存储设备状态<? if ($pm->sortImageIdx == 'stderr') echo $pm->sortImageUrl; ?></a></th>
+				<th title='路径'>
+					<a href='<?= $pm->colUrls['changer:changerdev'] ?>'>路径<? if ($pm->sortImageIdx == 'changer:changerdev') echo $pm->sortImageUrl; ?></a></th>
+				<th title='备注'>
+					<a href='<?= $pm->colUrls['changer:comment'] ?>'>备注<? if ($pm->sortImageIdx == 'changer:comment') echo $pm->sortImageUrl; ?></a></th>
+				<th title='最近修改时间'>
+					<a href='<?= $pm->colUrls['private:last_modified_time'] ?>'>最近修改时间<? if ($pm->sortImageIdx == 'private:last_modified_time') echo $pm->sortImageUrl; ?></a></th>
 				<? if (!$only1user) { ?>
-				<th title='Last modified by'>
-					<a href='<?= $pm->colUrls['private:last_modified_by'] ?>'>By<? if ($pm->sortImageIdx == 'private:last_modified_by') echo $pm->sortImageUrl; ?></a></th>
+				<th title='最近修改人'>
+					<a href='<?= $pm->colUrls['private:last_modified_by'] ?>'>最近修改人<? if ($pm->sortImageIdx == 'private:last_modified_by') echo $pm->sortImageUrl; ?></a></th>
 				<? } ?>
 			</tr>
 <?

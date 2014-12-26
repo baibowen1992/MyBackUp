@@ -14,7 +14,7 @@
 
 global $pm;
 echo "<form id=\"js_auto_refresh_form\" method='post' action='$pm->url'>";
-ZMC::titleHelpBar($pm, $pm->goto . 'Manage vault jobs', '', 'zmcTitleBarTable');
+ZMC::titleHelpBar($pm, $pm->goto . 'Manage vault jobs', '', 'wocloudTitleBarTable');
 ?>
 
 	<div class="dataTable" id="dataTable">
@@ -88,16 +88,16 @@ echo "      </table>
 if($hasJobInProgress)
 	$pm->buttons = array(
 			'Refresh Table' => true,
-			'Activate' => false,
-			'Deactivate' => false,
+			'激活' => false,
+			'反激活' => false,
 			'Delete' => false,
 			'Abort' => false,
 	);
 else
 	$pm->buttons = array(
 			'Refresh Table' => true,
-			'Activate' => false,
-			'Deactivate' => false,
+			'激活' => false,
+			'反激活' => false,
 			'Delete' => false,
 			'Vault Now' => false,
 	);

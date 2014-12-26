@@ -103,7 +103,7 @@ protected function adjustSlots()
 
 public function makeChanger(&$conf)
 {
-	$conf['device_property_list']['CREATE-BUCKET'] = 'off'; 
+	$conf['device_property_list']['CREATE-BUCKET'] = 'on'; 
 	if (!empty($conf['device_property_list']['S3_SERVICE_PATH']))
 		$conf['device_property_list']['S3_SERVICE_PATH'] = rtrim($conf['device_property_list']['S3_SERVICE_PATH'], '/');
 	if (empty($conf['device_property_list']['S3_SERVICE_PATH']))
@@ -159,11 +159,11 @@ public function createAndLabelSlots()
 
 	if ($labeled)
 	{
-		if (ZMC::$registry->debug) $this->reply->addMessage("Created $labeled new containers for DLE backup images.");
+		if (ZMC::$registry->debug) $this->reply->addMessage("为备份镜像创建 $labeled 个新的标记");
 		ZMC_BackupSet::putTapeList($this->reply, $tapeList, $config, true);
 	}
 	if ($this->reply->isErrors() > $numErrors)
-		throw new ZMC_Exception_YasumiFatal($this->reply->addInternal("Failed to create all needed labels in the ZMC cloud bucket."));
+		throw new ZMC_Exception_YasumiFatal($this->reply->addInternal("给云端的bucket创建标签失败"));
 }
 
 
@@ -192,7 +192,7 @@ protected function addSyntheticKeys()
 
 	if (filter_var($endpoint, FILTER_VALIDATE_IP) === FALSE)
 		if (!checkdnsrr($endpoint, 'ANY'))
-			$this->reply->addWarning("DNS Error: ZMC can not contact the Cloud at the selected location '$loc' using the Cloud's endpoint: $endpoint");
+			$this->reply->addWarning("DNS 错误: 云备份无法与选择的区域 '$loc' 通信，换为使用对象存储地址: $endpoint");
 }
 
 protected function setEndpoint($loc)

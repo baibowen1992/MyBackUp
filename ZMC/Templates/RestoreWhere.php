@@ -43,7 +43,7 @@ for(var i = 0; i < rlist.length; i++)
 	{
 		if (rlist[i].checked && (rlist[i].value == " . ZMC_Type_AmandaApps::DIR_UNIX . "))
 		{
-			alert('Please choose a different Destination Location type, or select a *NIX Destination Host Type.');
+			alert('请更换目的目录类型，或者选择*NIX 为目的主机类型');
 			return false;
 		}
 	}
@@ -55,7 +55,7 @@ if (dest_type_found == false)
 	return false;
 }
 \">\n";
-$dhnHelp = 'The host name of the system where backup is to be restored to.';
+$dhnHelp = '这是恢复过程目的主机的主机名.';
 $tdst = $pm->restore['target_dir_selected_type'];
 $pm->target_dir_types = ZMC_Type_AmandaApps::getTargetDirTypes($pm->restore['target_dir_types']);
 ?>
@@ -89,11 +89,11 @@ function displayRootUsername(select, field)
 
 
 
-<div class="zmcLeftWindow" style="overflow:visible;">
-	<? ZMC::titleHelpBar($pm, $pm->selected_name . ': Where would you like to restore to?'); ?>
-	<div class="zmcFormWrapper zmcLongLabel zmcLongInput">
+<div class="wocloudLeftWindow" style="overflow:visible;">
+	<? ZMC::titleHelpBar($pm, '将备份集'. $pm->selected_name . '中需要恢复的将内容恢复到哪里？'); ?>
+	<div class="wocloudFormWrapper wocloudLongLabel wocloudLongInput">
 		<div class="p">
-			<label>DLE/Object Type:</label>
+			<label>备份项类型：</label>
 			<input 
 				type="text" 
 				value="<?= ZMC::escape(empty($pm->restore['pretty_name']) ? $pm->restore['name'] : $pm->restore['pretty_name']); ?>"
@@ -102,7 +102,7 @@ function displayRootUsername(select, field)
 		</div>
 
 		<div class="p">
-			<label>Original Host:</label>
+			<label>备份源主机：</label>
 			<input 
 				type="text" 
 				value="<?= $pm->restore['client'] ?>"
@@ -111,7 +111,7 @@ function displayRootUsername(select, field)
 		</div>
 
 		<div class="p">
-			<label>Original <?= $pm->folder_name ?>:</label>
+			<label>备份源目录:</label>
 			<input 
 				type="text" 
 				value="<?= $pm->restore['disk_device'] ?>"
@@ -126,7 +126,7 @@ function displayRootUsername(select, field)
 		{ ?>
 		<div id="login_credential_div">
 			<div class="p">
-				<label><?= $cifs ? 'Share ':'' ?><?= $vmware ? 'ESX ':''?>Username:</label>
+				<label><?= $cifs ? 'Share ':'' ?><?= $vmware ? 'ESX ':''?>用户名</label>
 				<input 
 					name='zmc_share_username'
 					type="text" 
@@ -135,7 +135,7 @@ function displayRootUsername(select, field)
 			</div>
 	
 			<div class="p">
-				<label><?= $cifs ? 'Share ':'' ?><?= $vmware ? 'ESX ':''?>Password:
+				<label><?= $cifs ? 'Share ':'' ?><?= $vmware ? 'ESX ':''?>密码:
 					<input style="float:none;" title="Show Password" type="checkbox" onclick="this.form['zmc_share_password'].type = (this.form['zmc_share_password'].type === 'password' ? 'text' : 'password');" />
 				</label>
 				<input 
@@ -159,7 +159,7 @@ function displayRootUsername(select, field)
 			</div>
 			
 			<div class="p">
-				<label>Destination Host Type:</label>
+				<label>目的主机类型:</label>
 				<b>Linux/UNIX/Mac/Solaris</b><input type="hidden" name="host_type" value="', ZMC_Type_AmandaApps::HOST_TYPE_UNIX, '" />
 			</div>
 			
@@ -173,7 +173,7 @@ function displayRootUsername(select, field)
 			/>
 
 			<div class="p">
-				<label>Destination Host Name<span class="required">*</span>:</label>
+				<label>目的主机名<span class="required">*</span>:</label>
 				<input 
 					type="text"
 					id="target_host"
@@ -191,9 +191,9 @@ function displayRootUsername(select, field)
 	{
 ?>
 		<div class="p">
-			<label>Destination Host Type:</label>
+			<label>目的主机类型:</label>
 			<? if ($zwc = count(array_intersect(array(ZMC_Type_AmandaApps::DIR_WINDOWS, ZMC_Type_AmandaApps::DIR_WINDOWS_SHARE, ZMC_Type_AmandaApps::DIR_MS_SQLSERVER_ALTERNATE_PATH, ZMC_Type_AmandaApps::DIR_MS_SQLSERVER_ALTERNATE_NAME), $pm->restore['target_dir_types']))) { ?>
-			<select id='host_type' name="host_type" class="zmcLongInput" onChange="displayRootUsername(this, 'user_name')" >'
+			<select id='host_type' name="host_type" class="wocloudLongInput" onChange="displayRootUsername(this, 'user_name')" >'
 				<?
 				$nix = '';
 				if ($pm->restore['user_name'] === 'root')
@@ -221,7 +221,7 @@ function displayRootUsername(select, field)
 			/>
 
 		<div id="target_host_div" class="p">
-			<label>Destination Host Name<span class="required">*</span>:</label>
+			<label>目的主机名<span class="required">*</span>:</label>
 			<input 
 				type="text"
 				id="target_host"
@@ -243,7 +243,7 @@ function displayRootUsername(select, field)
 			<?
 				if($pm->restore['zmc_type'] === 'ndmp'){
 ?>
-					<label id="target_dir_label" style='display:none;'>Destination Location:</label>
+					<label id="target_dir_label" style='display:none;'>目的目录:</label>
 					<input id="target_dir" name='target_dir'
 						style="display:none;"
 						type='text' onFocus='this.select()'
@@ -273,14 +273,14 @@ function displayRootUsername(select, field)
 						</div>
 						<div class="p">
 							<label>Auth type<span class="required">*</span>:</label>
-							<select id="ndmp_filer_auth" class="zmcUltraShortInput" name="ndmp_filer_auth" title="Specify the authentication method">
+							<select id="ndmp_filer_auth" class="wocloudUltraShortInput" name="ndmp_filer_auth" title="Specify the authentication method">
 								<option selected="selected" value="md5">MD5</option>
 								<option value="text">Text</option>
 							</select>
 						</div>
 					</div> 
 			<?} elseif($pm->restore['zmc_type'] === 'vmware') {?>
-					<label id="target_dir_label" style='display:none;'>Destination Location:</label>
+					<label id="target_dir_label" style='display:none;'>目的目录:</label>
 					<input id="target_dir" name='target_dir'
 						style="display:none;"
 						type='text' onFocus='this.select()'
@@ -298,17 +298,17 @@ function displayRootUsername(select, field)
 							<label>Virtual Machine Name<span class="required">*</span>:</label>
 							<input type="text" name="virtual_machine_name" value='<?= $pm->restore['virtual_machine_name']?>'/>
 						</div>
-						<fieldset><p class="zmcIconWarning">A VM should not already exist at the specified original/alternate location.</p></fieldset>
+						<fieldset><p class="wocloudIconWarning">A VM should not already exist at the specified original/alternate location.</p></fieldset>
 					</div>
 			<?} else {?>
-				<label id="target_dir_label">Destination Location<span class="required">*</span>:</label>
+				<label id="target_dir_label">目的目录<span class="required">*</span>:</label>
 				<input id="target_dir" name='target_dir'
 					style="visibility:<?= ((empty($tdst) && count($pm->target_dir_types) === 1 && key($pm->target_dir_types) == ZMC_Type_AmandaApps::DIR_ORIGINAL) || ($tdst == ZMC_Type_AmandaApps::DIR_ORIGINAL)) ? 'hidden' : 'visible' ?>"
 					type='text' onFocus='this.select()'
 					value='<?= empty($locpos) ? ZMC::escape($pm->restore['target_dir']) : substr($pm->restore['target_dir'], $locpos +3) ?>' />
 			<?}?>
 			<br style='clear:left;' />
-			<fieldset id="destination_type"><legend>Destination Type?</legend>
+			<fieldset id="destination_type"><legend>目的目录类型?</legend>
 <?
 			$targetTypeCount = 0;
 			
@@ -382,7 +382,7 @@ function displayRootUsername(select, field)
 				}
 				echo "<div id='div_$okType'><label for='dl$targetTypeCount' style='clear:left; text-align:right;'>", $record['field'], ": &nbsp;</label>";
 				echo "<input id='dl$targetTypeCount' onclick=\"$onclick; return true;\" type='radio' name='target_dir_selected_type' value='$okType' $checked /> ";
-				echo "<span class='zmcAfter'>", ZMC::escape($record['description']), "</span><br style='clear:left;' />\n</div>\n";
+				echo "<span class='wocloudAfter'>", ZMC::escape($record['description']), "</span><br style='clear:left;' />\n</div>\n";
 			}
 ?>
 			</fieldset>
@@ -399,15 +399,15 @@ function displayRootUsername(select, field)
  		else
 			echo '<div class="p">';
 ?>	
-			<label>Restore Path<span class="required">*</span>:</label>
+			<label>恢复目录<span class="required">*</span>:</label>
 			<br style='clear:left;' />
-			<label for="safe_mode" style='clear:left; text-align:right;'>New Directory</label>
+			<label for="safe_mode" style='clear:left; text-align:right;'>新目录</label>
 			<input id="safe_mode" type="radio" name="safe_mode" value="1" <?= $pm->restore['safe_mode'] ? 'checked="checked"' : '' ?> />
-			<span class="zmcAfter">&lt;Destination&gt;/zmc.YYYY-MM-DD_hh-mm-ss/&lt;selections&gt; </span>
+			<span class="wocloudAfter">&lt;目的目录&gt;/wocloud.YYYY-MM-DD_hh-mm-ss/&lt;selections&gt; </span>
 			<br style='clear:left;' />
-			<label for="full_path_mode" style='clear:left; text-align:right;'>Full Path</label>
+			<label for="full_path_mode" style='clear:left; text-align:right;'>全路径</label>
 			<input id="full_path_mode" type="radio" name="safe_mode" value="0" <?= $pm->restore['safe_mode'] ? '' : 'checked="checked"' ?> />
-			<span class="zmcAfter">&lt;Destination&gt;/original/backup/path/to/restored/&lt;selections&gt;</span>
+			<span class="wocloudAfter">&lt;目的目录&gt;/original/backup/path/to/restored/&lt;selections&gt;</span>
 		</div>
 <?	}
 	else
@@ -416,12 +416,12 @@ function displayRootUsername(select, field)
 ?>
 
 		<div id='temp_dir_div' class="p">
-			<label>Temporary Location<span class="required">*</span>:</label>
+			<label>临时文件目录<span class="required">*</span>:</label>
 			<span id='temp_dir' style="visibility:<?= $pm->restore['temp_dir_auto'] ? 'hidden' : 'visible' ?>;" >
 			<input
 				type="text"
 				name="temp_dir"
-				title="The temporary directory on the Destination Host that can be used during restoration."
+				title="目的主机上的临时文件目录用于恢复过程中存放临时文件。"
 				value="<?= ZMC::escape($pm->restore['temp_dir']); ?>"
 				onFocus='this.select()'
 				onKeyUp="
@@ -434,27 +434,27 @@ function displayRootUsername(select, field)
 							windows_temp_dir = this.value
 					}
 				"
-			/><b>/.zmc_restore/</b></span>
+			/><b>/.wocloud_restore/</b></span>
 			<? if ($pm->restore['temp_dir_default'] !== false) { ?>
 			<div class="contextualInfoImage">
 				<a target="_blank" href="<?= ZMC::$registry->wiki ?>Restore_Where">
 					<img height="18" align="top" width="18" alt="More Information" src="/images/icons/icon_info.png"/>
 				</a>
 				<div class="contextualInfo">
-					<p>Do <b>not</b> use a memory-based filesystem.  For example, if the &quot;Destination Host Type&quot; is Solaris, then do not use "/tmp", which is normally a memory-based filesystem.  Restoring large amounts of data using a memory based filesystem may consume all of memory and cause the system to &quot;thrash&quot; swap space.</p>
+					<p>不要使用基于内存的文件系统。比如如果目的主机是 Solaris，那么不用使用 "/tmp"目录。在基于内存的文件系统上恢复大数据量文件的时候会耗尽所有内存，并导致系统交换空间爆掉。</p>
 				</div>
 			</div>
 			<br style='clear:left;' />
-			<label for='temp_auto' style='clear:left; text-align:right;'>Auto: &nbsp;</label><input onclick="gebi('temp_dir').style.visibility='hidden'" id='temp_auto' type='radio' name='temp_dir_auto' value='1' <?= $pm->restore['temp_dir_auto'] ? 'checked="checked"' : '' ?> /> (recommended)
+			<label for='temp_auto' style='clear:left; text-align:right;'>自动选择: &nbsp;</label><input onclick="gebi('temp_dir').style.visibility='hidden'" id='temp_auto' type='radio' name='temp_dir_auto' value='1' <?= $pm->restore['temp_dir_auto'] ? 'checked="checked"' : '' ?> /> (推荐)
 			<br style='clear:left;' />
-			<label for='temp_manual' style='clear:left; text-align:right;'>Manual: &nbsp;</label><input onclick="gebi('temp_dir').style.visibility='visible'" id='temp_manual' type='radio' name='temp_dir_auto' value='0' <?= $pm->restore['temp_dir_auto'] ? '' : 'checked="checked"' ?> />
+			<label for='temp_manual' style='clear:left; text-align:right;'>手动: &nbsp;</label><input onclick="gebi('temp_dir').style.visibility='visible'" id='temp_manual' type='radio' name='temp_dir_auto' value='0' <?= $pm->restore['temp_dir_auto'] ? '' : 'checked="checked"' ?> />
 			<? } ?>
 			<div style='clear:left;'></div>
 		</div>
 	</div>
-	<div class="zmcButtonBar">
-		<button type="submit" name="action" value="Apply Previous" class="zmcButtonsLeft" />Back</button>
-		<button type="submit" name="action" value="Apply Next" />Next</button>
+	<div class="wocloudButtonBar">
+		<button type="submit" name="action" value="Apply Previous" class="wocloudButtonsLeft" />上一步</button>
+		<button type="submit" name="action" value="Apply Next" />下一步</button>
 	</div>
 </div>
 
@@ -462,24 +462,24 @@ function displayRootUsername(select, field)
 <?
 if ($pm->restore['globable'])
 { ?>
-<div id='limit_restore_window' class="zmcLeftWindow" style="width:250px">
-	<? ZMC::titleHelpBar($pm, 'Limit Restore All?'); ?>
-	<div class="zmcFormWrapper zmcLongerLabel zmcLongInput">
+<div id='limit_restore_window' class="wocloudLeftWindow" style="width:250px">
+	<? ZMC::titleHelpBar($pm, '选择性还原所有?'); ?>
+	<div class="wocloudFormWrapper wocloudLongerLabel wocloudLongInput">
 		<? if (false && ZMC::$registry->dev_only) { ?>
 		<div class="p">
-			<label>Include List:</label>
+			<label>要恢复的文件列表:</label>
 			<textarea name="rlist" style="height:95px;"><?= ZMC::escape($pm->restore['rlist']); ?></textarea>
-			<br style='clear:left;' />List of filenames or wildcard expressions matching files to restore.
+			<br style='clear:left;' />文件名列表或者通配符匹配的需要还原的数据。
 		</div>
 		<? } elseif ($pm->restore['excludable']) { ?>
 		<div class="p">
-			<label>Exclude List:</label>
+			<label>排除列表：</label>
 			<textarea name="elist" style="height:95px;"><?= ZMC::escape($pm->restore['elist']); ?></textarea>
-			<br style='clear:left;' />List of filenames, directories, or wildcard expressions to exclude.
+			<br style='clear:left;' />文件/目录列表以及满足通配符排除的数据。
 		</div>
 		<? } ?>
 		<div class="p">
-			<span class="zmcUserMessagesText">Note: Put each item on its own line.  Leave box blank to restore everything.
+			<span class="wocloudUserMessagesText">注意：每行写一项，留空表示全部恢复。
 <!-- Leave both boxes blank to restore everything. -->
 			<br />
 			<br />
@@ -493,7 +493,7 @@ if ($pm->restore['globable'])
 if($pm->restore['zmc_type'] === 'windowssqlserver' && $pm->restore['restore_type'] !== ZMC_Restore::EXPRESS){
 	$rows =& ZMC_Mysql::getAllRows('SELECT * FROM ' . $pm->restore['tableName'] . 'WHERE (restore = ' . ZMC_Restore_What::SELECT . ' OR restore = ' . ZMC_Restore_What::IMPLIED_SELECT . ') AND type = 2 ORDER BY id');
 ?>
-<div id='sql_alternate_path' class='zmcRightWindow' style="width:650px">
+<div id='sql_alternate_path' class='wocloudRightWindow' style="width:650px">
 	<? ZMC::titleHelpBar($pm, 'Database(s) to restore');?>
 	<div class="dataTable centerHeadings">
 		<table border="0" width="650" cellspacing="0" cellpadding="0">
@@ -508,8 +508,8 @@ if($pm->restore['zmc_type'] === 'windowssqlserver' && $pm->restore['restore_type
 						$newpath = empty($pm->restore['sql_alternate_path']) ? "C:\\" : $pm->restore['sql_alternate_path'][$row['id']]['new_path'];	
 				?>
 				<tr class="stripeGray">
-					<td class="zmcCenterNoLeftPad" style="border-left:none"><?=$row['filename']?></td>
-					<td class="zmcCenterNoLeftPad">
+					<td class="wocloudCenterNoLeftPad" style="border-left:none"><?=$row['filename']?></td>
+					<td class="wocloudCenterNoLeftPad">
 						<input
 							id="sql_alternate_path_new_path_<?=$row['id']?>"
 							name="sql_alternate_path_new_path_<?=$row['id']?>"
@@ -524,7 +524,7 @@ if($pm->restore['zmc_type'] === 'windowssqlserver' && $pm->restore['restore_type
 		</table>
 	</div>
 </div>
-<div id='sql_alternate_name' class='zmcRightWindow' style="width:650px">
+<div id='sql_alternate_name' class='wocloudRightWindow' style="width:650px">
 	<? ZMC::titleHelpBar($pm, 'Database(s) to restore');?>
 	<div class="dataTable centerHeadings">
 		<table border="0" width="650" cellspacing="0" cellpadding="0">
@@ -542,8 +542,8 @@ if($pm->restore['zmc_type'] === 'windowssqlserver' && $pm->restore['restore_type
 						$newname = empty($pm->restore['sql_alternate_name']) ? $row['name'] : $pm->restore['sql_alternate_name'][$row['id']]['new_name'];	
 				?>
 				<tr class="stripeGray">
-					<td class="zmcCenterNoLeftPad" style="border-left:none"><?=$row['filename']?></td>
-					<td class="zmcCenterNoLeftPad">
+					<td class="wocloudCenterNoLeftPad" style="border-left:none"><?=$row['filename']?></td>
+					<td class="wocloudCenterNoLeftPad">
 						<input
 							id="sql_alternate_name_new_name_<?=$row['id']?>"
 							name="sql_alternate_name_new_name_<?=$row['id']?>"
@@ -551,7 +551,7 @@ if($pm->restore['zmc_type'] === 'windowssqlserver' && $pm->restore['restore_type
 							style="width:99%;text-align:center;"
 							value="<?=$newname?>">
 					</td>
-					<td class="zmcCenterNoLeftPad">
+					<td class="wocloudCenterNoLeftPad">
 						<input
 							id="sql_alternate_name_new_path_<?=$row['id']?>"
 							name="sql_alternate_name_new_path_<?=$row['id']?>"
@@ -614,7 +614,7 @@ if($pm->restore['zmc_type'] === 'windowssqlserver' && $pm->restore['restore_type
 		if(isRecoveryDB)
 			if(gebi('target_dir_label')) gebi('target_dir_label').innerHTML = "Exchange Recovery DB<span class=\"required\">*</span>:";
 		else
-			if(gebi('target_dir_label')) gebi('target_dir_label').innerHTML = "Destination Location<span class=\"required\">*</span>:";
+			if(gebi('target_dir_label')) gebi('target_dir_label').innerHTML = "目的目录<span class=\"required\">*</span>:";
 	}
 </script>
 </form>

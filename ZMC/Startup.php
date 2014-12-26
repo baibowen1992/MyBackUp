@@ -70,7 +70,7 @@ public static function initZmcOverrides(ZMC_Registry_MessageBox $pm)
 	$overrides = array('amanda_version' => null); 
 	$overrides['amanda_release'] = trim(file_get_contents($fn = ZMC::$registry->cnf['amanda_release_file'], FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES));
 
-	if (is_readable('/etc/resolv.conf') && (preg_match('/^search.*zmanda.com/m', file_get_contents('/etc/resolv.conf'))))
+	if (is_readable('/etc/resolv.conf') && (preg_match('/^search.*wocloud.cn/m', file_get_contents('/etc/resolv.conf'))))
 		$overrides['qa_team'] = true;
 	elseif(ZMC::$registry->qa_team)
 		$overrides['qa_team'] = false;
@@ -220,7 +220,7 @@ public static function getApachePort($pm, &$overrides, &$defaultPort, &$defaultH
 		}
 	}
 
-	$url = 'http://network.zmanda.com/lore/article.php?id=';
+	$url = 'http://network.wocloud.cn/lore/article.php?id=';
 	if ($default !== true) 
 	{
 		$pm->addError('ZMC Apache <virtualhost ...> configuration is broken. There must be a <virtualhost _default_:###> or <virtualhost 127.0.0.1:###>.  If you need ZMC Apache to only LISTEN on certain IPs, do not change <virtualhost>, but instead ADD a LISTEN 127.0.0.1:443, and another LISTEN for the IP needed.');

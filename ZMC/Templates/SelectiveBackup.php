@@ -17,47 +17,47 @@ $action = rtrim($pm->state, '012');
 echo "\n<form method='post' action='$pm->url'>\n";
 
 $only1user = (ZMC_User::count() === 1);
-ZMC::titleHelpBar($pm, $pm->goto . "List of objects (DLEs) to backup with: " . $pm->selected_name, 'DLE+Table', 'zmcTitleBarTable');
+ZMC::titleHelpBar($pm, $pm->goto . "可以备份的备份项列表: " . $pm->selected_name, 'DLE+Table', 'wocloudTitleBarTable');
 ?>
 	<input id="backup_how" type="hidden" value="<?= $pm->backup_how ?>" name="backup_how">
 	<div class="dataTable">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<? ZMC_Form::thAll() ?>
-				<th title='Type'>
-					<a href='<?= $pm->colUrls['property_list:zmc_type'] ?>'>Type<? if ($pm->sortImageIdx == 'property_list:zmc_type') echo $pm->sortImageUrl; ?></a></th>
+				<th title='类型'>
+					<a href='<?= $pm->colUrls['property_list:zmc_type'] ?>'>类型<? if ($pm->sortImageIdx == 'property_list:zmc_type') echo $pm->sortImageUrl; ?></a></th>
 				<? if (!empty($pm->aliases))
-						echo "<th title='Alias (defaults to directory/path)'><a href='{$pm->colUrls['disk_name']}'>Alias",
+						echo "<th title='别名(路径或文件夹)'><a href='{$pm->colUrls['disk_name']}'>别名",
 							($pm->sortImageIdx == 'disk_name' ? $pm->sortImageUrl : ''), "</a></th>\n";
 					if (!empty($pm->comments))
-						echo "<th title='Comments'><a href='{$pm->colUrls['property_list:zmc_comments']}'>Comments",
+						echo "<th title='备注'><a href='{$pm->colUrls['property_list:zmc_comments']}'>备注",
 							($pm->sortImageIdx == 'property_list:zmc_comments' ? $pm->sortImageUrl : ''), "</a></th>\n";
 				?>
-				<th title='Host Name / DLE Check Status' style='min-width:200px'>
-					<a href='<?= $pm->colUrls['host_name'] ?>'>Host Name / DLE Check Status<? if ($pm->sortImageIdx == 'host_name') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Directory/Path'>
-					<a href='<?= $pm->colUrls['disk_device'] ?>'>Directory/Path<? if ($pm->sortImageIdx == 'disk_device') echo $pm->sortImageUrl; ?></a></th>
+				<th title='节点名/备份项状态' style='min-width:200px'>
+					<a href='<?= $pm->colUrls['host_name'] ?>'>节点名/备份项状态<? if ($pm->sortImageIdx == 'host_name') echo $pm->sortImageUrl; ?></a></th>
+				<th title='目录路径'>
+					<a href='<?= $pm->colUrls['disk_device'] ?>'>目录路径<? if ($pm->sortImageIdx == 'disk_device') echo $pm->sortImageUrl; ?></a></th>
 				<? if (!empty($pm->templates))
-						echo "<th title='Template Name'><a href='{$pm->colUrls['property_list:zmc_dle_template']}'>Template",
+						echo "<th title='模板名'><a href='{$pm->colUrls['property_list:zmc_dle_template']}'>模板",
 							($pm->sortImageIdx == 'property_list:zmc_dle_template' ? $pm->sortImageUrl : ''), "</a></th>\n";
 				?>
-				<th title='# L0 Backup Images'>
-					<a href='<?= $pm->colUrls['L0'] ?>'># L0<? if ($pm->sortImageIdx == 'L0') echo $pm->sortImageUrl; ?></th>
-				<th title='# L1+ Backup Images'>
-					<a href='<?= $pm->colUrls['Ln'] ?>'># L1+<? if ($pm->sortImageIdx == 'Ln') echo $pm->sortImageUrl; ?></a></th>
-				<th title='AE Client Version'>
-					<a href='<?= $pm->colUrls['property_list:zmc_amcheck_version'] ?>'>AE Version<? if ($pm->sortImageIdx == 'property_list:zmc_amcheck_version') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Client OS'>
-					<a href='<?= $pm->colUrls['property_list:zmc_amcheck_platform'] ?>'>OS<? if ($pm->sortImageIdx == 'property_list:zmc_amcheck_platform') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Encryption Mode'>
-					<a href='<?= $pm->colUrls['encrypt'] ?>'>Encrypt<? if ($pm->sortImageIdx == 'encrypt') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Compression Mode'>
-					<a href='<?= $pm->colUrls['compress'] ?>'>Compress<? if ($pm->sortImageIdx == 'compress') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Last modified time'>
-					<a href='<?= $pm->colUrls['property_list:last_modified_time'] ?>'>Last Modified<? if ($pm->sortImageIdx == 'property_list:last_modified_time') echo $pm->sortImageUrl; ?></a></th>
+				<th title='#全量镜像'>
+					<a href='<?= $pm->colUrls['L0'] ?>'>#全量<? if ($pm->sortImageIdx == 'L0') echo $pm->sortImageUrl; ?></th>
+                <th title='#增量镜像'>
+					<a href='<?= $pm->colUrls['Ln'] ?>'>#增量<? if ($pm->sortImageIdx == 'Ln') echo $pm->sortImageUrl; ?></a></th>
+                <th title='客户端版本'>
+                    <a href='<?= $pm->colUrls['property_list:zmc_amcheck_version'] ?>'>客户端版本<? if ($pm->sortImageIdx == 'property_list:zmc_amcheck_version') echo $pm->sortImageUrl; ?></a></th>
+                <th title='客户端操作系统'>
+					<a href='<?= $pm->colUrls['property_list:zmc_amcheck_platform'] ?>'>客户端操作系统<? if ($pm->sortImageIdx == 'property_list:zmc_amcheck_platform') echo $pm->sortImageUrl; ?></a></th>
+				<th title='加密模式'>
+					<a href='<?= $pm->colUrls['encrypt'] ?>'>加密<? if ($pm->sortImageIdx == 'encrypt') echo $pm->sortImageUrl; ?></a></th>
+				<th title='压缩方法'>
+					<a href='<?= $pm->colUrls['compress'] ?>'>压缩<? if ($pm->sortImageIdx == 'compress') echo $pm->sortImageUrl; ?></a></th>
+				<th title='最近修改时间'>
+					<a href='<?= $pm->colUrls['property_list:last_modified_time'] ?>'>最近修改<? if ($pm->sortImageIdx == 'property_list:last_modified_time') echo $pm->sortImageUrl; ?></a></th>
 				<? if (!$only1user) { ?>
-				<th title='Last modified by'>
-					<a href='<?= $pm->colUrls['property_list:last_modified_by'] ?>'>By<? if ($pm->sortImageIdx == 'property_list:last_modified_by') echo $pm->sortImageUrl; ?></a></th>
+				<th title='最近修改人'>
+					<a href='<?= $pm->colUrls['property_list:last_modified_by'] ?>'>最近修改人<? if ($pm->sortImageIdx == 'property_list:last_modified_by') echo $pm->sortImageUrl; ?></a></th>
 				<? } ?>
 			</tr>
 <?
@@ -68,7 +68,7 @@ foreach ($pm->rows as $row)
 	{
 		$deleted = true;
 		$color = (($i++ % 2) ? 'stripeGrayDeleted':'stripeDeleted');
-		echo "<tr class='$color' onclick=\"window.confirm('Deleted DLEs can not be edited, and are removed when associated media have been dropped on the Backup|media page.'); return false;\">\n";
+		echo "<tr class='$color' onclick=\"window.confirm('已删除备份项无法编辑，且当关联设备被删除或者解绑后将被删除'); return false;\">\n";
 	}
 	else
 	{
@@ -149,7 +149,7 @@ foreach ($pm->rows as $row)
 				break;
 
 			case 'host_name':
-				$escaped = '<a onclick="noBubble(event)" href="/ZMC_Admin_Advanced?form=adminTasks&amp;action=Apply&amp;command=amadmin+' . ZMC::escape($pm->selected_name) . '+find+' . $row[$key] . "\">$escaped</a>";
+				$escaped = $row[$key];
 				$escapedTd = "<td>$escaped</td>\n";
 				$last_modified_time = -1;
 				if (!empty($row['property_list:last_modified_time']))

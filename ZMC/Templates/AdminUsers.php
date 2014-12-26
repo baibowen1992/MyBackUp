@@ -27,13 +27,13 @@ function zmc_admin_users_form_enable()
 
 
 
-<div class="zmcLeftWindow">
-	<? ZMC::titleHelpBar($pm, (($pm->edit && !empty($pm->edit['user_id'])) ? 'Edit ZMC User: ' . ZMC::escape($pm->edit['origUsername']) : 'Create ZMC User')); ?>
+<div class="wocloudLeftWindow">
+	<? ZMC::titleHelpBar($pm, (($pm->edit && !empty($pm->edit['user_id'])) ? '编辑控制台用户: ' . ZMC::escape($pm->edit['origUsername']) : 'Create ZMC User')); ?>
 	<form autocomplete="off" method="post" action="<?= $pm->url ?>">
-	<div class="zmcFormWrapperRight zmcLongInput">
-		<img class="zmcWindowBackgroundimageRight" src="/images/3.1/<?= ($pm->edit ? 'edit' : 'add') ?>.png" />
+	<div class="wocloudFormWrapperRight wocloudLongInput">
+		<img class="wocloudWindowBackgroundimageRight" src="/images/3.1/<?= ($pm->edit ? 'edit' : 'add') ?>.png" />
 <?
-$label = 'User Role<span class="required">*</span>:</label>';
+$label = '用户角色<span class="required">*</span>:</label>';
 foreach(array('Administrator', 'Operator', empty(ZMC::$registry->enable_monitor_role) ? null:'Monitor', empty(ZMC::$registry->enable_restore_role) ? null:'RestoreOnly') as $role)
 {
 	if (empty($role)) continue;
@@ -74,7 +74,7 @@ EOD;
 ?>
 		<input type='hidden' id='origUsername' name='origUsername' value='<?= empty($pm->origUsername) ? '' : ZMC::escape($pm->origUsername) ?>' />
 		<div class="p">
-			<label>User Name<span class="required">*</span>:</label>
+			<label>用户名<span class="required">*</span>:</label>
 			<input
 				tabindex="1"
 				<? echo 'onKeyUp="zmc_admin_users_form_enable()" ' ?>
@@ -92,18 +92,18 @@ EOD;
 						echo ' readonly disabled="disabled" title="Do not edit admin user name." ';
 				}
 				else
-					echo ' value="" title="Allowed characters are dash, underscore, and alphanumeric characters"';
+					echo ' value="" title="允许的字符时破折号、下划线、数字字母"';
 				?>
 			/>
 		</div><div class="p">
-			<label>Email Address<span class="required">*</span>:</label>
+			<label>邮 箱<span class="required">*</span>:</label>
 			<input
 				tabindex="2"
 				id="userEmail"
 				type="text"
 				name="email"
 				onKeyUp="zmc_admin_users_form_enable()"
-				title="Email address of the user for notification"
+				title="用户用于接收系统通知的邮箱"
 				<?
 				if (isset($_POST) && $_POST['user'] != null)
 					echo 'value="', ZMC::escape($_POST['email']), '"';
@@ -114,27 +114,27 @@ EOD;
 		</div><div class="p">
 		<label><?
 				if($_POST['edit_id'] == 0)
-					echo 'Password<span class="required">*</span>';
+					echo '密码<span class="required">*</span>';
 				elseif (!empty($pm->edit['user_id']) || $_POST['edit_id'] != 0)
-					echo 'New Password';
+					echo '新密码';
 				else
-					echo 'Password<span class="required">*</span>'; ?>
-				<input style="float:none;" title="Show Password" type="checkbox" onclick="this.form['password'].type = (this.form['password'].type === 'password' ? 'text' : 'password');" />:
+					echo '密码<span class="required">*</span>'; ?>
+				<input style="float:none;" title="显示密码" type="checkbox" onclick="this.form['password'].type = (this.form['password'].type === 'password' ? 'text' : 'password');" />:
 			</label>
-			<input tabindex="3" type="password" name="password" title="Zmanda management console password of the user" id="newPassword" <?
+			<input tabindex="3" type="password" name="password" title="用户在云备份控制台的密码" id="newPassword" <?
 				if ($pm->edit && isset($pm->edit['password']))
 					echo 'value="', ZMC::escape($pm->edit['password']), '"';
 				?>
 				onKeyUp="zmc_admin_users_form_enable()"
 			/>
 		</div><div class="p">
-			<label>Confirm<?
+			<label>确认<?
 				if (empty($pm->edit['user_id']) || ($_POST['edit_id'] == 0))
 					echo '<span class="required">*</span>';
 			?>
-				<input style="float:none;" title="Show Password" type="checkbox" onclick="this.form['confirm'].type = (this.form['confirm'].type === 'password' ? 'text' : 'password');" />:
+				<input style="float:none;" title="显示密码" type="checkbox" onclick="this.form['confirm'].type = (this.form['confirm'].type === 'password' ? 'text' : 'password');" />:
 			</label>
-			<input tabindex="4" type="password" name="confirm" title="Re-enter the password" id="confirmNewPassword" <?
+			<input tabindex="4" type="password" name="confirm" title="再次输入密码" id="confirmNewPassword" <?
 				if ($pm->edit && isset($pm->edit['confirm']))
 					echo 'value="', ZMC::escape($pm->edit['confirm']), '"';
 				?>
@@ -142,10 +142,10 @@ EOD;
 			/>
 		</div>
 		<div style='clear:both;'></div>
-	</div><!-- zmcFormWrapper -->
+	</div><!-- wocloudFormWrapper -->
 
 
-	<div class="zmcButtonBar"><?
+	<div class="wocloudButtonBar"><?
 		if (!empty($pm->edit['user_id']) && $_POST['edit_id'] !== 0)
 			echo '<input type="hidden" name="edit_id" value="', $pm->edit['user_id'], '" />'
 				. '<input tabindex="6" type="submit" name="action" value="Update" />';
@@ -156,21 +156,21 @@ EOD;
 
 			echo "<input tabindex='7' type='submit' value='Cancel' id='btnCancel' name='btnCancel' />";
 		?>
-	</div><!-- zmcButtonBar -->
+	</div><!-- wocloudButtonBar -->
 	</form>
-</div><!-- zmcLeftWindow -->
+</div><!-- wocloudLeftWindow -->
 
 
 
 
 <? if (!empty($pm->edit['user_id'])) { ?>
-<div class="zmcLeftWindow">
-    <? ZMC::titleHelpBar($pm, 'Associate ZMC User with Zmanda Network') ?>
+<!--<div class="wocloudLeftWindow">
+    <? ZMC::titleHelpBar($pm, 'Associate ZMC User with wocloud') ?>
 	<form autocomplete="off" method="post" action="<?= $pm->url ?>">
-	<div class="zmcFormWrapper zmcLongerLabel zmcLongInput">
+	<div class="wocloudFormWrapper wocloudLongerLabel wocloudLongInput">
 		<div class="p">
-			<label>Zmanda Network User Name:</label>
-			<input type="text" name="zmandaNetworkID" title="Enter Zmanda Network user name" id="znID" <?
+			<label>wocloud User Name:</label>
+			<input type="text" name="zmandaNetworkID" title="Enter wocloud user name" id="znID" <?
 				if ($pm->edit && !empty($pm->edit['network_ID']))
 					echo 'value="', ZMC::escape($pm->edit['network_ID']), '"';
 				?>
@@ -179,14 +179,14 @@ EOD;
 			<input type="hidden" name="edit_id" value="<?= $pm->edit['user_id'] ?>" />
 			<input type='hidden' id='origUsername' name='origUsername' value='<?= $pm->origUsername ?>' />
 		</div><div class="p">
-			<label>Zmanda Network Password:</label>
-			<input type="password" name="zmandaNetworkPassword" title="Enter Zmanda Network user password" id="znPassword" value="" />
+			<label>wocloud Password:</label>
+			<input type="password" name="zmandaNetworkPassword" title="Enter wocloud user password" id="znPassword" value="" />
 		</div>
 		<div style='clear:both;'></div>
-	</div><!-- zmcFormWrapper -->
-	<div class="zmcButtonBar"><input type='submit' name='UpdateZN' value='Update' /></div>
+	</div><!-- wocloudFormWrapper -->
+	<div class="wocloudButtonBar"><input type='submit' name='UpdateZN' value='Update' /></div>
 	</form>
-</div><!-- zmcLeftWindow -->
+</div>--<!-- wocloudLeftWindow -->
 <?	} 
 
 echo '<br style="clear:both;" />';
@@ -195,17 +195,17 @@ if (!isset($pm->rows) || !ZMC_User::hasRole('Administrator'))
 	echo '<div style="height:166px"></div>';
 else
 {
-    ZMC::titleHelpBar($pm, 'View, edit and delete users');
+    ZMC::titleHelpBar($pm, '查看、编辑、删除用户');
 ?>
 	<form method="post" action="<?= $pm->url ?>">
 	<div id="dataTable" class="dataTable">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<? ZMC_Form::thAll() ?>
-				<th title='User Name'><a href='<?= $pm->colUrls['user'] ?>'>User Name <? if ($pm->sortImageIdx == 'user') echo $pm->sortImageUrl; ?></a></th>
-				<th title='User Role'><a href='<?= $pm->colUrls['user_role'] ?>'>User Role <? if ($pm->sortImageIdx == 'user_role') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Email Address'><a href='<?= $pm->colUrls['email'] ?>'>Email Address <? if ($pm->sortImageIdx == 'email') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Creation Date'><a href='<?= $pm->colUrls['registration_date'] ?>'>Creation Date <? if ($pm->sortImageIdx == 'registration_date') echo $pm->sortImageUrl; ?></a></th>
+				<th title='用户名'><a href='<?= $pm->colUrls['user'] ?>'>用户名 <? if ($pm->sortImageIdx == 'user') echo $pm->sortImageUrl; ?></a></th>
+				<th title='用户角色'><a href='<?= $pm->colUrls['user_role'] ?>'>用户角色 <? if ($pm->sortImageIdx == 'user_role') echo $pm->sortImageUrl; ?></a></th>
+				<th title='邮箱'><a href='<?= $pm->colUrls['email'] ?>'>邮箱 <? if ($pm->sortImageIdx == 'email') echo $pm->sortImageUrl; ?></a></th>
+				<th title='创建日期'><a href='<?= $pm->colUrls['registration_date'] ?>'>创建日期 <? if ($pm->sortImageIdx == 'registration_date') echo $pm->sortImageUrl; ?></a></th>
 			</tr>
 <?
 		$i = 0;
@@ -236,8 +236,9 @@ EOD;
 		</table>
 	</div><!-- dataTable -->
 
-	<div class="zmcButtonBar zmcButtonsLeft">
-		<input type="button" name="noop" value="Invert Selection" onclick="var o=gebi('dataTable').getElementsByTagName('input'); for(var i = 0; i < o.length; i++) { b = o.item(i); b.checked = !b.checked } return false;" />
+	<div class="wocloudButtonBar wocloudButtonsLeft">
+<!--		<input type="button" name="noop" value="反选" onclick="var o=gebi('dataTable').getElementsByTagName('input'); for(var i = 0; i < o.length; i++) { b = o.item(i); b.checked = !b.checked } return false;" /><input type="button" name="noop" value="反选" onclick="var o=gebi('dataTable').getElementsByTagName('input'); for(var i = 0; i < o.length; i++) { b = o.item(i); b.checked = !b.checked } return false;" />-->
+		<button type="button" name="noop" value="Invert Selection" onclick="var o=gebi('dataTable').getElementsByTagName('input'); for(var i = 0; i < o.length; i++) { b = o.item(i); b.checked = !b.checked } return false;" /><input type="button" name="noop" value="反选" onclick="var o=gebi('dataTable').getElementsByTagName('input'); for(var i = 0; i < o.length; i++) { b = o.item(i); b.checked = !b.checked } return false;" />反选</button>
 		<input type="submit" name="action" value="Delete" />
 		<? echo $pm->goto; ?>
 	</div>

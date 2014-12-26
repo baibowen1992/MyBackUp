@@ -18,7 +18,7 @@ class ZMC_User
 
 	public static function init()
 	{
-		self::$users = ZMC_Mysql::getAllRowsMap('SELECT * FROM users ORDER BY user_id', 'Unable to read the "users" table', false, null, 'user_id');
+		self::$users = ZMC_Mysql::getAllRowsMap('SELECT * FROM users ORDER BY user_id', '无法读取数据表 "users" ', false, null, 'user_id');
 	}
 
 	public static function count()
@@ -129,7 +129,7 @@ class ZMC_User
 		}
 		if (!preg_match('/^[a-z0-9]+([-.][a-z0-9]+)*$/', $name))
 		{
-			$pm->addError("Invalid characters in user name '$name'.  Do not use spaces.  Start with a letter or digit. Use only alphanumeric characters, periods, or hyphens.");
+			$pm->addError("用户名 '$name'.中含有非法字符，请不要使用空格。");
 			return false;
 		}
 	}
@@ -174,7 +174,7 @@ class ZMC_User
 			ZMC::$userRegistry['sort'] = '';
 	
 		$paginator = new ZMC_Paginator($pm, 'FROM users', array('user', 'user_role', 'email', 'registration_date', 'user_id'));
-		
+
 		$paginator->createColUrls($pm);
 		array_pop($pm->columns);
 		$pm->rows = $paginator->get();
@@ -190,6 +190,109 @@ class ZMC_User
 		ZMC::auditLog(__FUNCTION__ . "($inUserName)", $result);
 		return $result;
 	}
+
+    /**
+     * 取用户的id，登录的时候
+     * @param $inUserName
+     * @return bool
+     * @throws ZMC_Mysql_Exception
+     */
+    public static function getUserIdByNetwork($inUserName)
+    {
+        $username = ZMC_Mysql::escape($inUserName);
+        $sql = "SELECT user_id FROM users WHERE user='$username'";
+        $result = ZMC_Mysql::getOneValue($sql, "Query failure while retrieving user_id for user '$username'.", false, substr($sql, 0, strpos($sql, 'SHA')+3));
+        ZMC::auditLog(__FUNCTION__ . "($inUserName)", $result);
+        return $result;
+    }
+
+    /**
+     * 取用户的id 和 资源池，登录的时候
+     *
+     * add by Johnny @20141217
+     *
+     * @param $inUserName
+     * @return bool
+     * @throws ZMC_Mysql_Exception
+     */
+    public static function getUserIdAddResPoolByNetwork($inUserName)
+    {
+        $username = ZMC_Mysql::escape($inUserName);
+        $sql = "SELECT user_id,resource_pool FROM users WHERE user='$username'";
+        return ZMC_Mysql::getAllRowsMap($sql, '无法读取用户表 "users" ', false, null, 'user_id');;
+    }
+
+    /**
+     * @param $userId
+     * @return bool
+     */
+    public static function getResPoolByUserId($userId){
+        try {
+            $sql = "SELECT resource_pool FROM users WHERE user_id=$userId";
+            return ZMC_Mysql::getOneValue($sql,"select resource_pool by userId:$userId");
+        }
+        catch(Exception $e){}
+    }
+
+    /**
+     * 更新资源池，
+     *
+     * add by Johnny @20141219
+     */
+    public static function updateUserResPool($resourcePool,$username){
+        $sql = "update users set resource_pool='$resourcePool' where user='$username'";
+        ZMC_Mysql::queryAndFree($sql, "user '$username' update resource_pool ,rerPool value:$resourcePool .", false, null);
+    }
+
+    function http_post_data($url, $data_string) {
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json; charset=utf-8',
+                'Content-Length: ' . strlen($data_string))
+        );
+        ob_start();
+        curl_exec($ch);
+        $return_content = ob_get_contents();
+        //echo $return_content.'<br>';
+        ob_end_clean();
+
+        $return_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        //echo $return_code.'<br>';
+        return array($return_code, $return_content);
+    }
+
+
+    public static function authenticateUserByNetwork($inUserName, $inToken)
+    {
+
+        // $url  = "http://127.0.0.1:8082/portal/user/checkIpAndIo";
+        $url  = "http://172.66.6.113:8082/portal/user/checkIpAndIo";
+//        $data = json_encode(array('username'=>$inUserName, 'password'=>$inPassword));
+
+        $data = json_encode(array('username'=>$inUserName, 'token'=>$inToken));
+//        echo "$inUserName=======$inPassword";
+//        echo "+++++++++++singlelogin:".$inSinglelogin;
+        //echo $data.'<br>'.'<br>';
+        //list($return_code, $return_content) = http_post_data($url, $data);
+        $result = ZMC_User::http_post_data($url, $data);
+
+        //echo 'johnnytest';
+        /*
+        header("application/json;charset=UTF-8");
+        $urlNetWork = 'http://10.122.129.99:8082/portal/user/login';
+        $request = new HttpRequest($urlNetWork , HttpRequest::METH_POST);
+        //$request->setHeaders(array('Accept' => 'application/json;charset=UTF-8', 'content-type' => 'application/json;charset=UTF-8'));
+        $json_str = "{'username':'johnny','password':'11111111'}";
+        //$request->setOptions(array('username' => 'johnny', 'password' => '11111111'));
+        $request->setOptions($json_str);
+        $result = $request->send();
+        */
+        return $result;
+    }
 	
 	public static function saveUser(ZMC_Registry_MessageBox $pm)
 	{
@@ -214,7 +317,7 @@ class ZMC_User
 			if (empty($_POST['user']))
 				$_POST['user'] = $_POST['origUsername'];
 			if ($_POST['origUsername'] !== $_POST['user'])
-				$nameChange = "Account name changed from '$_POST[origUsername]' to '$_POST[user]'";
+				$nameChange = "账户名 '$_POST[origUsername]' 修改为 '$_POST[user]'";
 		}
 		ZMC_User::filterZmcUsername($pm, $_POST['user']);
 		$_POST['origUsername'] = $_POST['user'];
@@ -229,22 +332,22 @@ class ZMC_User
 		$password = empty($_POST['password']) ? '' : trim($_POST['password']);
 		$email = $_POST['email'] = trim($_POST['email']);
 		if (empty($email))
-			$pm->addError('Please enter an email address.');
+			$pm->addError('请输入邮箱');
 		else
 		{
 			if (strlen($email) === strrpos($email, '@localhost') + 10) 
 				$_POST['email'] = "$email.localdomain";
 			if (!self::isValidAmandaEmail($email))
-				$pm->addWarnError('Please provide a valid email address with a FQDN that does not contain  `, !, or $');
+				$pm->addWarnError('请提供合法邮箱，不能包含 `, !, or $');
 		}
 	
 		
 		if (empty($_POST['edit_id']) || !empty($_POST['password']) || !empty($_POST['confirm']))
 		{
 			if (empty($_POST['password']))
-				$pm->addError('Please enter a password.');
+				$pm->addError('请输入密码');
 			elseif ($_POST['password'] != $_POST['confirm'])
-				$pm->addError('The passwords do not match.');
+				$pm->addError('两次密码不匹配');
 		}
 	
 		if (ZMC_User::hasRole('Administrator'))
@@ -252,17 +355,17 @@ class ZMC_User
 			if ($_POST['edit_id'] == 1) 
 				$_POST['user_role'] = 'Administrator';
 			elseif (empty($_POST['user_role']))
-				$pm->addError('Please select a role.');
+				$pm->addError('请选择角色.');
 		}
 		else
 			$_POST['user_role'] = 'Operator';
 
 		$existingId = ZMC_User::getBy('user', $_POST['user']);
 		if ($existingId && $existingId != $_POST['edit_id'])
-			$pm->addError("The user name '$_POST[user]' already exists.");
+			$pm->addError("用户名 '$_POST[user]' 已经存在.");
 		$existingId = ZMC_User::getBy('email', $email);
 		if ($existingId && $existingId !=$_POST['edit_id'])
-			$pm->addError('This email address already exists.');
+			$pm->addError('邮箱已经存在');
 		if (!$pm->isErrors()) 
 		{
 			if (empty($_POST['edit_id']))
@@ -279,14 +382,61 @@ class ZMC_User
 		return null;
 	}
 
-	
+
+    /**
+     * 插入不存在于备份系统的用户
+     *
+     * add by Johnny
+     * mod by Johnny @20141217 加入$resourcePool
+     */
+    public static function insertUser($username, $role, $email, $password, $zmandaNetworkId,$resourcePool){
+        $sha1 = sha1($password);
+        $sql = "INSERT INTO users (user, user_role, email, registration_date, password, network_ID, resource_pool)
+						VALUES ('$username', '$role', '$email', NOW(), '$sha1', '$zmandaNetworkId','$resourcePool')";
+        $sanitizedSql = str_replace("'$sha1'", "'***'", $sql);
+        ZMC_Mysql::queryAndFree($sql, "Query failure while adding/updating information for user '$username'.", false, $sanitizedSql);
+        $id = mysql_insert_id();
+        self::init();
+        return $id;
+    }
 
 
+    /**
+     * 插入设备拥有者表， gci_drives_owner
+     *
+     * add by Johnny @20140926
+     */
+    public static function insertDrivesOwner($username, $owner){
+        //$sql = "INSERT INTO users (user, user_role, email, registration_date, password, network_ID)
+					//	VALUES ('$username', '$role', '$email', NOW(), '$sha1', '$zmandaNetworkId')";
+        $sql = "INSERT INTO `gci_drives_owner` (`owner`,`drives`,`create_date`)VALUES('$username','$owner',NOW())";
+        ZMC_Mysql::queryAndFree($sql, "Query failure while adding/updating information for user '$username'.", false, null);
+        $id = mysql_insert_id();
+        return $id;
+    }
+
+    /**
+     * 查找出所有的设备拥有者
+     * @return array
+     */
+    public static function findAllDrivesOwner($username){
+        $sql = "SELECT id,owner,drives,create_date FROM gci_drives_owner ORDER BY id";
+        if($username){
+            $sql = "SELECT id,owner,drives,create_date FROM gci_drives_owner where owner='$username' ORDER BY id";
+        }
+        return ZMC_Mysql::getAllRowsMap($sql, '无法读取数据表 "gci_drives_owner" ', false, null, 'id');
+    }
 
 
-
-
-
+    /**
+     * 删除设备， gci_drives_owner
+     *
+     * add by Johnny @20141030
+     */
+    public static function deleteDrivesOwner($delete_devices_name,$username){
+        $sql = "DELETE FROM `gci_drives_owner` WHERE `drives` IN($delete_devices_name)";
+        ZMC_Mysql::queryAndFree($sql, "user '$username' delete drives[gci_drives_owner] ,all drives name:$delete_devices_name .", false, null);
+    }
 
 
 
@@ -300,7 +450,7 @@ class ZMC_User
 			$sql = "INSERT INTO users (user, user_role, email, registration_date, password, network_ID)
 						VALUES ('$username', '$role', '$email', NOW(), '$sha1', '$zmandaNetworkId')";
 			$sanitizedSql = str_replace("'$sha1'", "'***'", $sql);
-			$pm->addMessage("Account created: $username");
+			$pm->addMessage("创建用户: $username");
 		}
 		else
 		{
@@ -316,7 +466,7 @@ class ZMC_User
 							. (empty($password)			? '' : ", password='" . sha1($password) . "'")
 					. " WHERE user_id = $id";
 			$sanitizedSql = preg_replace("/password='[^']+'/", "password='***", $sql);
-			$pm->addMessage("Account updated: $username");
+			$pm->addMessage("账户更新: $username");
 		}
 	
 		ZMC::debugLog(__CLASS__ . ':' . __FUNCTION__ . "($id, $username, $role, $email, " 
@@ -327,9 +477,9 @@ class ZMC_User
 		ZMC_Mysql::queryAndFree($sql, "Query failure while adding/updating information for user '$username'.", false, $sanitizedSql);
 		if (empty($id))
 			$id = mysql_insert_id();
-		if (!empty($zmandaNetworkPassword))
+/*		if (!empty($zmandaNetworkPassword))
 			ZMC_ZmandaNetwork::verifyAndSave($pm, $zmandaNetworkId, $zmandaNetworkPassword, $id);
-
+*/
 		self::init();
 		return $id;
 	}
@@ -347,12 +497,12 @@ class ZMC_User
 		$id = intval($id);
 		if ($id <= 1)
 		{
-			$pm->addError("Refusing to delete user 'admin'. Will not delete the default administrator account.");
+			$pm->addError("无法删除系统默认管理员用户 'admin'");
 			return false;
 		}
 	
 		if (!isset(self::$users[$id]))
-			return $pm->addError("Unable to delete user id $id.  Already deleted?");
+			return $pm->addError("无法删除用户ID为 $id 的用户，已经删除了？");
 		$username = self::$users[$id]['user'];
 	
 		

@@ -185,24 +185,24 @@ protected static function inputS3_Compatible_Cloud(ZMC_Registry_MessageBox $pm, 
 		$suggest = "Try 256 MiB.";
 		$device['device_output_buffer_size'] = $norm['bs'] * 2 . 'm'; 
 		if ($norm['bs'] < 32)
-			$warning = "Block Size $bs $display is small.";
+			$warning = "块大小 $bs $display 太小.";
 	
 		if ($norm['bs'] > 2047)
-			$pm->addWarnError("Block Size $bs $display is too big. $suggest");
+			$pm->addWarnError("块大小 $bs $display 太大. $suggest");
 		elseif ($norm['bs'] > 1024)
 			$warning = "Block Size $bs $display is big.";
 
 		if($norm['bs'] > 256 && $device['device_property_list:REUSE_CONNECTION'] == "on")
-			$pm->addWarning("Enabling reuse connection when cloud object size is ".$norm['bs']."$display may impact on performance.");
+			$pm->addWarning("启用连接重用在对象大小 ".$norm['bs']."$display 的时候会影响性能.");
 		
 		if (!empty($warning))
 			$pm->addWarning("$warning $suggest");
 		if (empty($device['device_property_list:S3_SECRET_KEY']) && empty($device['device_property_list:PASSWORD']))
-			$pm->addWarnError("The secret password key is empty.");
+			$pm->addWarnError("secret key/密码为空.");
 		else if (!empty($device['device_property_list:S3_SECRET_KEY']) && !ctype_alnum($key = $device['device_property_list:S3_ACCESS_KEY']))
-			$pm->addWarnError("The access key '$key' contains non-alphanumeric characters (avoid IP address formats and periods).");
+			$pm->addWarnError("access key '$key' 含有非法字符.");
 		if (empty($device['device_property_list:S3_ACCESS_KEY']) && empty($device['device_property_list:USERNAME']))
-			$pm->addWarnError("The username/access key is empty.");
+			$pm->addWarnError("填入的用户名/access key 为空.");
 	}
 
 	return $device;

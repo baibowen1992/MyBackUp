@@ -44,7 +44,7 @@ function conflict_file_helper($pm)
 				$onclick = "gebi('disable_basic').style.visibility='visible'; gebi('basic_restore_replace').checked = gebi('basic_restore_rename').checked = gebi('basic_do_not_restore').checked = false;";
 				break;
 		}
-		$class = ($conflictFileOption == ZMC_Type_AmandaApps::OVERWRITE_EXISTING) ? 'class="zmcIconWarning"':'';
+		$class = ($conflictFileOption == ZMC_Type_AmandaApps::OVERWRITE_EXISTING) ? 'class="wocloudIconWarning"':'';
 		$ftext = ZMC_Type_AmandaApps::conflict2text($conflictFileOption, $pm->restore['destination_location'], true);
 		$div = "
 		<div class='p'>
@@ -100,11 +100,11 @@ function conflict_file_helper($pm)
 ?>
 
 
-<div class="zmcLeftWindow" style='clear:left; min-width:500px;'>
-	<? ZMC::titleHelpBar($pm, 'How to restore, if already exists?'); ?>
-		<div class='zmcFormWrapper zmcAutoLabel zmcLongLabel zmcLongInput'>
+<div class="wocloudLeftWindow" style='clear:left; min-width:500px;'>
+	<? ZMC::titleHelpBar($pm, '设置还原策略'); ?>
+		<div class='wocloudFormWrapper wocloudAutoLabel wocloudLongLabel wocloudLongInput'>
 		<div class="p">
-			<label>DLE/Object Type:</label>
+			<label>备份项类型:</label>
 			<input 
 				type="text" 
 				value="<?= ZMC::escape(empty($pm->restore['pretty_name']) ? $pm->restore['name'] : $pm->restore['pretty_name']); ?>"
@@ -113,7 +113,7 @@ function conflict_file_helper($pm)
 		</div>
 
 		<div class="p">
-			<label>Original Host:</label>
+			<label>源主机类型:</label>
 			<input 
 				type="text" 
 				value="<? foreach($pm->restore['media_explored'] as $media) { echo $media['host']; break; } ?>"
@@ -122,7 +122,7 @@ function conflict_file_helper($pm)
 		</div>
 
 		<div class="p">
-			<label>Original Path:</label>
+			<label>源目录:</label>
 			<input 
 				type="text" 
 				value="<? foreach($pm->restore['media_explored'] as $media) { echo $media['disk_name']; break; } ?>"
@@ -151,7 +151,7 @@ function conflict_file_helper($pm)
 		<div style='clear:both; height:10px;'></div>
 	<?
 		$zwc = ($pm->restore['host_type'] == ZMC_Type_AmandaApps::HOST_TYPE_WINDOWS);
-		echo "If the Destination Location already has a file or directory with the same name:<br />";
+		echo "如果目的目录已经存在同名文件/目录:<br />";
 
 		
 		if($pm->restore['zmc_type'] === 'windows'
@@ -179,20 +179,20 @@ function conflict_file_helper($pm)
 			$fileConflictOptions = '';
 			$opts = array_flip($pm->restore['conflict_file_options']);
 			if (isset($opts[ZMC_Type_AmandaApps::OVERWRITE_EXISTING]))
-				$fileConflictOptions .= "<div class='p'><input style='z-index:10; position:relative;' type='radio' name='basic_merge' id='basic_restore_replace' value='basic_restore_replace' onclick=\"gebi('file_OVERWRITE_EXISTING').click(); return true;\" /><label for='basic_restore_replace'>Restore &amp; <img style='vertical-align:text-top;' src='/images/global/calendar/icon_calendar_warning.gif' /> Replace</label></div>\n";
+				$fileConflictOptions .= "<div class='p'><input style='z-index:10; position:relative;' type='radio' name='basic_merge' id='basic_restore_replace' value='basic_restore_replace' onclick=\"gebi('file_OVERWRITE_EXISTING').click(); return true;\" /><label for='basic_restore_replace'>还原 &amp; <img style='vertical-align:text-top;' src='/images/global/calendar/icon_calendar_warning.gif' /> 覆盖</label></div>\n";
 			if (isset($opts[ZMC_Type_AmandaApps::KEEP_EXISTING]))
-				$fileConflictOptions .= "<div class='p'><input style='z-index:10; position:relative;' type='radio' name='basic_merge' id='basic_do_not_restore' value='basic_do_not_Restore' onclick=\"gebi('file_KEEP_EXISTING').click(); return true;\" /><label for='basic_do_not_restore'>Do not Restore</label></div>\n";
+				$fileConflictOptions .= "<div class='p'><input style='z-index:10; position:relative;' type='radio' name='basic_merge' id='basic_do_not_restore' value='basic_do_not_Restore' onclick=\"gebi('file_KEEP_EXISTING').click(); return true;\" /><label for='basic_do_not_restore'>不还原</label></div>\n";
 			if (isset($opts[ZMC_Type_AmandaApps::RENAME_RESTORED_N]))
-				$fileConflictOptions .= "<div class='p'><input style='z-index:10; position:relative;' type='radio' name='basic_merge' id='basic_restore_rename' value='basic_Restore_rename' onclick=\"gebi('file_RENAME_RESTORED_N').click(); return true;\" /><label for='basic_restore_rename'>Restore, but keep both files</label></div>\n";
+				$fileConflictOptions .= "<div class='p'><input style='z-index:10; position:relative;' type='radio' name='basic_merge' id='basic_restore_rename' value='basic_Restore_rename' onclick=\"gebi('file_RENAME_RESTORED_N').click(); return true;\" /><label for='basic_restore_rename'>还原，但是保留各自版本</label></div>\n";
 			if (!$zwc)
 			{
 				$visibility = 'null';
 				echo <<<EOD
-<div class="zmcAfter" style="position:relative;">
+<div class="wocloudAfter" style="position:relative;">
 <img id='disable_basic' style="visibility:hidden; position:absolute; width:100%; height:100%; background-color:#CCC; filter:alpha(opacity=60); opacity:0.6;">
 <table id='basic_table' style='margin:10px 0 0 0;'><tr>
 	<td style="vertical-align:middle;">
-		<fieldset id='basic_dir_fs' style='width:auto; margin-top:0; padding-top:0; visibility:$visibility;'><legend>Directory Conflicts</legend>
+		<fieldset id='basic_dir_fs' style='width:auto; margin-top:0; padding-top:0; visibility:$visibility;'><legend>目录冲突</legend>
 			<div class='p'><label>&nbsp;</label> </div>
 			<div class='p'>
 				<input style='z-index:10; position:relative;' id='basic_merge_folders' type='checkbox' name='basic_merge_folders' value='$conflictDirOption' onclick="
@@ -202,13 +202,13 @@ function conflict_file_helper($pm)
 						gebi('dir_KEEP_EXISTING').click();
 					gebi('basic_file_fs').style.visibility = (this.checked ? null:null);
 					return true;" />
-				<label for='basic_merge_folders' >Merge directory</label>
+				<label for='basic_merge_folders' >合并目录</label>
 			</div>
 			<div class='p'><label>&nbsp;</label> </div>
 		</fieldset>
 	</td>
 	<td>
-		<fieldset id='basic_file_fs' style='width:auto; margin-top:0; padding-top:0; visibility:$visibility;'><legend>File Conflicts</legend>
+		<fieldset id='basic_file_fs' style='width:auto; margin-top:0; padding-top:0; visibility:$visibility;'><legend>文件冲突</legend>
 			$fileConflictOptions
 			<div style='clear:left;'></div>
 		</fieldset>
@@ -238,7 +238,7 @@ EOD;
 			echo "</div>";
 			ob_start();
 			if (!$zwc)
-				echo "<fieldset style='width:auto; clear:left;'><legend>Directory Conflicts</legend>";
+				echo "<fieldset style='width:auto; clear:left;'><legend>文件夹冲突</legend>";
 
 			foreach($pm->restore['conflict_dir_options'] as $conflictDirOption)
 			{
@@ -264,13 +264,13 @@ EOD;
 						break;
 				}
 				if ($conflictDirOption == ZMC_Type_AmandaApps::REMOVE_EXISTING)
-					$class = 'class="zmcIconWarning"';
+					$class = 'class="wocloudIconWarning"';
 				elseif ($conflictDirOption == ZMC_Type_AmandaApps::OVERWRITE_EXISTING)
 				{
-					$class = 'class="zmcIconWarning"';
+					$class = 'class="wocloudIconWarning"';
 					$hidden = 'visible';
 					$style = ($pm->restore['conflict_dir_selected'] == $conflictDirOption ? '' : 'style="visibility:hidden;"');
-					$text .= "<div id='merge_explanation' $style>Note: Extended attributes of restored directory are not preserved.<br />\n";
+					$text .= "<div id='merge_explanation' $style>注意: 还原目录的扩展属性未能保.<br />\n";
 					$onclick .= "gebi('merge_explanation').style.visibility = 'visible'; ";
 					$text .= '</div>';
 				}
@@ -290,12 +290,12 @@ EOD;
 			{
 				echo "<div style='clear:left;'></div>\n";
 				echo "</fieldset>\n";
-				echo "<fieldset style='width:auto;'><legend>File Conflicts</legend>\n";
+				echo "<fieldset style='width:auto;'><legend>文件冲突</legend>\n";
 				echo conflict_file_helper($pm) . "</fieldset>\n";
 			}
 
 			$pm->form_advanced_html = ob_get_clean();
-			$pm->form_type['advanced_form_classes'] = 'zmcAutoLabel zmcUltraShortInput';
+			$pm->form_type['advanced_form_classes'] = 'wocloudAutoLabel wocloudUltraShortInput';
 			
 			if (empty($disableAdvanced))
 				ZMC_Loader::renderTemplate('formAdvanced', $pm);
@@ -307,9 +307,9 @@ EOD;
 			ZMC_HeaderFooter::$instance->injectYuiCode($code);
 
 ?>
-	<div class="zmcButtonBar">
-		<button type="submit" name="action" value="Apply Previous" class="zmcButtonsLeft" />Back</button>
-		<button type="submit" name="action" value="Apply Next" />Next</button>
+	<div class="wocloudButtonBar">
+		<button type="submit" name="action" value="Apply Previous" class="wocloudButtonsLeft" />上一步</button>
+		<button type="submit" name="action" value="Apply Next" />下一步</button>
 	</div>
 </div>
 

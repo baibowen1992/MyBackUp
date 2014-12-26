@@ -142,7 +142,7 @@ public function createAndLabelSlots()
 
 	if ($labeled)
 	{
-		if (ZMC::$registry->debug) $this->reply->addMessage("Created $labeled new containers for DLE backup images.");
+		if (ZMC::$registry->debug) $this->reply->addMessage("为备份镜像创建 $labeled 个新的标记");
 		ZMC_BackupSet::putTapeList($this->reply, $tapeList, $config, true);
 	}
 
@@ -153,7 +153,7 @@ public function createAndLabelSlots()
 			$link = readlink($dataLink);
 		elseif (file_exists($dataLink))
 		{
-			$this->reply->addWarnError("The file '$dataLink' is not a symbolic link pointing to the current DLE backup image container. Please remove this file, before continuing.");
+			$this->reply->addWarnError("文件 '$dataLink' 并不是指向当前备份镜像标记的链接，请在继续运行前删除。");
 			if (ZMC::$registry->safe_mode) return;
 		}
 	}else{

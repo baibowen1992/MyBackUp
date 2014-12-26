@@ -34,12 +34,12 @@ ZMC_Loader::renderTemplate('MessageBox', $pm);
 			<p>
 				<label for="downloadCheckbox">
 					<input type="radio" name="install" value="download" checked id="downloadCheckbox" />
-					Download from Zmanda Network
+					Download from wocloud
 				</label>
 			</p>
 			<div style='margin:15px'>
 				<p>If the above does not succeed,</p>
-				<p>you may login to Zmanda Network,</p>
+				<p>you may login to wocloud,</p>
 				<p>manually download the certificate,</p>
 				<p>and then upload it to your ZMC server:</p>
 			</div>

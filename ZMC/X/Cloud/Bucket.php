@@ -119,7 +119,7 @@ protected function runState(ZMC_Registry_MessageBox $pm, $state)
 
 		case 'Cancel':
 			if ($pm->state === 'Cancel') 
-				$pm->addWarning("Edit/Add cancelled.");
+				$pm->addWarning("编辑/新增  取消.");
 		case 'Refresh':
 		case 'Refresh Table':
 		case '': 

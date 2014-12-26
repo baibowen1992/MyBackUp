@@ -19,7 +19,7 @@ class ZMC_Report_Timeline
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Report', 'ZMC - Backup Timeline Report', 'timeline');
+		ZMC_HeaderFooter::$instance->header($pm, 'Report', '云备份 - Backup Timeline Report', 'timeline');
 		$pm->addDefaultInstruction('View timeline reports for previous backups.');
 		if (!ZMC_BackupSet::assertSelected($pm))
 			return 'MessageBox'; 

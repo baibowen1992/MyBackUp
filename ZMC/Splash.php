@@ -80,7 +80,7 @@ class ZMC_Splash
 			'tombstone' => 'Splash',
 			'subnav' => '',
 			'product_datestamp' => ZMC::dateNow(true),
-			'title' => 'Welcome to the Zmanda Management Console',
+			'title' => '欢迎使用云备份控制台',
 			'short_name' => 'AEE',
 		));
 		ZMC_Loader::renderTemplate('Login', $box->merge(array(

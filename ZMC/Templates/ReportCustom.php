@@ -18,9 +18,9 @@ echo "\n<form method='post' action='$pm->url'>\n";
 function display_name_select()
 {
 ?>
-			<label class="zmcShortestLabel">Name:</label>
+			<label class="wocloudShortestLabel">名字:</label>
 			<select name='choose_report' onChange='submit()'>
-				<option value=''>--Choose a <?= $_SESSION['custom']['is_preset'] ? 'Preset' : 'Custom' ?> Report Template--</option>
+				<option value=''>--请选择一个 <?= $_SESSION['custom']['is_preset'] ? 'Preset' : 'Custom' ?> 报告模板--</option>
 				<?
 				if ($_SESSION['custom']['is_preset'])
 					$list =& ZMC_Report_Custom::$presets;
@@ -41,31 +41,31 @@ function display_name_select()
 }
 ?>
 
-<div class="zmcLeftWindow">
+<div class="wocloudLeftWindow">
 	<? ZMC::titleHelpBar($pm, 'Select or Customize a Report Template'); ?>
 	<div class="tabbedNavigation">
 		<ul>
 		<?
 			if ($_SESSION['custom']['is_preset'])
 			{
-				echo "<li class='current'><a href='#'>Preset</a></li>\n";
-				echo "<li><a href='?type=custom'>Custom</a></li>";
+				echo "<li class='current'><a href='#'>预置</a></li>\n";
+				echo "<li><a href='?type=custom'>自定义</a></li>";
 			}
 			else
 			{
-				echo "<li><a href='?type=preset'>Preset</a></li>";
-				echo "<li class='current'><a href='#'>Custom</a></li>";
+				echo "<li><a href='?type=preset'>预置</a></li>";
+				echo "<li class='current'><a href='#'>自定义</a></li>";
 			}
 		?>
 		</ul>
 		<br style='clear:left;' />
 	</div>
 
-	<div class="zmcFormWrapper zmcShortLabel zmcLongInput">
+	<div class="wocloudFormWrapper wocloudShortLabel wocloudLongInput">
 		<div class="p">
 			<?
 			if (!$_SESSION['custom']['is_preset'] && !empty($_SESSION['custom']['report']))
-				echo ' <input type="submit" name="action" value="Delete Template" class="zmcButtonsLeft" />';
+				echo ' <input type="submit" name="action" value="Delete Template" class="wocloudButtonsLeft" />';
 			$cols = (empty($pm->columns) ? array() : array_flip($pm->columns));
 			$disabled = '';
 			if ($_SESSION['custom']['is_preset'])
@@ -108,8 +108,8 @@ function display_name_select()
 		</div>
 	</div>
 
-	<div class="zmcButtonBar">
-		<input type="submit" name="action" value="Save As" class='zmcButtonsLeft' />
+	<div class="wocloudButtonBar">
+		<input type="submit" name="action" value="Save As" class='wocloudButtonsLeft' />
 		<input type="text" name="name" value="My_Report" />
 		<? if (!$_SESSION['custom']['is_preset'])
 			echo '<input type="submit" name="action" value="Update" />';

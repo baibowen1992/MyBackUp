@@ -30,14 +30,14 @@ ZMC_BackupCalendar::renderCalendar($pm, "ReportTimeline");
 
 
 
-<div class="zmcLeftWindow">
-	<? ZMC::titleHelpBar($pm, 'Backup States'); ?>
+<div class="wocloudLeftWindow">
+	<? ZMC::titleHelpBar($pm, '备份状态'); ?>
 	<img src="/images/section/report/legend_timeline.gif" />
 </div>
 
 
-<div class="zmcLeftWindow" style="clear:left; max-width:978px;">
-	<? ZMC_Report::zoomFitTitleBar($pm, 'Report Timeline', true); ?>
+<div class="wocloudLeftWindow" style="clear:left; max-width:978px;">
+	<? ZMC_Report::zoomFitTitleBar($pm, '报告时间表', true); ?>
 	<div class="dataTable">
 		<table>
 			<tr><? ZMC_Report::renderDLEPhaseHeader('ReportTimeline', $rowHeight); ?></tr>
@@ -45,7 +45,7 @@ ZMC_BackupCalendar::renderCalendar($pm, "ReportTimeline");
 		</table>
 	</div>
 
-	<div class="zmcButtonBar">
+	<div class="wocloudButtonBar">
 		<input type='submit' id='show_monitor_tips' name='show_monitor_tips' value='Toggle Details' />
 	</div>
 </div>

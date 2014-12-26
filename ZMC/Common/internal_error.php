@@ -24,7 +24,7 @@ if (empty($error))
 $code = (empty($_GET['code']) ? $error:$_GET['code']);
 $display = ($registry['debug'] ? $error : wordwrap($_GET['error'], 60, "\n", true));
 if (!empty($code))
-	$display = "code:\n<a href='http://network.zmanda.com/zmc2lore.php?svnrev=" . $registry['zmc_svn_info'] . "&branch=" . $registry['zmc_build_version'] . "&code=$code'>$display</a>";
+	$display = "code:\n<a href='http://network.wocloud.cn/zmc2lore.php?svnrev=" . $registry['zmc_svn_info'] . "&branch=" . $registry['zmc_build_version'] . "&code=$code'>$display</a>";
 
 if (!empty($_GET['date']))
 	$display .= "\ndate: " . $_GET['date'];
@@ -32,9 +32,9 @@ if (!empty($_GET['date']))
 echo $parts[0];
 echo <<<EOD
 		<div style='clear:both;'></div>
-		<div class='zmcUserErrors' style='width:478px;' id='msgBoxWarns2'>
-			<div class="zmcMsgBox" onclick="gebi('msgBoxWarns2').style.display='none';" >X</div>
-			<div class="zmcMsgWarnErr"><img onclick="this.parentNode.style.display = 'none'" style="cursor:pointer" src="/images/global/calendar/icon_calendar_failure.gif" style="vertical-align:text-top; padding-right:3px" alt="ERROR" />
+		<div class='wocloudUserErrors' style='width:478px;' id='msgBoxWarns2'>
+			<div class="wocloudMsgBox" onclick="gebi('msgBoxWarns2').style.display='none';" >X</div>
+			<div class="wocloudMsgWarnErr"><img onclick="this.parentNode.style.display = 'none'" style="cursor:pointer" src="/images/global/calendar/icon_calendar_failure.gif" style="vertical-align:text-top; padding-right:3px" alt="ERROR" />
 				$display
 			</div>
 		</div>

@@ -17,8 +17,8 @@ class ZMC_Restore_Where extends ZMC_Restore
 	public static function runWrapped(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Restore', 'ZMC - Where would you like to restore to?', 'where');
-		$pm->addDefaultInstruction('Configure where to perform restore (e.g. new vs. original locations).');
+		ZMC_HeaderFooter::$instance->header($pm, 'Restore', '云备份 - 还原目的地', 'where');
+		$pm->addDefaultInstruction('本页面配置还原数据存放位置。');
 		if (!($configName = ZMC_BackupSet::assertSelected($pm)))
 			return 'MessageBox'; 
 		if (!ZMC_BackupSet::hasBackups($pm, $configName))
@@ -58,8 +58,8 @@ class ZMC_Restore_Where extends ZMC_Restore
 
 				if ($this->restore_job['target_dir_selected_type'] == ZMC_Type_AmandaApps::DIR_RAW_IMAGE)
 				{
-					$pm->addWarning('When restoring Windows backup image files created by ZWC to non-Windows systems, only the raw image file (ZIP formatted) can be restored. Please make sure adequate space exists for restoring the entire backup image file.');
-					$pm->addWarning('Conflict resolution does not apply for raw image restores. Restoring a raw image file will overwrite any existing raw image file having the same name at the same location as "Destination Location"');
+					$pm->addWarning('当恢复windows系统上的数据到非windows系统的时候，只能恢复ZIP格式的raw镜像文件。请确保恢复设备有足够的空间存放完整备份镜像文件。');
+					$pm->addWarning('因为冲突暂时不执行raw镜像恢复。一旦执行会覆盖目标目录下同名的raw文件');
 					$this->restore_job['save_conflict_resolvable'] = $this->restore_job['conflict_resolvable'];
 					$this->restore_job['conflict_resolvable'] = false; 
 				}
@@ -72,17 +72,17 @@ class ZMC_Restore_Where extends ZMC_Restore
 					}
 					if (!empty($this->restore_job['temp_dir_selected_type']))
 						if (empty($this->restore_job['zwc'])) 
-							$this->restore_job['temp_dir'] = ZMC_Type_AmandaApps::assertValidDir($pm, $this->restore_job['temp_dir'], $this->restore_job['temp_dir_selected_type'], 'Temporary Directory');
+							$this->restore_job['temp_dir'] = ZMC_Type_AmandaApps::assertValidDir($pm, $this->restore_job['temp_dir'], $this->restore_job['temp_dir_selected_type'], '临时目录');
 						if($this->restore_job['_key_name'] === 'vmware'){
 							if(empty($this->restore_job['temp_dir'])){
-								$pm->addError('Please choose a Temperory Directory Location');
+								$pm->addError('请选择一个临时目录');
 							}else if($pm->restore['temp_dir'] == "/tmp/amanda" && !empty(ZMC::$registry['default_vmware_restore_temp_path'])){
 								$pm->restore['temp_dir'] = ZMC::$registry['default_vmware_restore_temp_path'];
 							}   
 						}
 						if($this->restore_job['_key_name'] === 'solaris' && $this->restore_job['program'] == "amzfs-sendrecv"){
 							if(empty($this->restore_job['temp_dir'])){
-								$pm->addError('Please choose a Temperory Directory Location');
+								$pm->addError('请选择一个临时目录');
 							}else if($pm->restore['temp_dir'] !== "/tmp" && $pm->restore['temp_dir'][0] !== "/"){
 								$pm->restore['temp_dir'] = "/tmp";
 							}   
@@ -103,7 +103,7 @@ class ZMC_Restore_Where extends ZMC_Restore
 						$this->restore_job['target_dir'] = $this->restore_job['disk_device'];
 					if ($this->restore_job['restore_type'] !== ZMC_Restore::EXPRESS)
 						if ($this->restore_job['restore_to_original_requires_express'])
-							$pm->addError('Please choose a Destination Location other than "Original Location", or use '
+							$pm->addError('请选择一个和 "原始路径" 不一样的路径，或者使用 '
 								. ZMC_Restore::$buttons[ZMC_Restore::EXPRESS]
 								. ' to restore to the orginal location. "' . $this->restore_job['pretty_name'] . '" can not be restored onto a "live" location piecemeal.');
 				}
@@ -144,12 +144,12 @@ class ZMC_Restore_Where extends ZMC_Restore
 								$this->restore_job['sql_alternate_path'][$row['id']] = array('original_path' => $row['filename'], 'new_path' => $this->restore_job['sql_alternate_path_new_path_' . $row['id']]);
 						}
 					} else {
-						$this->restore_job['target_dir'] = ZMC_Type_AmandaApps::assertValidDir($pm, $this->restore_job['target_dir'], $this->restore_job['target_dir_selected_type'], 'Destination Location');
+						$this->restore_job['target_dir'] = ZMC_Type_AmandaApps::assertValidDir($pm, $this->restore_job['target_dir'], $this->restore_job['target_dir_selected_type'], '目的目录');
 					}
 				}
 
 				if (false === ZMC_User::filterHostUsername($pm, $this->restore_job['user_name']))
-					$pm->addWarnError('Invalid User Name.');
+					$pm->addWarnError('无效用户名.');
 		
 				if (!$pm->isErrors())
 					$this->restore_job['configured_where'] = true;
@@ -162,7 +162,7 @@ class ZMC_Restore_Where extends ZMC_Restore
 				if ($pm->isErrors())
 					return;
 
-				$pm->addMessage('Restore|Where changes applied.');
+				$pm->addMessage('恢复参数已应用.');
 				if (!empty($applyPrevious))
 					return ZMC::redirectPage('ZMC_Restore_What', $pm);
 				if ($conflictResolvable)

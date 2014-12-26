@@ -1,11 +1,9 @@
 #!/bin/bash -u
-# Copyright (C) 2006-2013 Zmanda Incorporated.
-# All Rights Reserved.
 #
 # The software you have just accessed, its contents, output and underlying
 # programming code are the proprietary and confidential information of Zmanda
-# Incorporated.  Only specially authorized employees, agents or licensees of
-# Zmanda may access and use this software.  If you have not been given
+# Incorporated.  Only specially authorized employees, agents or licensees
+# may access and use this software.  If you have not been given
 # specific written permission by Zmanda, any attempt to access, use, decode,
 # modify or otherwise tamper with this software will subject you to civil
 # liability and\/or criminal prosecution to the fullest extent of the law.

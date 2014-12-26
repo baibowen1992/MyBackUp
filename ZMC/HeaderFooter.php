@@ -302,10 +302,10 @@ function zmcYuiInit(repeatCount)
 		if (--repeatCount)
 			return setTimeout('zmcYuiInit(' + repeatCount + ')', 3333)
 	
-		if (confirm("ZMC has not yet finished loading required javascript files from the AEE server. Do you want to continue waiting for these files to load?"))
+		if (confirm("需要从服务器导入javascript文件. 是否继续等待？"))
 			return setTimeout('zmcYuiInit(90)', 333) // wait another 30 seconds
 
-		alert('ZMC was not able to load the required JavaScript files from the AEE server to your Web browser.  Please check connectivity and logout of ZMC, before trying again.')
+		alert('无法从服务器导入所需JavaScript到当前浏览器，请重新登陆')
 	}
 
 	var o = gebi('div_yui_loading')

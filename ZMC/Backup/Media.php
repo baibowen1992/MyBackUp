@@ -18,8 +18,8 @@ class ZMC_Backup_Media extends ZMC_Backup
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		unset($_POST['selected_ids_mm']['99990000000000']); 
-		ZMC_HeaderFooter::$instance->header($pm, 'Backup', 'ZMC - Manage Media', 'media');
-		$pm->addDefaultInstruction('Manage media used by backup sets. Please ensure that only one user at a time is interacting with the forms on this page. After choosing an operation (e.g. "archive", "recycle", "drop"), please wait for the requested operation to complete before starting a new operation. These restrictions apply to both Label and Media tabs.');
+		ZMC_HeaderFooter::$instance->header($pm, 'Backup', '云备份 - Manage Media', 'media');
+		$pm->addDefaultInstruction('管理备份集使用的存储设备。请确保同一时间内仅有一个用户在本页面进行交互操作。在执行一个操作后请耐心等待操作成功完成再进行下一个操作。');
 		$mediaPage = new self($pm);
 		if (!empty($pm->selected_name)) ZMC_BackupSet::readConf($pm, $pm->selected_name);
 
@@ -175,7 +175,7 @@ class ZMC_Backup_Media extends ZMC_Backup
 
 			case 'Cancel':
 				ZMC_BackupSet::cancelEdit();
-				$pm->addWarning("Edit/Add cancelled.");
+				$pm->addWarning("编辑/新增  取消.");
 				break;
 
 			default:

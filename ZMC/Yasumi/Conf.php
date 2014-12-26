@@ -610,7 +610,7 @@ class ZMC_Yasumi_Conf extends ZMC_Yasumi
 		if (isset($this->username))
 			$dle['property_list']['last_modified_by'] = $this->username;
 		$dle['property_list']['last_modified_time'] = ZMC::humanDate(true);
-		$this->reply->addMessage($msg = "Updated DLE $id: $msg by " . $this->username);
+		$this->reply->addMessage($msg = "更新备份项 $id: " . $this->username);
 		ZMC::auditLog($msg);
 	}
 
@@ -742,7 +742,7 @@ class ZMC_Yasumi_Conf extends ZMC_Yasumi
 		if (empty($dles)) return;
 		foreach($dles as &$dle)
 		{
-			$dle['property_list']['zmc_amcheck'] = 'checking (check host request received ' . ZMC::humanDate(true) . ')';
+			$dle['property_list']['zmc_amcheck'] = '检查主机 (检查请求接受于 ' . ZMC::humanDate(true) . ')';
 			foreach(array('zmc_amcheck_date', 'zmc_amcheck_code', 'zmc_amcheck_warn') as $prop)
 				unset($dle['property_list'][$prop]);
 		}

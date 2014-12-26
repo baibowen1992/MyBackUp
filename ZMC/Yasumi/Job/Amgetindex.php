@@ -1,5 +1,5 @@
 <?
-
+//zhoulin-restore-what 201409221624
 
 
 
@@ -18,7 +18,7 @@ class ZMC_Yasumi_Job_Amgetindex extends ZMC_Yasumi_Job
 	public function __construct(ZMC_Yasumi $yasumi = null, $args = array(), ZMC_Registry_MessageBox $reply = null)
 	{
 		parent::__construct($yasumi, $args, $reply);
-		$this->jobType = 'Get_Indexes';
+		$this->jobType = '获取索引';
 	}
 
 	protected function init()
@@ -116,10 +116,10 @@ class ZMC_Yasumi_Job_Amgetindex extends ZMC_Yasumi_Job
 			{
 				$diskName = mb_ereg_replace(':', '_', mb_ereg_replace('\\\\', '_', mb_ereg_replace('/', '_', $record['disk_name'])));
 				$fn = $this->getAmandaConfPath(true) . 'index/' . $record['host'] . "/$diskName/" . $record['datetime'] . '_' . $record['level'] . '.gz';
-				$this->setState(null, "Reading $record[host]:$diskName for $record[datetime] L$record[level]");
+				$this->setState(null, "读取 $record[host]:$diskName 在时间节点 $record[datetime] 备份级别为 L$record[level]的数据");
 				$this->debugLog(__FUNCTION__ . "() - sending index to sort: $fn");
 				if (false === ($fp = gzopen($fn, 'r')))
-					throw new ZMC_Exception("Aborted. Index file missing: $fn");
+					throw new ZMC_Exception("中止。索引文件丢失： $fn");
 
 				if($this->data['_key_name'] === 'windowssqlserver' || $this->data['_key_name'] === 'windowsexchange' || $this->data['_key_name'] === 'windowshyperv'){
 					$line = "/";
@@ -131,7 +131,7 @@ class ZMC_Yasumi_Job_Amgetindex extends ZMC_Yasumi_Job
 					while(!gzeof($fp))
 					{
 						if($count_files_dir >= ZMC::$registry->display_max_files){
-							$this->reply->state['warning_message'] = "Backup has more than '".ZMC::$registry->display_max_files."' files/directories. Please increase 'Maximum Files to Display' from ". ZMC::getPageUrl($this->reply, 'Admin', 'preferences') . " or use 'Restore All' option for restore.";
+							$this->reply->state['warning_message'] = "当前备份备份数据文件/文件夹数大于 '".ZMC::$registry->display_max_files."' 。请联系管理员在页面". ZMC::getPageUrl($this->reply, 'Admin', 'preferences') . "增加选项 'Maximum Files to Display' 的值。 或者使用 '还原所有' 选项进行还原。";
 							break;
 						}
 						$line = gzgets($fp);
@@ -177,7 +177,8 @@ class ZMC_Yasumi_Job_Amgetindex extends ZMC_Yasumi_Job
 					{
 						if($count_files_dir >= ZMC::$registry->display_max_files){
 							$this->reply->state['warning_message'] = "Backup has more than '".ZMC::$registry->display_max_files."' files/directories. Please increase 'Maximum Files to Display' from ". ZMC::getPageUrl($this->reply, 'Admin', 'preferences') . " or use 'Restore All' option for restore.";
-							break;
+                            $this->reply->state['warning_message'] = "当前备份备份数据文件/文件夹数大于 '".ZMC::$registry->display_max_files."' 。请联系管理员在页面". ZMC::getPageUrl($this->reply, 'Admin', 'preferences') . "增加选项 'Maximum Files to Display' 的值。 或者使用 '还原所有' 选项进行还原。";
+                            break;
 						}
 						$line = gzgets($fp);
 
@@ -226,7 +227,7 @@ class ZMC_Yasumi_Job_Amgetindex extends ZMC_Yasumi_Job
 			}
 			if (false === fclose($this->sqlMp)) 
 				throw new ZMC_Exception_YasumiFatal('Failed to close child STDIN (child will hang).');
-			$this->setState("Sorting Index Files ..");
+			$this->setState("排序索引文件 ..");
 			$sort_start_time  = $this->microtime_float();
 			$this->debugLog(__FUNCTION__ . "() - finished sending indexes to sort");
 			try{
@@ -369,7 +370,7 @@ class ZMC_Yasumi_Job_Amgetindex extends ZMC_Yasumi_Job
 					if ($percent > 85)
 						throw new ZMC_Exception_YasumiFatal("Insufficient memory available ($percent% used).");
 					else
-						$this->reply->addWarning($msg = "Low Memory: $percent% of PHP memory used");
+						$this->reply->addWarning($msg = "内存不足: $percent% 的内存PHP已使用");
 			}
 			
 			foreach($sqlFilesContent as $id => $record)

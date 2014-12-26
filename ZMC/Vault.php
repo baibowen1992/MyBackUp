@@ -45,8 +45,8 @@ protected function __construct($pm)
 	if (!empty($pm->state))
 		return $this;
 	
-	ZMC_HeaderFooter::$instance->addYui('zmc-utils', array('dom', 'event', 'connection'));
-	ZMC_HeaderFooter::$instance->addYui('zmc-messagebox', array('dom', 'event', 'connection'));
+	ZMC_HeaderFooter::$instance->addYui('wocloud-utils', array('dom', 'event', 'connection'));
+	ZMC_HeaderFooter::$instance->addYui('wocloud-messagebox', array('dom', 'event', 'connection'));
 	$pm->state = (empty($_REQUEST['action']) ? '' : $_REQUEST['action']);
 	if($pm->state === 'DuplicateConfirm')
 		$pm['duplicate_backupset_name'] = $_REQUEST['duplicate_backupset_name'];
@@ -198,7 +198,7 @@ protected function updateAdd(ZMC_Registry_MessageBox $pm, $update)
 
 	if (!empty($pm->fatal) || $pm->isErrors())
 	{
-		$pm->addError($msg = $pm->selected_name . ': ' . ($update ? 'Update' : 'Create') . " $pm->subnav settings failed for device \"" . $pm->binding['private:zmc_device_name'] . "\": $e");
+		$pm->addError($msg = $pm->selected_name . ': ' . ($update ? 'Update' : 'New') . " $pm->subnav settings failed for device \"" . $pm->binding['private:zmc_device_name'] . "\": $e");
 		return $this->buildFormWrapper($pm);
 	}
 
@@ -209,7 +209,7 @@ protected function updateAdd(ZMC_Registry_MessageBox $pm, $update)
 	if (!$update)
 		ZMC_Paginator_Reset::reset('last_modified_time'); 
 
-	$pm->addMessage($msg = $pm->selected_name . ': ' . ($update ? 'Updated' : 'Added') . ' "' . ucfirst($pm->subnav) . '" settings for device "' . $pm->binding['private']['zmc_device_name'] . '".');
+	$pm->addMessage($msg = $pm->selected_name . ': ' . ($update ? 'Update' : 'Add') . ' "' . ucfirst($pm->subnav) . '" settings for device "' . $pm->binding['private']['zmc_device_name'] . '".');
 	ZMC::auditLog($msg, 0, null, ZMC_Error::NOTICE);
 }
 

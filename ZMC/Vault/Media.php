@@ -18,7 +18,7 @@ class ZMC_Vault_Media extends ZMC_Vault
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		unset($_POST['selected_ids_mm']['99990000000000']); 
-		ZMC_HeaderFooter::$instance->header($pm, 'Vault', 'ZMC - Manage Media', 'media');
+		ZMC_HeaderFooter::$instance->header($pm, 'Vault', '云备份 - Manage Media', 'media');
 		$mediaPage = new self($pm);
 		if (!empty($pm->selected_name)) ZMC_BackupSet::readConf($pm, $pm->selected_name);
 
@@ -36,7 +36,7 @@ class ZMC_Vault_Media extends ZMC_Vault
 		
 		$licenses = ZMC_License::readLicenses($pm);
 		if ($licenses['licenses']['zmc']['Remaining']['vault'] <= 0) {
-			$pm->addError("You do not have the license for 'Vault' feature. Please contact Zmanda Support for more information.");
+			$pm->addError("You do not have the license for 'Vault' feature. Please contact Support for more information.");
 			return 'MessageBox';
 		}
 		
@@ -117,7 +117,7 @@ class ZMC_Vault_Media extends ZMC_Vault
 
 			case 'Cancel':
 				ZMC_BackupSet::cancelEdit();
-				$pm->addWarning("Edit/Add cancelled.");
+				$pm->addWarning("编辑/新增  取消.");
 				break;
 
 			default:

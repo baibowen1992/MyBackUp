@@ -208,7 +208,7 @@ class ZMC_Yasumi_DeviceProfile extends ZMC_Yasumi_Conf
 				if (false === file_put_contents($fn = ZMC::$registry->device_profiles . "$deviceName.pem", str_replace('\n', "\n", $profileArray['ssl_ca_cert'])."\n"))
 					throw new ZMC_Exception_YasumiFatal($this->reply->addInternal("Unable to save certificate to: $fn"));
 		}
-		ZMC::auditLog(($this->create ? 'Created new' : 'Updated') . " ZMC device: '$msg'.");
+		ZMC::auditLog(($this->create ? 'Created new' : 'Update') . " ZMC device: '$msg'.");
 	}
 
 	
@@ -275,7 +275,7 @@ class ZMC_Yasumi_DeviceProfile extends ZMC_Yasumi_Conf
 		{
 			if (!file_exists($orig = ZMC::$registry->device_profiles . $id . '.yml'))
 			{
-                $this->reply->addWarning("Deleting '$orig' failed.  Device not found.  Already deleted?");
+                $this->reply->addWarning("删除 '$orig' 失败.  设备没找到. 是否已经删除？");
 				continue;
 			}
 			$bak = ZMC::$registry->var_log_zmc . DIRECTORY_SEPARATOR . 'device_profiles' . DIRECTORY_SEPARATOR . $id . '-' . ZMC::dateNow(true) . '.yml';

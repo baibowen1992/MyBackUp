@@ -14,12 +14,12 @@
 
 class ZMC_Backup_List
 {
-	const CHOOSE_MESSAGE = 'Choose a list of objects (DLEs) to edit by clicking its name in the table below, or create a new list.';
+	const CHOOSE_MESSAGE = '需要编辑备份项，请在表格中单击备份项名称, 或者新建一个.';
 
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		ZMC_BackupSet::select($pm);
-		ZMC_HeaderFooter::$instance->header($pm, 'Backup', 'ZMC - Manage lists of things to backup', 'list');
+		ZMC_HeaderFooter::$instance->header($pm, 'Backup', '云备份 - 管理备份列表', 'list');
 		
 		$pm->edit = $pm->goto = null;
 		$pm->state = (empty($_REQUEST['action']) ? '' : $_REQUEST['action']);
@@ -37,7 +37,7 @@ class ZMC_Backup_List
 				&&	ZMC_Disklists::get($_REQUEST['name'])
 				&&	false === ZMC_Disklists::getMine($_REQUEST['name'])
 			)
-			$pm->addError('Only the administrator or list owner may perform the action requested.');
+			$pm->addError('只有管理员和备份项所属者才能执行该请求.');
 		else
 		{
 			$listPage = new self($pm);
@@ -69,14 +69,14 @@ class ZMC_Backup_List
 
 			case 'Add': 
 				if (empty($_POST['name']))
-					return $pm->addError('Please enter a list name.');
+					return $pm->addError('请输入名称.');
 				elseif (!ZMC_BackupSet::isValidName($pm, $_POST['name']))
 					return;
 				ZMC_Disklists::create($pm, $_POST['name'], $comments, $ownerId);
 				break;
 
 			case 'Edit':
-				$pm->edit = ZMC_Disklists::get(ZMC_Form::getEditId($pm, 'name', 'Edit failed.  No list name given.'));
+				$pm->edit = ZMC_Disklists::get(ZMC_Form::getEditId($pm, 'name', '编辑失败没有指明名称'));
 				break;
 
 			case 'Delete':
@@ -85,18 +85,18 @@ class ZMC_Backup_List
 				foreach(ZMC::$userRegistry['selected_ids'] as $id => $ignore)
 				{
 					if (false === ($list = ZMC_Disklists::getMine($id)))
-						$pm->addError("Unable to delete list: $id (must be owner or admin)");
+						$pm->addError("无法删除: $id (必须是管理员或者所属者)");
 					if (ZMC_Disklists::getColumn($id, 'live'))
 					{
 						$live = true;
 						unset($ids[$id]);
-						$ids["<span class='zmcUserWarnings'><b>$id (LIVE)</b></span>"] = true;
+						$ids["<span class='wocloudUserWarnings'><b>$id (LIVE)</b></span>"] = true;
 					}
 				}
 				if (!empty($live))
-					$pm->addWarning('Deleting a "live" list deletes only the objects in the list.  Deleting a backup set will also delete the backup set\'s "live" list of objects.');
+					$pm->addWarning('删除一个 "活动的" 备份项仅仅指在该表中删除。删除一个备份集则会删除备份集中的活动备份项.');
 
-				$pm->addWarning('There is no undo.');
+				$pm->addWarning('没有撤销.');
 				$pm->prompt ='Are you sure you want to DELETE the object list(s)?<br /><ul>'
 					. '<li>'
 					. implode("\n<li>", array_keys($ids))
@@ -111,10 +111,10 @@ class ZMC_Backup_List
 				if (isset($_POST['ConfirmationYes']))
 					foreach(ZMC::$userRegistry['selected_ids'] as $name => $ignore)
 						if (!ZMC_Disklists::rm($pm, $name))
-							$pm->addError("Unable to delete list: $name");
+							$pm->addError("无法删除: $name");
 
 				if (ZMC_Disklists::count() == 0)
-					$pm->addWarning("No usable lists remain.");
+					$pm->addWarning("没有可用备份项.");
 				$pm->next_state = '';
 				break;
 
@@ -125,11 +125,11 @@ class ZMC_Backup_List
 					ZMC::quit();
 					$newName = $_REQUEST['new_backup_set_name'];
 					$editId = ZMC_Disklists::duplicate($pm, $_REQUEST['name'], $newName);
-					$pm->addMessage("Duplicated '{$pm->name}' to '$newName'.");
+					$pm->addMessage("复制 '{$pm->name}' 为 '$newName'.");
 				}
 				else
 				{
-					$pm->prompt = 'Please enter a name for the duplicated object list.';
+					$pm->prompt = '请输入复制备份项的名称.';
 					$pm->url = '?' . str_replace('action=duplicate', 'action=duplicateConfirm', $_SERVER['QUERY_STRING']);
 					$pm->yes = "Duplicate";
 					$pm->no = "Cancel";

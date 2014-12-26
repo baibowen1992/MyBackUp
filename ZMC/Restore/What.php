@@ -1,5 +1,5 @@
 <?
-
+//zhoulin-restore-what 201409221524
 
 
 
@@ -32,8 +32,8 @@ class ZMC_Restore_What extends ZMC_Restore
 	public static function runWrapped(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Restore', 'ZMC - What would you like to restore?', 'What');
-		$pm->addDefaultInstruction('Configure where and how to perform restore.  Use "Restore All" to restore all, except items matching specified patterns.  Use "Explore & Select" to restore only some.');
+		ZMC_HeaderFooter::$instance->header($pm, 'Restore', '云备份 - 恢复源', 'What');
+		$pm->addDefaultInstruction('配置怎样还原以及还原到哪里。使用 "还原所有" 来还原备份的所有文件，除了符合排除项目应该要排除的文件。使用"选择性恢复" 进行选择性恢复。');
 		if (!($configName = ZMC_BackupSet::assertSelected($pm)))
 			return 'MessageBox'; 
 		if (!ZMC_BackupSet::hasBackups($pm, $configName))
@@ -42,16 +42,16 @@ class ZMC_Restore_What extends ZMC_Restore
 		$pm->rows = $pm->state = '';
 		if (!empty($_REQUEST['action'])){
 
-			if(!isset($_REQUEST['restore_pref']) && $_REQUEST['action'] == "Next"){
-				$pm->addError("Restore preference must be selected.");
+			if(!isset($_REQUEST['restore_pref']) && $_REQUEST['action'] == "下一步"){
+				$pm->addError("必须选择恢复偏好.");
 			}else{
 				
 				$pm->state = $_REQUEST['restore_pref'];
 			}
-			if($_REQUEST['action'] != "Next")
+			if($_REQUEST['action'] != "下一步")
 				$pm->state = $_REQUEST['action'];
 			if($pm->state === 'Search' && empty($_REQUEST['restore_search'])){
-				$pm->addError("File/Pattern to restore should not be empty.");
+				$pm->addError("需要还原的文件或者文件匹配模式不应该为空.");
 			}
 		}
 		unset($_REQUEST['action']);
@@ -106,10 +106,11 @@ class ZMC_Restore_What extends ZMC_Restore
 			{
 				$job->getBreadCrumbs($job->pm);
 				if ($job->restore_job['cwd_ids_last'] === $job->restore_job['cwd_ids']){
+                    $gci_restore_time=$job->restore_job['date_time_parsed'];
 					if ($job->restore_job['restore_type'] == ZMC_Restore::EXPRESS)
-						$job->pm->addEscapedMessage($summary = "Selected: Restore All from the most recent backups <u>started</u> on or before:\n" . $job->restore_job['date_time_parsed']);
+                        $job->pm->addEscapedMessage($summary = "已选择：恢复不晚于 ". $gci_restore_time. "  的最近备份集的所有文件\n");
 					else
-						$job->pm->addEscapedMessage($summary = "Selected: Exploring the most recent backups <u>started</u> on or before:\n" . $job->restore_job['date_time_parsed']);
+						$job->pm->addEscapedMessage($summary = " 已选择：恢复不晚于 " . $gci_restore_time. "  的最近备份集的文件\n");
 
 				}
 				else 
@@ -126,7 +127,7 @@ class ZMC_Restore_What extends ZMC_Restore
 			}
 		}
 		$job->mergeToDisk();
-		if (isset($job->restore_job['date_time_image'])) $msg = 'Using backup history from backup image(s) created ~: ' . $job->restore_job['date_time_image'];
+		if (isset($job->restore_job['date_time_image'])) $msg = '从'.$job->restore_job['date_time_image'].'创建的备份镜像中获取备份历史记录。' ;
 		if (!empty($job->restore_job['date_time_image']))
 			$job->pm->addMessage($msg);
 		if (!empty($summary))
@@ -177,7 +178,7 @@ class ZMC_Restore_What extends ZMC_Restore
 			$deviceList = array_merge(array($pm->set['profile_name']), $deviceList);
 			
 		if(empty($deviceList)){
-			$pm->addMessage("This backup set, \"" . $pm->selected_name . "\", has no backups.");
+			$pm->addMessage("备份集, \"" . $pm->selected_name . "\", 还没有备份数据.");
 			return 'MessageBox';
 		}
 		$job->restore_job['device_list'] = $deviceList;
@@ -198,7 +199,7 @@ class ZMC_Restore_What extends ZMC_Restore
 		}
 		catch (Exception $e)
 		{
-			$this->pm->addError("An unexpected problem occurred while reading the list of devices:'. $e");
+			$this->pm->addError("在读取存储设备列表发生意外错误:'. $e");
 			return false;
 		}
 		return $result->dle_list;
@@ -216,7 +217,7 @@ class ZMC_Restore_What extends ZMC_Restore
 		}
 		catch (Exception $e)
 		{
-			$this->pm->addError("An unexpected problem occurred while reading the backup history'. $e");
+			$this->pm->addError("在读取备份历史记录的时候发生意外错误'. $e");
 			return false;
 		}
 		return $result;
@@ -234,7 +235,7 @@ class ZMC_Restore_What extends ZMC_Restore
 		}
 		catch (Exception $e)
 		{
-			$this->pm->addError("An unexpected problem occurred while reading the disklist.conf file'. $e");
+			$this->pm->addError("读取文件 disklist.conf 发生意外错误'. $e");
 			return false;
 		}
 		return $result->conf;
@@ -243,15 +244,15 @@ class ZMC_Restore_What extends ZMC_Restore
 	private function filterDiskName()
 	{
 		if (empty($this->restore_job['disk_name']))
-			$this->pm->addError('Alias/Directory/Path is required.');
+			$this->pm->addError('目录是必填项');
 		
 		
 		if(strpos($this->restore_job['zmc_type'], 'windows') === false){ 
 			if ($this->restore_job['disk_name'] !== strtr($this->restore_job['disk_name'], "?$^[]{}+|", "123456789"))
-				$this->pm->addError('A manual restore using amrestore is required.  ZMC can not restore non-windows DLEs having an initial path containing any of the following characters: ?, $, ^, [, ], {, }, +, |');
+				$this->pm->addError('需要手动使用 amrestore 进行恢复，云备份暂时无法恢复非windows平台下原始路径包含这些字符: ?, $, ^, [, ], {, }, +, | 的备份项');
 		} else {
 			if ($this->restore_job['disk_name'] !== strtr($this->restore_job['disk_name'], '*?"<>|', "123456"))
-				$this->pm->addError('A manual restore using amrestore is required.  ZMC can not restore windows DLEs having an initial path containing any of the following characters: *, ?, ", <, >, |');
+				$this->pm->addError('需要手动使用 amrestore 进行恢复，云备份暂时无法恢复windows平台下原始路径包含下面字符: *, ?, ", <, >, | 的备份项');
 		}
 	}
 
@@ -267,10 +268,10 @@ class ZMC_Restore_What extends ZMC_Restore
 		}
 		switch($this->pm->state) 
 		{
-			case 'Reset':
+			case '重置':
 				if ($this->pm->amgetindex_state['running'])
 				{
-					$this->pm->addError('Please wait for current explore to complete, or abort the explore before "Clearing" the explore results.');
+					$this->pm->addError('请耐心等待本次检索结束，或者在清除检索结果前取消检索。');
 					break;
 				}
 				$this->clear();
@@ -337,14 +338,14 @@ class ZMC_Restore_What extends ZMC_Restore
 				}
 				if ($this->setOptions($restore_type) && $this->restore_job['browseable'])
 				{
-					$msg = "Searching for backups of object/directory path '{$this->restore_job['disk_name']}' on '{$this->restore_job['client']}' made on or before {$this->restore_job['date_time_parsed']} ..";
+					$msg = "正在主机 '{$this->restore_job['client']}' 上的 '{$this->restore_job['disk_name']}' 目录下搜索不晚于时间 {$this->restore_job['date_time_parsed']} 的备份数据";
 					$this->findMedia("Find media for backups of object/directory path '{$this->restore_job['disk_name']}' on '{$this->restore_job['client']}' made on or before {$this->restore_job['date_time_parsed']} ..");
 					if(!empty($this->restore_job['date_time_parsed']) && empty($this->restore_job['media_explored'])){
-						$this->pm->addError("No record found for:
-								&emsp;&emsp;&emsp;Backup Date and Time: on or before {$this->restore_job['date_time_parsed']}
-								&emsp;&emsp;&emsp;Restore Device: {$this->restore_job['restore_device']}
-								&emsp;&emsp;&emsp;Host Name: {$this->restore_job['client']}
-								&emsp;&emsp;&emsp;Alias/Directory/Path: {$this->restore_job['disk_name']}");
+						$this->pm->addError("没有找到记录:
+								&emsp;&emsp;&emsp;备份日期和时间: 不晚于 {$this->restore_job['date_time_parsed']}
+								&emsp;&emsp;&emsp;还原设备: {$this->restore_job['restore_device']}
+								&emsp;&emsp;&emsp;主机名: {$this->restore_job['client']}
+								&emsp;&emsp;&emsp;路径: {$this->restore_job['disk_name']}");
 						return;
 					}
 					if ($this->createRestoreTree($msg))
@@ -370,14 +371,14 @@ class ZMC_Restore_What extends ZMC_Restore
 					return;
 				if (!$this->setOptions(ZMC_Restore::EXPRESS))
 					return;
-				if ($this->findMedia("Restore all for backups of object/directory path '{$this->restore_job['disk_name']}' on '{$this->restore_job['client']}' made on or before {$this->restore_job['date_time_parsed']} .."))
+				if ($this->findMedia("还原主机 '{$this->restore_job['client']}' 中目录 '{$this->restore_job['disk_name']}' 下的所有文件或不晚于时间 {$this->restore_job['date_time_parsed']} .."))
 					$this->restore_job['restore_type'] = ZMC_Restore::EXPRESS; 
 				if(!empty($this->restore_job['date_time_parsed']) && empty($this->restore_job['media_explored']))
-					$this->pm->addError("No record found for:
-							&emsp;&emsp;&emsp;Backup Date: on or before {$this->restore_job['date_time_parsed']}
-							&emsp;&emsp;&emsp;Restore Device: {$this->restore_job['restore_device']}
-							&emsp;&emsp;&emsp;Host Name: {$this->restore_job['client']}
-							&emsp;&emsp;&emsp;Alias/Directory/Path: {$this->restore_job['disk_name']}");
+					$this->pm->addError("没有找到备份记录:
+							&emsp;&emsp;&emsp;备份时间: 不晚于 {$this->restore_job['date_time_parsed']}
+							&emsp;&emsp;&emsp;还原设备: {$this->restore_job['restore_device']}
+							&emsp;&emsp;&emsp;主机名: {$this->restore_job['client']}
+							&emsp;&emsp;&emsp;目录名/别名: {$this->restore_job['disk_name']}");
 				return;
 
 
@@ -410,9 +411,9 @@ class ZMC_Restore_What extends ZMC_Restore
 				if (false === $this->setCwd($this->restore_job, $this->restore_job['fpn']))
 				{
 					if (ZMC::$registry->dev_only)
-						$this->pm->addWarning("Not found (resetting to $origFpn): cwd=" . $this->restore_job['cwd'] . "; fpn=" . $this->restore_job['fpn']. "; disk_device=" . $this->restore_job['disk_device']);
+						$this->pm->addWarning("找不到 (resetting to $origFpn): cwd=" . $this->restore_job['cwd'] . "; fpn=" . $this->restore_job['fpn']. "; disk_device=" . $this->restore_job['disk_device']);
 					else
-						$this->pm->addWarning($this->restore_job['fpn'] . ' not found.');
+						$this->pm->addWarning($this->restore_job['fpn'] . ' 找不到');
 					$this->restore_job['fpn'] = $origFpn;
 				}
 
@@ -427,7 +428,7 @@ class ZMC_Restore_What extends ZMC_Restore
 				if ($total === false)
 					break;
 				if ($total)
-					$this->pm->addMessage("Selected an additional $total descendant items implied by your selection of directories/folders.");
+					$this->pm->addMessage("在你已选择的目录下一共已选择 $total 个文件项目（包含隐藏文件）。");
 				ZMC::merge($this->restore_job['rbox'], $this->restore_job['lbox']); 
 				$this->restore_job['lbox'] = null;
 				return;
@@ -439,7 +440,7 @@ class ZMC_Restore_What extends ZMC_Restore
 				if ($total === false)
 					break;
 				if ($total)
-					$this->pm->addMessage("Deselected an additional $total descendant items implied by your selection of directories/folders.");
+					$this->pm->addMessage("在你已选择的目录下一共取消了 $total 个文件项目（包含隐藏文件）。");
 
 				ZMC::array_move($this->restore_job['rbox'], $this->restore_job['lbox'], $this->pm->rbox); 
 				return;
@@ -479,7 +480,7 @@ class ZMC_Restore_What extends ZMC_Restore
 				$parent = $this->getRecord($this->restore_job['cwd_ids']);
 				if ($parent['restore'] >= self::IMPLIED_SELECT)
 				{
-					$this->pm->addError("Pruning previously selected objects/files/directories is not supported. Instead, navigate to the top of the selected items and then remove the parent item from the restore list. (#$restoreFlag)");
+					$this->pm->addError("修改已经选择的文件/目录目前暂时不支持，回到选择项目的顶级然后再进行删除 (#$restoreFlag)");
 					return false;
 				}
 			}
@@ -563,11 +564,11 @@ class ZMC_Restore_What extends ZMC_Restore
 		}
 		$this->restore_job['date_time_parsed'] = date('F j, Y, g:i a', $this->restore_job['timestamp']);
 		if ($parsed['year'] < 1990)
-			$this->pm->addWarnError("Year '$parsed[year]' must be between the current year and 1980.");
+			$this->pm->addWarnError("年份 '$parsed[year]' 必须位于1980和今年之间");
 		elseif ($this->restore_job['timestamp'] < ($yearAgo = (time() - 31536000 )))
-			$this->pm->addMessage("Searching for a backup more than one year old.");
+			$this->pm->addMessage("搜索一个大于一年的备份");
 		elseif ($this->restore_job['timestamp'] < ($yearAgo - 31536000 ))
-			$this->pm->addWarning("Searching for a backup more than two years old.");
+			$this->pm->addWarning("搜索一个大于两年的备份");
 
 		foreach($parsed as &$piece)
 			if ($piece < 10)
@@ -695,7 +696,7 @@ class ZMC_Restore_What extends ZMC_Restore
 						$row['zmc_type'] = $disklist['dle_list'][$dle_host_info]['property_list']['zmc_type']; 
 						$row['zmc_amanda_app'] = $disklist['dle_list'][$dle_host_info]['property_list']['zmc_amanda_app']; 
 						$row['configuration_id'] = ZMC_BackupSet::getId(); 
-						$this->restore_job['monitor_not_upto_date'] = "DLE entries are not up to date on Monitor screen.";
+						$this->restore_job['monitor_not_upto_date'] = "监控页面备份项入口不是最新";
 						goto found_in_amadmin_find;
 					}
 					else 
@@ -713,12 +714,12 @@ class ZMC_Restore_What extends ZMC_Restore
 				if (!empty($hosts))
 				{
 					$disk_names = ZMC_Mysql::getAllOneValue($sql = "SELECT DISTINCT(disk_name) $sqlBody ORDER BY disk_name ASC LIMIT 100");
-					$err = "No backups found for hostname \"{$this->restore_job['client']}\" and DLE \"{$this->restore_job['disk_name']}\". Try one of these:" . (count($hosts) < 5 ? "\n&emsp;&emsp;" : " ") . implode((count($hosts) < 5) ? "\n&emsp;&emsp;" : ', ', $disk_names);
+					$err = "没有找到主机名为 \"{$this->restore_job['client']}\" 备份项为 \"{$this->restore_job['disk_name']}\" 的备份数据。尝试:" . (count($hosts) < 5 ? "\n&emsp;&emsp;" : " ") . implode((count($hosts) < 5) ? "\n&emsp;&emsp;" : ', ', $disk_names);
 				}
 				else
 				{
 					$hosts = ZMC_Mysql::getAllOneValue($sql = 'SELECT DISTINCT(hostname) FROM backuprun_dle_state WHERE state LIKE \'Backups in %\' AND configuration_id = ' . ZMC_BackupSet::getId() . ' ORDER BY hostname ASC LIMIT 100');
-					$err = "No backups found for hostname \"{$this->restore_job['client']}\". Try one of these:" .  (count($hosts) < 5 ? "\n&emsp;&emsp;" : " ") . implode((count($hosts) < 5) ? "\n&emsp;&emsp;" : ', ', $hosts);
+					$err = "没有找到主机名为 \"{$this->restore_job['client']}\"的备份数据。尝试:" .  (count($hosts) < 5 ? "\n&emsp;&emsp;" : " ") . implode((count($hosts) < 5) ? "\n&emsp;&emsp;" : ', ', $hosts);
 				}
 				$this->pm->addError($err);
 			}

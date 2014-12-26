@@ -75,6 +75,10 @@ else {
 </div><!-- headerLinks -->
 
 <div style='position:absolute; top:8px; right:8px;'>
+<<<<<<< HEAD
+=======
+
+>>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
 	<div class="links">
     <a id="startButton"  href="javascript:void(0);">操作提醒</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 	<? echo '<a href="', $pm->admin_users_url, '?edit_id=', $_SESSION['user_id'], '&amp;action=edit">', $_SESSION['user'], '</a>',

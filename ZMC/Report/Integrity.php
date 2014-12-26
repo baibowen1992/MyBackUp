@@ -19,8 +19,8 @@ class ZMC_Report_Integrity
 public static function run(ZMC_Registry_MessageBox $pm)
 {
 	$pm->enable_switcher = true;
-	ZMC_HeaderFooter::$instance->header($pm, 'Report', 'ZMC - Data Integrity', 'data integrity');
-	ZMC_HeaderFooter::$instance->addYui('zmc-utils', array('dom', 'event', 'connection'));
+	ZMC_HeaderFooter::$instance->header($pm, 'Report', '云备份 - 数据完整性', 'data integrity');
+	ZMC_HeaderFooter::$instance->addYui('wocloud-utils', array('dom', 'event', 'connection'));
 	$pm->addDefaultInstruction('Verify integrity of data for previous backups.');
 	if (!ZMC_BackupSet::assertSelected($pm))
 		return 'MessageBox'; 

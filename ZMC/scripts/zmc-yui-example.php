@@ -18,14 +18,14 @@ ZMC_HeaderFooter::$instance->header("YUI Test", "Testing YUI in ZMC");
 
 
 
-ZMC_HeaderFooter::$instance->addYui('zmc-utils', array('dom', 'event'));
-ZMC_HeaderFooter::$instance->addYui('zmc-example', array('zmc-utils', 'json'));
+ZMC_HeaderFooter::$instance->addYui('wocloud-utils', array('dom', 'event'));
+ZMC_HeaderFooter::$instance->addYui('zmc-example', array('wocloud-utils', 'json'));
 
 ?>
 <div style="position:absolute; top:200px">
 <h1>ZMC YUI Test</h1>
 <p>There should be three pop-up windows:</p>
-	<p>1. "zmc-utils.js: loaded ok"</p>
+	<p>1. "wocloud-utils.js: loaded ok"</p>
 	<p>2. "zmc-example.js: loaded ok"</p>
 	<p>3. "Json test successful"</p>
 <p>After loading, clicking anywhere on the screen should move a small blue square (a small div) to the location of the mouse.</p>

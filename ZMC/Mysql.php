@@ -175,7 +175,7 @@ class ZMC_Mysql
 		}catch (Exception $e){
 			$error = substr($e->getMessage(), stripos($e->getMessage(), "MySQL error"));
 			if(preg_match("/marked as crashed/", $error)){
-			$a = '<div style="" id="zmcMessageBox0" class="zmcMessageBox"><div style="float:left" id="msgBoxErrors" class="zmcMessages zmcUserErrors"><div onclick="this.parentNode.style.display=\'none\'" class="zmcMsgBox">X</div><div class="zmcMsgWarnErr"><img alt="Warnings" src="/images/global/calendar/icon_calendar_failure.gif" style="cursor:pointer" onclick="this.parentNode.style.display=\'none\'">&nbsp;'.$error.'. Please <a target=\'_blank\' href="' . ZMC::$registry->lore  . '440">click here</a> to resolve this issue.</div><div></div>';
+			$a = '<div style="" id="wocloudMessageBox0" class="wocloudMessageBox"><div style="float:left" id="msgBoxErrors" class="wocloudMessages wocloudUserErrors"><div onclick="this.parentNode.style.display=\'none\'" class="wocloudMsgBox">X</div><div class="wocloudMsgWarnErr"><img alt="Warnings" src="/images/global/calendar/icon_calendar_failure.gif" style="cursor:pointer" onclick="this.parentNode.style.display=\'none\'">&nbsp;'.$error.'. Please <a target=\'_blank\' href="' . ZMC::$registry->lore  . '440">click here</a> to resolve this issue.</div><div></div>';
 			ZMC::print_me($a, true);
 			}
 		}

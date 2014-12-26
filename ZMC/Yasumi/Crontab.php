@@ -86,7 +86,7 @@ class ZMC_Yasumi_Crontab extends ZMC_Yasumi
 	
 	public function opSync()
 	{
-		$this->reply->setPrefix("Updating AE crontab .. ");
+		$this->reply->setPrefix("更新定时任务 .. ");
 		$this->mkdirIfNotExists(self::CRONDIR);
 		$oldCron = $stdout = '';
 		try
@@ -170,12 +170,12 @@ class ZMC_Yasumi_Crontab extends ZMC_Yasumi
 			try
 			{
 				ZMC_ProcOpen::procOpen('crontab', 'crontab', array($oldCronFilename), $stdout, $stderr, "Error status returned when installing new crontab for 'amandabackup' user.");
-				$msg = 'Crontab for "amandabackup" user has been updated.';
+				$msg = '用户的定时任务更新成功。';
 				if (empty($newCron))
-					$msg = "Crontab for 'amandabackup' user is now empty.\nNo active backup sets or vault jobs exist.";
+					$msg = "用户的定时任务为空.\n不存在激活的备份集。";
 				
 					
-				$this->reply->addMessage("$msg\rThere are $total active backup sets and/or vault jobs.\n$stdout $stderr");
+				$this->reply->addMessage("$msg\r总共有 $total 个激活的备份集。\n$stdout $stderr");
 			}
 			catch (ZMC_Exception_ProcOpen $e)
 			{

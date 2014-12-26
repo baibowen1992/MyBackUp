@@ -1,5 +1,6 @@
 <?
-
+//zhoulin-admin-preference 201409172220
+//高级社会主页面部分   数组循环
 
 
 
@@ -20,43 +21,43 @@ class ZMC_Admin_Preferences
 	private static $boolConfigs = array(
 		
 		
-		'sync_always' => array('Auto-Sync Manual Edits?', true),
-		'security_warnings' => array('Security Warnings?', true),
-		'space_warnings' => array('Space Warnings?', true),
-		'always_show_switcher' => array('Show backup set chooser?', false),
-		'allow_dropping_vtapes' => array('Enable dropping vtapes?', false),
-		'find_hostnames' => array('Recognize hostname aliases of this server?', true),
-		'internet_connectivity' => array('Server has Internet connectivity?', true),
-		'dns_server_check' => array('DNS Server Check?', true),
-		'test_internet_connectivity' => array('Test Internet connectivity?', true),
-		'trim_white_space' => array('Auto trim white space?', true),
-		'check_localhost_tar_version' => array('Check version of tar on localhost?', true),
-		'use_cache' => array('Turbo Mode?', true),
-		'log_slow_queries' => array('Log Slow Queries?', true),
-		'ultra_turbo' => array('Display Stale Results?', false),
-		'verbose_logs' => array('Verbose Logs?', true),
-		'verify_installed_files' => array('Verify Installed Files?', true),
-		'enable_monitor_role' => array('Monitor Only Role?', false),
-		'enable_restore_role' => array('Restore Only Role?', false),
+		'sync_always' => array('自动同步手动修改的配置?', true),
+		'security_warnings' => array('安全警告?', true),
+		'space_warnings' => array('容量警告?', true),
+		'always_show_switcher' => array('显示备份集选择器?', false),
+		'allow_dropping_vtapes' => array('允许删除虚拟存储设备', false),
+		'find_hostnames' => array('识别主机名别名?', true),
+		'internet_connectivity' => array('服务器有Internet连接?', true),
+		'dns_server_check' => array('DNS服务器检测?', true),
+		'test_internet_connectivity' => array('测试Internet连接?', true),
+		'trim_white_space' => array('自动删除空字符?', true),
+		'check_localhost_tar_version' => array('检测本地tar版本?', true),
+		'use_cache' => array('加速模式?', true),
+		'log_slow_queries' => array('日志慢速查询?', true),
+		'ultra_turbo' => array('显示过期结果?', false),
+		'verbose_logs' => array('详细日志?', true),
+		'verify_installed_files' => array('校验安装文件?', falsse),
+		'enable_monitor_role' => array('启用监控用户?', false),
+		'enable_restore_role' => array('启用恢复用户?', false),
 
-		'debug' => array('Debug Mode?', false),
-		'input_filters' => array('Input Filters?', true),
-		'safe_mode' => array('Safe Mode?', true),
+		'debug' => array('调试模式?', false),
+		'input_filters' => array('输入过滤器?', true),
+		'safe_mode' => array('安全模式?', true),
 		
-		'auto_exclude_unix_dirs' => array('Automatically exclude certain directories from *nix DLEs?', true),
-		'auto_exclude_windows_dirs' => array('Automatically exclude certain directories from Windows DLEs?', false),
-		'large_file_system' => array('Large File System (LFS)', true),
-		'default_check_server_installation' => array('Check Server Installation? <br />(Login Screen)', true),
-		'default_sync_backupset' => array('Sync Backup Sets? <br />(Login Screen)', true),
+		'auto_exclude_unix_dirs' => array('自动排除*nix系统下备份项中的某些目录?', true),
+		'auto_exclude_windows_dirs' => array('自动排除windows系统下备份项中的某些目录?', false),
+		'large_file_system' => array('大文件系统 (LFS)', true),
+		'default_check_server_installation' => array('检查服务器安装? <br />(登陆界面)', true),
+		'default_sync_backupset' => array('同步备份集? <br />(登陆界面)', true),
 	);
 
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		if (ZMC::$registry->offsetExists('qa_team'))
 		{
-			self::$boolConfigs['dev_only'] = array('Developer Mode?', false);
-			self::$boolConfigs['raw_restore_log'] = array('Raw Restore Log?', false);
-			self::$boolConfigs['qa_mode'] = array('Zmanda QA Mode?', false);
+			self::$boolConfigs['dev_only'] = array('开发模式?', false);
+			self::$boolConfigs['raw_restore_log'] = array('原始恢复日志?', false);
+			self::$boolConfigs['qa_mode'] = array('系统 QA 模式?', false);
 		}
 
 		if (ZMC_User::hasRole('Administrator'))
@@ -71,8 +72,8 @@ class ZMC_Admin_Preferences
 				&& ($_REQUEST['ConfirmationYes'] === 'Upload'))
 			{
 				unlink($uploadFn);
-				$pm->addWarning("Collecting and compressing Amanda Enterprise logs and ZMC backup set configuration files.  Uploading to Zmanda may require several minutes.");
-				ZMC::execv('bash', "cd $tmp; /opt/zmanda/amanda/bin/zm-support --ftp-to-zmanda > $uploadFn &");
+				$pm->addWarning(" 收集并压缩日志以及备份配置文件");
+				ZMC::execv('bash', "cd $tmp; /opt/zmanda/amanda/bin/zm-support  > $uploadFn &");
 			}
 		}
 
@@ -87,22 +88,22 @@ class ZMC_Admin_Preferences
 				call_user_func(array('ZMC_Admin_Preferences', $action), $pm);
 		}
 		if (ZMC::$registry->input_filters === false)
-			self::addEscapedWarning($pm, 'input_filters', "Do <b>not</b> disable ZMC input filters, unless instructed by Zmanda Customer Support.  Re-enable Input Filters as soon as possible.");
+			self::addEscapedWarning($pm, 'input_filters', "不要禁用输入过滤,除非管理员请求配合支撑的时候，然后尽快开启.");
 		if (ZMC::$registry->safe_mode === false)
-			self::addEscapedWarning($pm, 'safe_mode', "Do <b>not</b> disable safe mode, unless instructed by Zmanda Customer Support.  Re-enable safe mode as soon as possible.");
+			self::addEscapedWarning($pm, 'safe_mode', "不要禁用安全模式，除非管理员请求配合支撑的时候，然后尽快开启.");
 		if (ZMC::$registry->dev_only === true)
-			self::addEscapedWarning($pm, 'dev_only', "Developer Mode is <b>NOT</b> supported on production installations.\nDEBUG mode auto-enabled (required when using developer mode).");
+			self::addEscapedWarning($pm, 'dev_only', "开发者模式在生产环境是不被支撑的，此时debug模式会自动开启.");
 		if (ZMC::$registry->qa_mode === true)
-			self::addWarning($pm, 'qa_mode', "QA Mode is <b>NOT</b> supported on production installations.");
+			self::addWarning($pm, 'qa_mode', "QA模式在生产环境是不被支撑的.");
 		if (ZMC::$registry->use_cache !== true)
-			self::addEscapedWarning($pm, 'use_cache', "Turbo Mode <b>is</b> recommended on all production installations.");
+			self::addEscapedWarning($pm, 'use_cache', "Turbo模式在所有生产环境推荐启用");
 		if (ZMC::$registry->ultra_turbo === true)
-			self::addEscapedWarning($pm, 'ultra_turbo', "Displaying stale results allows ZMC to display results quicker, but some information shown in ZMC will only be updated every " . ZMC::$registry->proc_open_long_timeout . " seconds.  Expired information may be displayed as &quot;unexpired&quot; or vice-versa. ZMC will perform various actions based on potentially incorrect assumptions.");
+			self::addEscapedWarning($pm, 'ultra_turbo', "展示历史数据。但是一些信息仅支持每隔 " . ZMC::$registry->proc_open_long_timeout . " 秒更新.有效信息显示为 &quot;unexpired&quot; ");
 		if ((ZMC::$registry->ultra_turbo === true) && (ZMC::$registry->use_cache !== true))
-			self::addWarning($pm, 'ultra_turbo', "Displaying stale results is <b>NOT</b> possible, because Turbo Mode has been disabled.");
+			self::addWarning($pm, 'ultra_turbo', "因为turbo模式未开启，展示历史数据将失效。");
 		$pm->test_internet_connectivity_on = ''; 
 		$pm->test_internet_connectivity_off = 'checked';
-		$pm->addDefaultInstruction('Administer Preferences - adjust personal preferences');
+		$pm->addDefaultInstruction('管理参数 - 调整个人参数');
 		$pm->userSessionTimeout = ZMC_User::get('session_timeout');
 		$pm->boolConfigs = self::$boolConfigs;
 		foreach(self::$boolConfigs as $key => $ignored)
@@ -110,8 +111,8 @@ class ZMC_Admin_Preferences
 			$pm[$key . '_on'] = (empty(ZMC::$registry[$key]) ? '' : 'checked="checked"');
 			$pm[$key . '_off'] = (empty(ZMC::$registry[$key]) ? 'checked="checked"' : '');
 		}
-		ZMC_HeaderFooter::$instance->header($pm, 'Admin', 'ZMC - Preferences', 'preferences'); 
-		ZMC_HeaderFooter::$instance->addYui('zmc-utils', array('dom', 'event', 'connection'));
+		ZMC_HeaderFooter::$instance->header($pm, 'Admin', '云备份 - 系统设置', 'preferences'); 
+		ZMC_HeaderFooter::$instance->addYui('wocloud-utils', array('dom', 'event', 'connection'));
 		return 'AdminPreferences';
 	}
 
@@ -141,10 +142,10 @@ class ZMC_Admin_Preferences
 		{
 			ZMC_User::set($_SESSION['user_id'], 'session_timeout', $t);
 			if ($t == 0) $t = $pm->sessionTimeout;
-			$pm->addMessage("Your session will timeout after $t minutes of no activity.");
+			$pm->addMessage("你已设置你的登陆会话保留时间为 $t 分钟。");
 		}
 		else
-			self::addError($pm, 'UserSessionTimeout', "Session timeout cannot exceed {$pm->sessionTimeout} minutes.");
+			self::addError($pm, 'UserSessionTimeout', "登陆超时时间不能超过 {$pm->sessionTimeout} minutes.");
 	
 		if ($_POST['show_help_pages'] === 'Yes')
 		{
@@ -198,7 +199,7 @@ class ZMC_Admin_Preferences
 	public static function opGlobalDefaults($pm)
 	{
 		if (!ZMC_User::hasRole('Administrator'))
-			return $pm->addError('Only ZMC administrators may perform this action.');
+			return $pm->addError('仅允许管理员进行该操作.');
 
 		if (($_POST['debug'] === 'No') && ZMC::$registry->debug)
 		{
@@ -207,7 +208,7 @@ class ZMC_Admin_Preferences
 			unlink($uploadFn);
 			$pm->confirm_template = 'ConfirmationWindow';
 			$pm->confirm_help = 'Take a snapshot of AE configuration and log files.';
-			$pm->addMessage('Snapshotting log files captures recent events. Uploading the logs to Zmanda helps the Zmanda Support Team respond to help requests.');
+			$pm->addMessage('快照日志文件中捕获最近发生的事件。上传日志来调整有助于调整支持团队的帮助请求。');
 			$pm->prompt = 'Upload logs and backup set configuration files to Zmanda?';
 			$pm->confirm_action = 'UploadConfirm';
 			$pm->yes = 'Upload';
@@ -321,7 +322,7 @@ class ZMC_Admin_Preferences
 					$pm->flagErrors['date_timezone'] = true;
 				}
 				else
-					$pm->addWarning("PHP settings changes saved, but will not take effect until ZMC has been restarted:  /etc/init.d/zmc_aee restart", ZMC_Registry_MessageBox::STICKY_RESTART);
+					$pm->addWarning("PHP设置更改已保存，再重启云备份服务后生效。", ZMC_Registry_MessageBox::STICKY_RESTART);
 		}
 
 		if ($_POST['sql_time_limit'] < 15)
@@ -372,21 +373,21 @@ class ZMC_Admin_Preferences
 			if (ZMC::isValidIntegerInRange($t, 1, 10080)) 
 			{
 				if (ZMC::$registry->session_timeout !== $t)
-					$pm->addMessage("The maximum allowed session time limit has been changed to $t minutes of no activity.");
+					$pm->addMessage("会话最大保留时间已更改为 $t 分钟，需要重启激活");
 				$overrides['session_timeout'] = $t;
 				$pm->sessionTimeout = $t;
 			}
 			else
-				self::addError($pm, 'SessionTimeout', "The maximum allowed session time limit ($t) must be between 1 minute and 10,080 minutes (1 week).");
+				self::addError($pm, 'SessionTimeout', "最大会话保留时间 ($t) 必须是 1 ～10,080 分钟 (1 周).");
 		}
 
 		if ($_POST['test_internet_connectivity'] === 'Yes')
 		{
 			$result = ZMC::testConnectivity();
 			if ($result === true)
-				$pm->addMessage("Internet connectivity test was successful.");
+				$pm->addMessage("Internet连接测试成功");
 			else
-				self::addError($pm, 'test_internet_connectivity', "Internet connectivity test failed: $result");
+				self::addError($pm, 'test_internet_connectivity', "Internet连接测试失败");
 		}
 
 		ZMC::$registry->setOverrides($overrides);

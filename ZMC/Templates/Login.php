@@ -1,5 +1,5 @@
 <?
-
+//zhoulin-login 201409222016
 
 
 
@@ -18,6 +18,7 @@ global $pm;
 
 
 ?>
+
 <div style="height:10px;"></div>
 <? if (!empty($pm['noCookies'])) { ?>
 <script type="text/javascript">
@@ -34,21 +35,38 @@ global $pm;
 if (!isset($pm->logos))
 	ZMC_HeaderFooter::$instance->enableFooter(false);
 if (!empty($pm['noCookies']))
-	$pm->addEscapedError("Cookies required.\n\nPlease enable cookies in your browser before using this page.\n\nBrowser requirements are described in more detail <a href='" . ZMC::$registry->wiki . "Pre-Installation#Zmanda_Management_Console_Browser_Requirements' target='_blank'>here</a>.");
+	$pm->addEscapedError("需要浏览器启用cookie\n");
 ?>
+<header class="sf-header" >
+		<div class="sf-main" data-spm="a1z08" >
+			<a href="" class="sf-logo"><img src="../images/logo.png">
+            </a>
+			   <div class="ser mt15 fr">
+			    <div class="input-append">
+				</div>
+			   </div>	
+		</div>
+</header>
 <form action="<?= $pm->url ?>?cookies_checked=1" method="post">
 <input type="hidden" name="login" value="<?= ZMC::$registry->short_name ?>" />
 <input type="hidden" name="last_page" value="<?= isset($pm->last_page) ? $pm->last_page : '' ?>" />
-<div class="zmcWindow">
-	<? ZMC::titleHelpBar($pm, 'Zmanda Management Console Login'); ?>
-	<div class="zmcFormWrapper zmcShorterInput" style="float:left; width:350px; margin:0px auto; text-align:justify;">
+<div class="zmcWindow" style=" background:url(images/login/cube.jpg) center center no-repeat; height:522px;width:1440px ; margin: 0 auto; ">
+	<!--<? ZMC::titleHelpBar($pm, ''); ?>
+	<div class="zmcFormWrapper zmcShorterInput" style="float:center;width:350px; margin:0px auto; text-align:justify; background:#FFFFFF;"> -->
+	<div class="zmcFormWrapper zmcShorterInput" style="background:#fff; width:260px; 
+	border:1px solid #ccc;
+	position:absolute;
+	top:30px;
+	right:80px;
+	margin-right: 200px;
+	margin-top: 85px; ">
 	<?
 	if (isset($pm->logos))
 	{
 		if (count($pm->logos) === 0)
-			echo "<h2>No products found.<br /><br />Please contact customer support, if you need help.</h2>\n";
+			echo "<h2>未找到任何产品<br /><br />请联系管理员</h2>\n";
 		else
-			echo "<center><h3>Please select</h3></center>\n";
+			echo "<center><h3>请选择</h3></center>\n";
 		foreach($pm->logos as $key => $logo)
 		{
 			$svnInfo = '';
@@ -63,177 +81,95 @@ if (!empty($pm['noCookies']))
 	else
 	{
 	?>
-		<img src="/images/login/logo_management_console.gif" />
-		<br />
+
+
 		<?
-		if (!empty($pm->lostPassword))
-			echo '<div style="margin:15px 0 15px 0; width:350px;"><p>Enter your Username and a new password will be assigned to your account. Your new password will be emailed to you, if email service has been configured on this server for remote delivery (or local delivery, if your ZMC account email address is local to this server).</p>
-				<p>Alternatively, to reset the ZMC admin user password to "<b>admin</b>", run the command:
-				<br /><small>' . ZMC::$registry->cnf->zmc_bin_path . 'reset_admin_password.sh</small><br />
-				</p></div>';
-		else
-			echo '<br /><br />';
+//		if (!empty($pm->lostPassword))
+//			echo '<div style="margin:15px 0 15px 0; width:350px;"><p>重置密码请登陆云管理平台或者联系管理员。</p>
+//				</p></div>';
+//		else
+//			echo '<br />';
 		?>
-
-		<div class="p">
-			<label for="username">Username: <span class="required">*</span></label>
-			<input type="text" name="username" value="<? if (!empty($_SESSION['user'])) echo ZMC::escape($_SESSION['user']); ?>" />
+        <?
+        if ( $pm->singlelogin != 0){
+            echo "当前认证体系：云平台单点登陆";}
+        ?>
+		<div class="p" <? echo (($pm->singlelogin === 0) ? '':'hidden' ); ?>>
+			<input class="logininput"  type="text" placeholder="用户名" name="username"  style=" margin:0 0 10px 30px; padding-left:15px; line-height:26px; border:1px #cccccc solid; background-color:#fff; height:26px; width:180px;" value="<? if (!empty($_SESSION['user'])) echo ZMC::escape($_SESSION['user']); ?>" />
 		</div>
-
 		<? if (!empty($pm->lostPassword))
 		{ ?>
-			<div class="p zmcButtonsLeft">
-				<input value="Cancel" type="button" onclick="history.back()" />
-				<input name="RetrievePassword" value="Create and Email New Password" type="submit">
-			</div><?
+<?
 		}
 		else
 		{
 			?>
-			<div class="p">
-				<label for="password">Password: <span class="required">*</span></label>
-				<input type="password" name="password" />&nbsp;
-				<input id="login_button" type="submit" name="submit" value="Login" style="margin:0" />
+			<div class="p" <? echo (($pm->singlelogin === 0) ? '':'hidden' ); ?>>
+				<input class="logininput" type="password" placeholder="密码" name="password" style=" margin:0 0 20px 30px; padding-left:15px; line-height:26px; border:1px #cccccc solid; background-color:#fff; height:26px; width:180px;" />&nbsp;
 			</div>
 			<?
 			if (!empty($_SESSION['logout']) || !empty($_SESSION['last_page']))
 			{
 			?>
-				<div class="p">
-					<label for="resume">Resume Session?&nbsp;</label>
-					<input id="resume" name="resume" type="checkbox" value="" <? echo (empty($pm->loggedOut) ?	' checked="checked" ' : ''); ?> />
-				</div>
+				
 			<?
 			}
 			?>
 			<div style='clear:left;'></div>
-			<div class="p">
-				<label for="resume">Check Server <br />Installation?&nbsp;</label>
-				<?php $default_check_server_installation = (ZMC::$registry->default_check_server_installation == true)? "checked='checked'" : "";?>
-			<input id="check_server" name="check_server" type="checkbox" value="" <?=$default_check_server_installation?> />
+            <div class="p" <? echo (($pm->singlelogin === 0) ? '':'hidden' ); ?>>
+					<span>
+                    <label for="resume" style=" margin-left:30px; color:#808080;">恢复会话&nbsp;</label>
+                    <input id="resume" name="resume" type="checkbox" value="" <? echo (empty($pm->loggedOut) ?	' checked="checked" ' : ''); ?> />
+                    </span>
+                    
+				</div>
+			
+			<div class="p" hidden="hidden">
+                <label for="resume">同步备份集?&nbsp;</label>
+                <input id="sync_backupset" name="sync_backupset" type="checkbox" value=""  />
 			</div>
-			<div style='clear:left;'></div>
-			<div class="p">
-				<label for="resume">Sync Backup Sets?&nbsp;</label>
-				<?php $default_sync_backupset = (ZMC::$registry->default_sync_backupset == true)? "checked='checked'" : "";?>
-				<input id="sync_backupset" name="sync_backupset" type="checkbox" value="" <?=$default_sync_backupset?>/>
-			</div>
+            <div class="p" <? echo (($pm->singlelogin === 0) ? '':'hidden' ); ?>>
+                <input id="login_button" type="submit" name="submit"  value="登录" style="margin:10px 26px 15px 0; width:200px; height:40px; font-size: 20px;                           font-weight: bold; letter-spacing:10px;   color:#FFF" />
+
+            </div>
 	
 			<input id="javascript_switch" type="hidden" name="JS_SWITCH" value="JS_OFF" />
 			<script>gebi("javascript_switch").value = 'JS_ON'</script>
 			<div style='clear:left;'></div>
-			<div class="p">
-				<label>&nbsp;</label>
-				<label><small><a href="<?= $pm->url ?>?action=lostPassword&login=<?= ZMC::$registry->short_name ?>">Can't access your account?</a></small></label>
+			<div class="p" <? echo (($pm->singlelogin === 0) ? '':'hidden' ); ?>>
+				<label style=" margin:0 0 0 27px; color:#ff7c31 " ><small>重置密码请登陆云管理平台或者联系管理员</small></label>
 			</div>
 			<?
 		}
 		?>
-	
 	<?}  ?>
-		<div id="zmcLoginMessageBox" style="clear:left;">
+		<div id="wocloudLoginMessageBox" style="clear:left;">
 			<noscript>
-			<div class="zmcMessageBox">
-			<div class="zmcMsgWarnErr zmcUserErrorsText zmcIconError">&nbsp;&nbsp;
-				JavaScript required. <br /><br />Please enable scripting in your browser before using this page.<br /><br />Browser requirements are described in more detail
-				<a href="<?= ZMC::$registry->wiki ?>Pre-Installation#Zmanda_Management_Console_Browser_Requirements" target="_blank">here</a>.
+			<div class="wocloudMessageBox">
+			<div class="wocloudMsgWarnErr wocloudUserErrorsText wocloudIconError">&nbsp;&nbsp;
+				请在访问该页面前启用浏览器<br />
 			</div>
 			</div>
 			</noscript>
 		<?
 			if (isset($_GET['timeout']))
-				$pm->addError('To protect the application data, the session has timed out.');
+				$pm->addError('登陆超时，请从云平台登陆后跳转.');
 			ZMC_Loader::renderTemplate('MessageBox', $pm);
 		?>
 		</div>
 		<div style='clear:left;'></div>
 	</div>
-	<img src="/images/login/vertical_rule.gif" width="2" height="361" align="left" />
-	<div style="text-align:center; border-bottom:1px solid #5C706E; background-color:white; overflow:hidden;">
-		<a href="http://www.zmanda.com/" target="_blank">
-			<img src="/images/login/plogo_<?= (ZMC::$registry->short_name_lc)? ZMC::$registry->short_name_lc: "aee" ?>.gif" alt="visit the Zmanda Website" style="width:240px; padding:20px;" />
-			<?php if(count($pm->logos) > 1){?>
-				<img src="/images/login/plogo_zrm.gif" alt="visit the Zmanda Website" style="width:240px; padding:20px;" />
-			<?php } ?>
-		</a>
-	</div>
-	<div style="text-align:center; overflow:hidden;">
-		<div class="zmcTitleBar">Zmanda Portal</div>
-		<div style='height:148px; padding:0px; margin-top:20px;'>
-	<div style="width:32%;float:left;">
-		<a
-			href="http://<?= ZMC::$registry->zn_host ?>.zmanda.com/index.php?action=Login&amp;module=Users&amp;xcartAnonSessionID="
-			target="_blank"
-			onmouseover="MM_swapImage('Network','','/images/login/icon_network_lrg_over.jpg',1)"
-			onmouseout="MM_swapImgRestore()"
-		>
-			<img
-				style="margin:auto; display:block;"
-				src="/images/login/icon_network_lrg.jpg"
-				title="Go to the Zmanda Network"
-				alt="Go to the Zmanda Network"
-				width="63"
-				height="95"
-				border="0"
-				id="Network"
-			/>
-		</a>
-	</div>
-	<div style="width:2px; float:left;">
-		<img src="/images/login/vertical_rule.gif" width="2" height="110" />
-	</div>
-	<div style="width:32%;float:left;">
-		<a
-			href="http://forums.zmanda.com/"
-			target="_blank"
-			onmouseover="MM_swapImage('Forums','','/images/login/icon_forum_lrg_over.jpg',1)"
-			onmouseout="MM_swapImgRestore()"
-		>
-			<img
-				style="margin:auto; display:block;"
-				src="/images/login/icon_forum_lrg.jpg"
-				title="Go to the Zmanda Forums"
-				alt="Go to the Zmanda Forums"
-				width="63"
-				height="95"
-				border="0"
-				id="Forums"
-			/>
-		</a>
-	</div>
-	<div style="width:2px; float:left;">
-		<img src="/images/login/vertical_rule.gif" width="2" height="110" />
-	</div>
-	<div style="width:32%;float:left;">
-		<a
-			href="http://wiki.zmanda.com/index.php/Main_Page"
-			target="_blank"
-			onmouseover="MM_swapImage('Wiki','','/images/login/icon_wiki_lrg_over.jpg',1)"
-			onmouseout="MM_swapImgRestore()"
-		>
-			<img
-				style="margin:auto; display:block;"
-				src="/images/login/icon_wiki_lrg.jpg"
-				title="Go to the Zmanda Wiki"
-				alt="Go to the Zmanda Wiki"
-				width="74"
-				height="95"
-				border="0"
-				id="Wiki"
-			/>
-		</a>
-	</div>
-	</div>
-	</div>
-	<div class="zmcButtonBar">
-		<div style='position:absolute; font-size:8pt; color:#CCC; z-index:999; top:7px; left:10px;'><?= ZMC::dateNow(true); ?></div>
-
-		<div style="position:absolute; right:10px; top:7px; color:#999!important;">
-			<small>Copyright &copy;&nbsp; <a href="http://www.zmanda.com" target="_blank">Zmanda, Inc.</a> All Rights Reserved.</small>
-		</div>
-	</div>
+	
 </div>
+
+
 </form>
+<div class="sf-footer-copyright">
+			Copyright  &copy;&nbsp; <?= ZMC::dateNow(true); ?> <a href="http://www.wocloud.cn" target="_blank">ChinaUnicom, Inc.</a> 
+			<br>
+			All Rights Reserved.
+			<br>
+</div>
 
 <?
 

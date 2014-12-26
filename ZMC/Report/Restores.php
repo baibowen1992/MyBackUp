@@ -15,7 +15,7 @@
 
 class ZMC_Report_Restores 
 {
-	public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Report', $title = 'ZMC - Monitor Recent Restores', $subnav = 'restores')
+	public static function run(ZMC_Registry_MessageBox $pm, $tombstone = 'Report', $title = '云备份 - Monitor Recent Restores', $subnav = 'restores')
 	{
 		$pm->enable_switcher = true;
 		ZMC_HeaderFooter::$instance->header($pm, $tombstone, $title, $subnav);
@@ -40,7 +40,7 @@ class ZMC_Report_Restores
 		$files = glob($dirName = ZMC::$registry->etc_amanda . $name . '/jobs/history/*Restore.state');
 		if (count($files) > 0)
 			return true;
-		$pm->addMessage("This backup set \"$name\" has no restores.");
+		$pm->addMessage("备份集 \"$name\" 没有还原");
 		return false;
 	}
 

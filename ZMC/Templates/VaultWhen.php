@@ -21,10 +21,10 @@ $action = rtrim($pm->state, '012');
 <input type='hidden' name='_key_name' value='<?= ZMC::escape($pm->binding['_key_name']) ?>' />
 <input type='hidden' name='private[occ]' value='<?= ZMC::escape($pm->binding['private']['occ']) ?>' />
 <input type='hidden' name='private[profile_occ]' value='<?= ZMC::escape($pm->binding['private']['profile_occ']) ?>' />
-<div class="zmcLeftWindow" style='max-width:575px;'>
+<div class="wocloudLeftWindow" style='max-width:575px;'>
 	<? ZMC::titleHelpBar($pm, 'Schedule a vault job for: ' . $pm->binding['config_name'], $pm->state);
 ?>
-	<div class="zmcFormWrapper zmcUltraShortInput">
+	<div class="wocloudFormWrapper wocloudUltraShortInput">
 		<img id="schedule_icon" style="position:absolute; left:10px; top:35px;" src="/images/section/admin/schedule-transparent-80.png">
 		<div class="p">
 			<label><b>Vault Start Time:<span class="required">*</span></b></label>
@@ -33,7 +33,7 @@ $action = rtrim($pm->state, '012');
 
 		<div class="p">
 			<label><b>Schedule Type:<span class="required">*</span></b></label>
-			<select id="zmc_schedule_type" class="zmcLongerInput" name="schedule_type" onchange="
+			<select id="zmc_schedule_type" class="wocloudLongerInput" name="schedule_type" onchange="
 				var ow=gebi('custom_weekday')
 				var fh=gebi('full_hours')
 				var od=gebi('custom_days_of_the_month')
@@ -83,18 +83,18 @@ $action = rtrim($pm->state, '012');
 		<div id="custom_weekday" style="display:none">
 			<div class="p">
 				<label><b>Custom Weekday<br />(Advanced):<span class="required">*</span></b></label>
-				<div class="zmcAfter">
-					<div class="dataTable zmcBorder">
+				<div class="wocloudAfter">
+					<div class="dataTable wocloudBorder">
 						<table width="100%" style="text-align:center">
 							<tr>
 								<th style="text-align:right;">Type</th>
-								<th class="zmcCenterNoLeftPad">Mon</th>
-								<th class="zmcCenterNoLeftPad">Tue</th>
-								<th class="zmcCenterNoLeftPad">Wed</th>
-								<th class="zmcCenterNoLeftPad">Thur</th>
-								<th class="zmcCenterNoLeftPad">Fri</th>
-								<th class="zmcCenterNoLeftPad">Sat</th>
-								<th class="zmcCenterNoLeftPad">Sun</th>
+								<th class="wocloudCenterNoLeftPad">Mon</th>
+								<th class="wocloudCenterNoLeftPad">Tue</th>
+								<th class="wocloudCenterNoLeftPad">Wed</th>
+								<th class="wocloudCenterNoLeftPad">Thur</th>
+								<th class="wocloudCenterNoLeftPad">Fri</th>
+								<th class="wocloudCenterNoLeftPad">Sat</th>
+								<th class="wocloudCenterNoLeftPad">Sun</th>
 							</tr>
 							<tr>
 								<th style="text-align:right;">No</th>
@@ -111,9 +111,9 @@ $action = rtrim($pm->state, '012');
 		</div>
 
 		<div id="custom_days_of_the_month" style="display:none">
-			<div class="p zmcShortestInput">
+			<div class="p wocloudShortestInput">
 				<label><b>Custom Days of the Month (Advanced):<span class="required">*</span></b></label>
-				<table class="dataTable zmcBorder" style="text-align:center; border-collapse:separate;">
+				<table class="dataTable wocloudBorder" style="text-align:center; border-collapse:separate;">
 					<tr>
 						<th style="text-align:center;">&nbsp;&nbsp;Day&nbsp;&nbsp;</th>
 						<th style="text-align:center;">Vault?</th>
@@ -153,15 +153,15 @@ $action = rtrim($pm->state, '012');
 		</div>
 		<br>
 		<div style="clear:left;"></div>
-	</div><!-- zmcFormWrapperLeft -->
+	</div><!-- wocloudFormWrapperLeft -->
 
 <?	if (!empty($pm->form_advanced_html)) ZMC_Loader::renderTemplate('formAdvanced', $pm); ?>
 
-	<div class="zmcButtonBar">
+	<div class="wocloudButtonBar">
 		<input type="submit" name="action" value="Next" title="Next" />
 		<input type="submit" name="action" value="Cancel" title="Cancel" />
 	</div>
-</div><!-- zmcLeftWindow -->
+</div><!-- wocloudLeftWindow -->
 
 <?
 
@@ -196,7 +196,7 @@ function showHours($pm, $prefix = '')
 			$checked = 'checked="checked"';
 
 		echo "\t\t\t\t<input type='hidden' name='{$field}[$i]' value='' />\n"; 
-		echo "\t\t\t\t<div class='zmcAfter' style='padding-left:0;'>$h</div><input $checked style='width:10px;' type='checkbox' name='{$field}[$i]' value='1' />\n";
+		echo "\t\t\t\t<div class='wocloudAfter' style='padding-left:0;'>$h</div><input $checked style='width:10px;' type='checkbox' name='{$field}[$i]' value='1' />\n";
 
 		if ($i === 11)
 			echo "<label style='clear:left; text-align:right'><b>PM&nbsp;&nbsp;</b></label>\n";
@@ -205,7 +205,7 @@ function showHours($pm, $prefix = '')
 		<div style="clear:left;">
 			<br />
 			<label style="text-align:right;"><b>Minutes&nbsp;</b></label>
-			<input type="text" name="<?= $prefix ?>minute" maxlength="2" value="<?= $pm->binding['schedule'][$prefix . 'minute'] ?>" /><div class="zmcAfter">after the hours selected above</div>
+			<input type="text" name="<?= $prefix ?>minute" maxlength="2" value="<?= $pm->binding['schedule'][$prefix . 'minute'] ?>" /><div class="wocloudAfter">after the hours selected above</div>
 		</div>
 <?
 }

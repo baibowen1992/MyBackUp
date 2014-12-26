@@ -1,8 +1,8 @@
 <?
-
-
-
-
+//zhoulin-backup-where 201409191744
+//zhoulin-backup-staging 201409192103
+//zhoulin-backup-when 201409191338
+//zhoulin-monitor-backup 201409191157
 
 
 
@@ -33,7 +33,7 @@ function zmc_timestamp2locale(timestamp)
 }
 </script>
 EOD;
-	ZMC::titleHelpBar($pm, $pm->goto . $pm->tableTitle, $pm->tableTitle, 'zmcTitleBarTable');
+	ZMC::titleHelpBar($pm, $pm->goto . $pm->tableTitle, $pm->tableTitle, 'wocloudTitleBarTable');
 
 	if (!empty($pm->prepend_html) && empty($pm->csv))
 		echo $pm->prepend_html;
@@ -42,90 +42,90 @@ EOD;
 static $col2titles = array(
 	'active' => array('Backup in Progress', '<img style="vertical-align:middle;" src="/images/icons/icon_calendar_progress.gif" height="18" width="20" />'),
 	'age' => array('Age in Days', 'Age', 'center'),
-	'autoflush' => array('Automatically flush staging area during a backup run?', 'Flush'),
-	'autolabel' => array(null, 'Auto Label'),
-	'backup_level' => array('Backup Level', 'Level', 'center'),
-	'bucket_name' => array(null, 'Bucket Name'),
-	'bucket_size' => array(null, 'Bucket Size'),
-	'bucket_objects' => array(null, '# Objects', 'right'),
-	'backuprun_date_time' => array(null, 'Date and Time'),
+	'autoflush' => array('在备份运行过程中自动刷新缓存?', '刷新'),
+	'autolabel' => array(null, '自动标记'),
+	'backup_level' => array('备份级别', '级别', 'center'),
+	'bucket_name' => array(null, 'Bucket 名'),
+	'bucket_size' => array(null, 'Bucket 容量'),
+	'bucket_objects' => array(null, '# 对象', 'right'),
+	'backuprun_date_time' => array(null, '日期和时间'),
 	'barcode' => array(null, 'Barcode'),
-	'changer:changerdev' => array(null, 'Endpoint / Changer Path'),
-	'creationdate' => array(null, 'Creation (Server Time)', 'white-space:nowrap;'),
-	'comment' => array('Comments and Notes', 'Comment'),
-	'compress' => array(null, 'Compressed'),
-	'config_name' => array(null, 'Backup Set', 'min-width:100px;'),
-	'configuration_id' => array(null, 'Backup Set', 'min-width:100px;'),
+	'changer:changerdev' => array(null, '备份存储目录'),
+	'creationdate' => array(null, '创建 (服务器时间)', 'white-space:nowrap;'),
+	'comment' => array('备注', '备注'),
+	'compress' => array(null, '压缩'),
+	'config_name' => array(null, '备份集', 'min-width:100px;'),
+	'configuration_id' => array(null, '备份集', 'min-width:100px;'),
 	'datetime' => array(null, 'Written', null),
 	'dev_path' => array(null, 'Device Path'),
-	'directory' => array(null, 'Directory/Path'),
+	'directory' => array(null, '目录'),
 	'dle_state_id' => array(null, '#'),
-	'estimate' => array(null, 'Checking<br />Backup Plan', 'center'),
-	'encrypt' => array(null, 'Encrypted'),
-	'endpoint' => array(null, 'Endpoint'),
+	'estimate' => array(null, '检查<br />备份计划', 'center'),
+	'encrypt' => array(null, '加密'),
+	'endpoint' => array(null, '地址'),
 	'etag' => array(null, 'ETag'),
-	'failed' => array(null, 'Failed Reason', 'max-width:250px;'),
-	'filename' => array(null, 'Matched Filename (or counts)'),
-	'flush' => array(null, 'Clearing<br />Staging Area', 'center'),
-	'host' => array(null, 'Hostname'),
-	'holding_disk' => array(null, 'Transferring&nbsp;Backup<br />to Server', 'center'),
-	'holdingdisk_list:zmc_default_holding:directory' => array('Location of staging directory', 'Directory'),
+	'failed' => array(null, '失败原因', 'max-width:250px;'),
+	'filename' => array(null, '汽配文件名 (或数目)'),
+	'flush' => array(null, '清理缓存区域', 'center'),
+	'host' => array(null, '主机名'),
+	'holding_disk' => array(null, '传递备份到服务器', 'min-width:70px;'),
+	'holdingdisk_list:zmc_default_holding:directory' => array('存放缓存数据的目录', '缓存目录'),
 	
-	'holdingdisk_list:zmc_default_holding:use' => array('Used Space vs. Total Space', 'Staging Usage Statistics', 'width:150px'),
-	'holdingdisk_list:zmc_default_holding:partition_total_space' => array('Used Space vs. Total Space', 'Staging Partition Statistics', 'width:150px'),
+	'holdingdisk_list:zmc_default_holding:use' => array('已用空间和总空间', '缓存使用统计', 'width:150px'),
+	'holdingdisk_list:zmc_default_holding:partition_total_space' => array('已用空间和总空间', '缓存统计', 'width:150px'),
 	
 	'media:partition_total_space' => array('Media partition usage', 'Media Partition Statistics'),
-	'hostname' => array(null, 'Host Name'),
-	'id' => array('Event Id', 'Id'),
-	'job' => array(null, 'Restore Job Description', 'min-width:375px;'),
+	'hostname' => array(null, '主机名'),
+	'id' => array('日志序号', '序号'),
+	'job' => array(null, '还原任务描述', 'min-width:375px;'),
 	'key' => array(null, 'Key'),
-	'_key_name' => array('Device Type', 'Device'),
+	'_key_name' => array('设备类型', '设备'),
 	'label' => array('Last seen Amanda label in this slot', 'Current/New Label'),
 	'labels' => array(null, 'Media Labels / Barcodes'),
-	'last_used' => array(null, 'Written When'),
-	'lastmodified' => array(null, 'Last Modified'),
+	'last_used' => array(null, '修改人Written When'),
+	'lastmodified' => array(null, '最后修改'),
 	'location_constraint' => array(null, 'Location Constraint'),
 	'media_usage' => array(null, 'Media Usage'),
 	'media_label' => array(null, 'Media Label'),
-	'message' => array(null, 'Description'),
-	'media:allocated_space' => array('Maximum space used by media of this backup set', 'Max Media Space'),
-	'media:partition_total_space' => array('Used Space vs. Total Space', 'Storage Device Statistics', 'width:150px'),
-	'media' => array(null, 'Writing to<br />Backup Media', 'center'),
-	'nb' => array(null, 'DLEs', 'width:35px;'),
+	'message' => array(null, '说明'),
+	'media:allocated_space' => array('该备份集使用的最大空间', 'Max Media Space'),
+	'media:partition_total_space' => array('使用空间和总空间', '存储空间统计', 'width:150px'),
+	'media' => array(null, '写入备份介质', 'min-width:70px;'),
+	'nb' => array(null, '备份项', 'width:35px;'),
 	'nc' => array(null, 'Parts', 'width:35px;'),
-	'org' => array(null, 'Description'),
-	'owner' => array(null, 'Owner'),
-	'percent_use' => array(null, 'Used', 'right'),
+	'org' => array(null, '说明'),
+	'owner' => array(null, '所属者'),
+	'percent_use' => array(null, '已使用', 'right'),
 	'prehtml' => array(null, 'Log'),
-	'private:last_modified_by' => array('Last modified by', 'By'),
-	'private:last_modified_time' => array('Last modified time', 'Time Last Modified'),
-	'private:zmc_device_name' => array(null, 'Device Name'),
+	'private:last_modified_by' => array('最后一次修改人', '修改'),
+	'private:last_modified_time' => array('最后一次修改时间', '最后一次修改'),
+	'private:zmc_device_name' => array(null, '设备名'),
 	'prune_reason' => array('Is this media Prunable?', 'Prunable', 'center'),
 	'reuse' => array('Archive media or reuse?', 'Archived?', 'center'),
 	'region' => array(null, 'Location', 'white-space:nowrap;'),
-	'schedule:archived_media' => array('Number of media archived vs. media  used', 'Archived<br/>vs. Used', 'center'),
-	'schedule:desired_retention_period' => array('D=Desired / H=Historical / E=Estimated Retention Periods', 'Retention%', 'width:25%;'),
-	'schedule:dumpcycle' => array(null, 'Backup<br />Cycle', 'center'),
-	'schedule:hours' => array('Backups will be started for each of the following hours.', 'Hours', 'right'),
-	'schedule:minute' => array('Backups will be started at this many minutes after the hour started.', 'Minute', 'right'),
+	'schedule:archived_media' => array('存档介质数量和使用量', '存档和使用', 'center'),
+	'schedule:desired_retention_period' => array('D=需要的 / H=历史的 / E=预计保留周期', '保留%', 'width:22%;'),
+	'schedule:dumpcycle' => array(null, '备份周期', 'center'),
+	'schedule:hours' => array('备份将在下述小时数时执行', '时', 'right'),
+	'schedule:minute' => array('备份将在既定的小时数的下述分钟数后执行。', '分', 'right'),
 	'schedule:runtapes' => array('Media Per Backup', 'MPB'),
-	'schedule:schedule_type' => array(null, 'Schedule Type'),
-	'schedule:status' => array('Schedule Health Status', 'Status'),
-	'schedule:when' => array('Which days backup is started (e.g. M=Monday, A=Auto, I=Incremental, F=Full, &mdash;=no backup scheduled)', 'When', 'width:5%;', 'nowrap'),
-	'severity' => array(null, 'Severity'),
-	'size' => array(null, 'Size', 'right'),
+	'schedule:schedule_type' => array(null, '计划类型'),
+	'schedule:status' => array('计划健康状态', '状态'),
+	'schedule:when' => array('备份执行的日期(举例M=周一, A=自动, I=增量, F=完整, &mdash;=没有备份计划)', '日期', 'width:5%;', 'nowrap'),
+	'severity' => array(null, '日志级别'),
+	'size' => array(null, '容量', 'right'),
 	'slot' => array(null, 'Slot'),
-	'state' => array(null, 'State', 'center'),
-	'status' => array(null, 'Status', 'center'),
+	'state' => array(null, '状态', 'center'),
+	'status' => array(null, '状态', 'center'),
 	'storageclass' => array(null, 'Storage Class'),
-	'subsystem' => array(null, 'Source'),
-	'summary' => array(null, 'Summary', null),
+	'subsystem' => array(null, '来源'),
+	'summary' => array(null, '概要', null),
 	'time_duration' => array('Total Backup Runtime', 'HH:MM', 'width:50px;'),
 	'timestamp2locale' => array(null, 'Creation Date', null),
 	'tlast_used' => array(null, 'Written', null),
-	'timestamp' => array(null, 'Date and Time'),
-	'user_id' => array(null, 'User'),
-	'zmc_type' => array(null, 'Type', 'center'),
+	'timestamp' => array(null, '日期和时间'),
+	'user_id' => array(null, '用户'),
+	'zmc_type' => array(null, '类型', 'center'),
 	'zmc' => array(null, 'ZMC', 'center'),
 );
 
@@ -173,7 +173,7 @@ foreach($pm->columns as $as => $col)
 	}
 	$titles =& $col2titles[$lckey];
 	if ($pm->tableTitle === 'Event Viewer' && $key === 'id')
-		echo '<th><img height="18" width="18" title="Click number for details" alt="More Information" src="/images/icons/icon_info.png"/></th>';
+		echo '<th><img height="18" width="18" title="点击数字查看详细" alt="详细信息" src="/images/icons/icon_info.png"/></th>';
 	elseif (empty($pm->csv))
 	{
 		echo '<th ';
@@ -181,7 +181,7 @@ foreach($pm->columns as $as => $col)
 			if ($titles[2] === 'right')
 				echo " style='text-align:right;'";
 			elseif ($titles[2] === 'center')
-				echo ' class="zmcCenterNoLeftPad"';
+				echo ' class="wocloudCenterNoLeftPad"';
 			else
 				echo " style='$titles[2]'";
 
@@ -294,7 +294,7 @@ foreach($pm->rows as $id => $row)
 					$td = str_replace('>', ' align=right>', $td);
 					break;
 				case 'center':
-					$td = str_replace('>', ' class="zmcCenterNoLeftPad" style="width:5%;">', $td);
+					$td = str_replace('>', ' class="wocloudCenterNoLeftPad" style="width:5%;">', $td);
 					break;
 				default:
 					$td = str_replace('>', " style='$style'>", $td);
@@ -305,14 +305,7 @@ foreach($pm->rows as $id => $row)
 			case 'id':
 				if ($pm->tableTitle === 'Event Viewer')
 				{
-					echo "<td><a href='http://network.zmanda.com/zmc2lore.php?"
-						. '&zmc_svn_revision=' . ZMC::$registry->svn->zmc_svn_revision
-						. '&zmc_build_version=' . ZMC::$registry->svn->zmc_build_version
-						. (empty($row['subsystem']) ? '' : ('&subsystem=' . urlencode($row['subsystem'])))
-						. "&severity=$row[severity]"
-						. '&summary=' . md5($row['summary'])
-						. '&message=' . md5($row['message'])
-						. "'>$row[id]</a></td>";
+					echo "<td></td>";
 					continue 2;
 				}
 				break;
@@ -340,9 +333,9 @@ foreach($pm->rows as $id => $row)
 
 			case 'prune_reason':
 				if (empty($row['prune_reason']))
-					echo ($row['retained_reason'] === 'Unexpired') ? $td : '<td style="background-color:#ff9; font-weight:bold;" class="zmcCenterNoLeftPad">', $row['retained_reason'], "</td>";
+					echo ($row['retained_reason'] === 'Unexpired') ? $td : '<td style="background-color:#ff9; font-weight:bold;" class="wocloudCenterNoLeftPad">', $row['retained_reason'], "</td>";
 				else
-					echo '<td style="background-color:#fcc; font-weight:bold;" class="zmcCenterNoLeftPad">',
+					echo '<td style="background-color:#fcc; font-weight:bold;" class="wocloudCenterNoLeftPad">',
 						'<img style="vertical-align:middle;" src="/images/icons/icon_calendar_warning.gif" />',
 						$row[$key], "</td>";
 				break;
@@ -354,7 +347,7 @@ foreach($pm->rows as $id => $row)
 
 			case 'holdingdisk_list:zmc_default_holding:partition_total_space':
 				if ($row['holdingdisk_list:zmc_default_holding:strategy'] === 'disabled')
-					echo $td, 'Disabled</td>';
+					echo $td, '禁用</td>';
 				else
 					echoSpaceUsedBar($td, $row, $key, $row['holdingdisk_list:zmc_default_holding:filesystem_reserved_percent'], 'holdingdisk_list:zmc_default_holding:partition_used_space');
 				break;
@@ -362,7 +355,7 @@ foreach($pm->rows as $id => $row)
 			case 'holdingdisk_list:zmc_default_holding:use':
 				if ($row['holdingdisk_list:zmc_default_holding:strategy'] === 'disabled')
 				{
-					echo $td, "Disabled</td>";
+					echo $td, "禁用</td>";
 					break;
 				}
 				$reserved = 0;
@@ -439,7 +432,7 @@ foreach($pm->rows as $id => $row)
 					$escaped = '';
 				}
 				$key .= '_bar';
-				$bar = (isset($row[$key]) ? "<div $title class='zmc" . $row[$key] . "Bar'></div>" : '');
+				$bar = (isset($row[$key]) ? "<div $title class='wocloud" . $row[$key] . "Bar'></div>" : '');
 				echo $td, $bar, $escaped, "</td>";
 				break;
 
@@ -449,11 +442,11 @@ foreach($pm->rows as $id => $row)
 
 			case 'state':
 				if ($row['state'] === 'Failed')
-					echo $td, '<img style="vertical-align:middle;" title="Backup Failed" src="/images/global/calendar/icon_calendar_failure.gif"></td>';
+					echo $td, '<img style="vertical-align:middle;" title="备份失败" src="/images/global/calendar/icon_calendar_failure.gif"></td>';
 				elseif ($row['active'])
-					echo $td, '<img style="vertical-align:middle;" title="Backup Running" src="/images/icons/icon_calendar_progress.gif" /></td>';
+					echo $td, '<img style="vertical-align:middle;" title="备份运行中" src="/images/icons/icon_calendar_progress.gif" /></td>';
 				else
-					echo $td, '<img style="vertical-align:middle;" title="Backup Succeeded" src="/images/icons/icon_calendar_success.gif" /></td>';
+					echo $td, '<img style="vertical-align:middle;" title="备份成功" src="/images/icons/icon_calendar_success.gif" /></td>';
 				break;
 
 			case 'zmc_type':
@@ -493,8 +486,10 @@ foreach($pm->rows as $id => $row)
 					}
 					else
 						$value = '';
-					
-				echo '<td nowrap', $ecolor, '><a onclick="noBubble(event)" href="/ZMC_Report_Backups?viewDate=', substr($row[$key], 0, -8), '">', $value, "</a></td>";
+                if(ZMC_User::hasRole('Administrator'))
+				    echo '<td nowrap', $ecolor, '><a onclick="noBubble(event)" href="/ZMC_Report_Backups?viewDate=', substr($row[$key], 0, -8), '">', $value, "</a></td>";
+				else
+                    echo '<td nowrap', $ecolor, '>', $value, "</td>";
 				break;
 
 			case 'backup_level': 
@@ -578,7 +573,7 @@ foreach($pm->rows as $id => $row)
 				if ($row[$key] === 'empty' || $row[$key] === 'empty slot')
 					echo $td, "$img $escaped</td>";
 				else
-					echo $td, "<input onFocus=\"if (this.value === 'unknown') this.value=''; else this.select(); \" onKeyUp=\"this.style.backgroundColor='#ffffcc'\" class='zmcShortInput' type='text' name='label[$row[id]]' id='label[$row[id]]' value='", ZMC::escape($escaped), "' />$img</td>";
+					echo $td, "<input onFocus=\"if (this.value === 'unknown') this.value=''; else this.select(); \" onKeyUp=\"this.style.backgroundColor='#ffffcc'\" class='wocloudShortInput' type='text' name='label[$row[id]]' id='label[$row[id]]' value='", ZMC::escape($escaped), "' />$img</td>";
 				break;
 
 			case 'reuse':
@@ -597,7 +592,7 @@ foreach($pm->rows as $id => $row)
 				$ml_pre = $ml_post = '';
 				if (!empty($row['L0_missing']))
 				{
-					$ml_pre = '<span class="zmcUserErrorsText zmcIconError">';
+					$ml_pre = '<span class="wocloudUserErrorsText wocloudIconError">';
 					$ml_post = '</span>';
 				}
 				elseif ($row['backup_level'] == 0)
@@ -841,9 +836,9 @@ function echoSpaceUsedBar($td, $row, $totalKey, $reserved, $usedKey, $fallbackTo
 			$errAt  = bcmul($row[$totalKey], max(0.02, 1 - $reservedPercent - 0.03));
 			$warnAt = bcmul($errAt, 0.80);
 			if (bccomp($row[$usedKey], $errAt) >= 0)
-				$class="zmcUserErrorsText zmcIconError";
+				$class="wocloudUserErrorsText wocloudIconError";
 			elseif (bccomp($row[$usedKey], $warnAt) >= 0)
-				$class="zmcUserWarningsText zmcIconWarning";
+				$class="wocloudUserWarningsText wocloudIconWarning";
 
 		}
 	}

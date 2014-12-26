@@ -22,29 +22,29 @@ public static function renderDLEPhaseHeader($subnavInfo = 'What', $rowHeight)
 		if ($subnavInfo === 'ReportTimeline')
 		{
 			?>
-			<th>HostName</td>
-			<th>Directory</td>
-			<th class='zmcCenterNoLeftPad'>Time</td>
-			<th class='zmcCenterNoLeftPad'>Level</td>
+			<th>主机名</td>
+			<th>目录</td>
+			<th class='wocloudCenterNoLeftPad'>时间</td>
+			<th class='wocloudCenterNoLeftPad'>级别</td>
 			<?
 		}
 		else
 		{
 			?>
-			<th>HostName</td>
-			<th>Directory</td>
-			<th class='zmcCenterNoLeftPad'>Level</td>
+			<th>主机名</td>
+			<th>目录</td>
+			<th class='wocloudCenterNoLeftPad'>级别</td>
 			<?
 		}
 	}
 
 	foreach(array(
-		"Clearing<br />Staging Area",
-		"Checking<br />Backup Plan",
-		"Transferring<br />Backup to Server",
-		"Writing to<br />Backup Media")
+		"清除<br />缓存",
+		"检查<br />备份计划",
+		"传输<br />备份到服务器",
+		"传输<br />备份到存储设备")
 		as $header)
-		echo "<th width='120' id='timelinePhase-1' class='zmcCenterNoLeftPad'>$header</td>\n";
+		echo "<th width='120' id='timelinePhase-1' class='wocloudCenterNoLeftPad'>$header</td>\n";
 }
 
 public static function zoomFitTitleBar(ZMC_Registry_MessageBox $pm, $subnavTitle, $dayWeekNav = false)
@@ -118,7 +118,7 @@ public static function renderTimeLineHeader(ZMC_Registry_MessageBox $pm, $subnav
 			$imgStr = "<img style='position:absolute;' title='$altStr' src='$iconImage'>";
 
 		$dplus = $d+1;
-		echo "<th id='mediaDate-$dplus' class='zmcCenterNoLeftPad'>" . date("Y-m-d", $pm->BIDRangeArray[$d]['ts']) . "&nbsp;$imgStr</td>\n";
+		echo "<th id='mediaDate-$dplus' class='wocloudCenterNoLeftPad'>" . date("Y-m-d", $pm->BIDRangeArray[$d]['ts']) . "&nbsp;$imgStr</td>\n";
 	}
 }
 
@@ -133,15 +133,15 @@ public static function renderTimeStampPullDown(ZMC_Registry_MessageBox $pm, $sub
 		switch ($numBackup)
 		{
 			case 0:
-				echo "<th class='zmcCenterNoLeftPad'>&nbsp;</td>";
+				echo "<th class='wocloudCenterNoLeftPad'>&nbsp;</td>";
 				break;
 
 			case 1:
-				echo "<th class='zmcCenterNoLeftPad'>".$pm->BIDRangeArray[$d]['bidinfo']->mGetTime(0)."</td>";
+				echo "<th class='wocloudCenterNoLeftPad'>".$pm->BIDRangeArray[$d]['bidinfo']->mGetTime(0)."</td>";
 				break;
 
 			default:
-				echo "<th class='zmcCenterNoLeftPad'>";
+				echo "<th class='wocloudCenterNoLeftPad'>";
 				echo "<input  TYPE=hidden VALUE='", $pm->BIDRangeArray[$d]['ts'], "' NAME=columnDay>";
 				echo "<select onchange='this.form.submit();' name=columnDayTSIndex style='float:none; width:65px; font-size:12px;' title=Timestamp(s) value=1>";
 	

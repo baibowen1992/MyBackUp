@@ -71,12 +71,12 @@ public static $cloudRegions = array(
 
 public static function getCloudEndpoints($regionMap)
 {
-	$zmcFormMap = array();
+	$wocloudFormMap = array();
 	foreach($regionMap as $region => $info)
 		if ($info[0] === true)
-			$zmcFormMap[$region] = $info[2];
-	arsort($zmcFormMap);
-	return $zmcFormMap;
+			$wocloudFormMap[$region] = $info[2];
+	arsort($wocloudFormMap);
+	return $wocloudFormMap;
 }
 
 protected static function init()
@@ -85,11 +85,11 @@ protected static function init()
 	
 	self::$defaultTypeArray = array(
 		
-		'form_classes' => 'zmcLongInput zmcLongLabel',
-		'advanced_form_classes' => 'zmcLongInput zmcShortLabel',
+		'form_classes' => 'wocloudLongInput wocloudLongLabel',
+		'advanced_form_classes' => 'wocloudLongInput wocloudShortLabel',
 		'creationDefaults' => array(
 			'autoflush' => 'on',
-			'autolabel' => 'off',
+			'autolabel' => 'on',
 			'autolabel_how' => 'empty volume_error',
 			'autolabel_format' => '$c-$b',
 			'labelstr' => '^@@ZMC_AMANDA_CONF@@(-.*)+$',
@@ -112,24 +112,26 @@ protected static function init()
 					'use_request_display' => '%',
 					'directory' => ZMC::$registry->default_holding_disk_path ? ZMC::$registry->default_holding_disk_path.'@@ZMC_AMANDA_CONF@@' : '/var/lib/amanda/staging/'.'@@ZMC_AMANDA_CONF@@',
 					'chunksize' => '2047m',
-					'strategy' => 'no_more_than'
+					'strategy' => 'disbale'
+                    // 设置默认缓存为disable
+//					'strategy' => 'no_more_than'
 				)
 			),
 		),
 		'form' => array(
-			'private:zmc_device_name' => array(10, 'VeRmpaw', '', 'Device Name', 'User-friendly name for this ZMC device.'),
+			'private:zmc_device_name' => array(10, 'VeRmpaw', '', '设备名称', '友好的设备名。'),
 			'config_name' => array(15, 'veRmpaw', '', 'Backup Set'),
-			'comment' => array(20, 'VErMpaw', '', 'Comments', 'Notes about this how this backup set uses this device.', 'textarea'),
+			'comment' => array(20, 'VErMpaw', '', '注释', '有关备份集如何使用该设备的注释。', 'textarea'),
  			'taperscan:plugin' => array(21, 'VErMPaw',
 					array(
 							'oldest' => 'Oldest',
 							'traditional' => 'Traditional',
 							'lexical' => 'Lexical',
 					),
-					'Taperscan', 'How tape should be scanned?', 'selectShorterInput'),
+					'设备扫描', '设备的扫描方式', 'selectShorterInput'),
 			'private:profile_occ' => array(990, 'vERMPaw', 0, 'Device Binding OCC', 'tracks concurrency version', 'hidden'),
 			'private:occ' => array(991, 'vERMPaw', 0, 'Device Profile OCC', 'tracks concurrency version', 'hidden'),
-			'private:zmc_show_advanced' => array(998, 'vERMPaw', 0, 'Show advanced settings', 'sticky preference', 'hidden'),
+			'private:zmc_show_advanced' => array(998, 'vERMPaw', 0, '显示更多高级设置', 'sticky preference', 'hidden'),
 		)
 	);
 
@@ -140,7 +142,7 @@ protected static function init()
 			'name' => 'Disk/NAS/SAN',
 			'license_group' => 'disk',
 			'category' => 'vtape',
-			'advanced_form_classes' => 'zmcLongInput zmcLongLabel',
+			'advanced_form_classes' => 'wocloudLongInput wocloudLongLabel',
 			'creationDefaults' => array(
 				'changer' => array(
 					'ignore_barcodes' => 'on',
@@ -157,21 +159,21 @@ protected static function init()
 				),
 			),
 			'form' => array(
-				'changer:changerdev' =>	array(40, 'VeRmpaw', '', 'Backups stored at', 'Location must be accessible to server when saving this form.', 'zmcLongerInput', '', 
-					'<div class="contextualInfoImage"><a target="_blank" href="http://docs.zmanda.com/Project:Amanda_Enterprise_3.3/ZMC_Users_Manual/BackupWhere#Advanced_Options"><img width="18" height="18" align="top" alt="More Information" src="/images/icons/icon_info.png"/></a>
+				'changer:changerdev' =>	array(40, 'VeRmpaw', '', '备份存储目录', '在保存的时候请确保该目录对于服务器是可见的。', 'wocloudLongerInput', '', 
+					'<div class="contextualInfoImage"><a target="_blank" href="http://localhost"><img width="18" height="18" align="top" alt="More Information" src="/images/icons/icon_info.png"/></a>
 						<div class="contextualInfo">
 							<p>
-								The name of the backup set is appended to the root path of the ZMC disk device.
-								If you need a different root path for a different backup set, then create a new device profile.
+								默认会在家目录下新建一个以备份集名字命名的文件夹来存储备份。
+								如果想为不同备份集准备不同的备份目录，请重新建一个设备，并修改设备属性的家目录。
 								<br><br>
-								<a target="_blank" href="http://docs.zmanda.com/Project:Amanda_Enterprise_3.3/ZMC_Users_Manual/BackupWhere#Advanced_Options">Backup Storage Locations</a>.
+								<a target="_blank"  href="http://localhost">备份存储位置</a>.
 							</p>
 						</div>
 					</div>'),
-				'media:partition_total_space'		=> array(50, 'VeRmPaw', '0', 'Partition Total Space', '', 'textShortestInput', '', 'MiB'),
-				'media:partition_free_space'		=> array(51, 'VeRmPaw', '0', 'Partition Free Space', '', 'textShortestInput', '', 'MiB (shared free space)'),
-				'media:used_space'=> array(52, 'VermPaw', '0', 'Media Used Space', '', 'textShortestInput', '', 'MiB (used by this backup set)'),
-				
+				'media:partition_total_space'		=> array(50, 'VeRmPaw', '0', '分区总空间', '', 'textShortestInput', '', 'MiB'),
+				'media:partition_free_space'		=> array(51, 'VeRmPaw', '0', '分区剩余空间', '', 'textShortestInput', '', 'MiB '),
+				'media:used_space'=> array(52, 'VermPaw', '0', '已用空间', '', 'textShortestInput', '', 'MiB (这个备份集已经使用的)'),
+
 
 
 
@@ -190,7 +192,7 @@ protected static function init()
 		's3_compatible_cloud' => array(
 			'name' => 'Cloud Storage Service',
 			'category' => 'vtape',
-			'advanced_form_classes' => 'zmcLongLabel',
+			'advanced_form_classes' => 'wocloudLongLabel',
 			'creationDefaults' => array(
 				'changer' => array(
 					'ignore_barcodes' => 'on',
@@ -205,19 +207,18 @@ protected static function init()
 			),
 			'form' => array(
 				'device_property_list:S3_BUCKET_LOCATION' =>
-					array(25, 'VErMpaW', '', 'Location Restriction', 'Optional'),
-				'changer:changerdev' =>	array(40, 'VeRmpaw', '', 'Backups stored at', 'Location must be accessible to server when saving this form.', 'zmcLongerInput', '', 
-					'<div class="contextualInfoImage"><a target="_blank" href="http://docs.zmanda.com/Project:Amanda_Enterprise_3.3/ZMC_Users_Manual/BackupWhere#Advanced_Options"><img width="18" height="18" align="top" alt="More Information" src="/images/icons/icon_info.png"/></a>
+					array(25, 'VErMpaW', '', '位置锁定', 'Optional'),
+				'changer:changerdev' =>	array(40, 'VeRmpaw', '', '存储备份集于', '在保存的时候请确保其对于服务器是可见的。', 'wocloudLongerInput', '',
+					'<div class="contextualInfoImage"><a target="_blank" href="http://localhost"><img width="18" height="18" align="top" alt="More Information" src="/images/icons/icon_info.png"/></a>
 						<div class="contextualInfo">
 							<p>
-								The name of the backup set is appended to the cloud storage access key to obtain a unique location for this backup set.
-								If you need to use a different cloud storage access key, then create a new device profile.
+								默认会在用户对象存储下新建一个以对象存储access-key加备份集名字命名的bucket来存储备份数据。
+								如果想使用其他对象存储access key，请使用你想用的key重新建一个存储设备。
 								<br><br>
-								<a target="_blank" href="http://docs.zmanda.com/Project:Amanda_Enterprise_3.3/ZMC_Users_Manual/BackupWhere#Advanced_Options">Cloud storage locations</a>.
+								<a target="_blank"  href="http://localhost">备份存储位置</a>.
 							</p>
 						</div>
 					</div>'),
-				
 
 
 
@@ -230,16 +231,16 @@ protected static function init()
 
 
 
-				'device_property_list:S3_SSL' => array(110, 'VErMPAw', array('checked' => true, 'on' => 'on', 'off' => 'off'), 'Secure Communications', 'Use secure communications when transmitting data to/from the cloud', 'checkbox', '', '(recommended)'),
+				'device_property_list:S3_SSL' => array(110, 'VErMPAw', array('checked' => true, 'on' => 'on', 'off' => 'off'), '安全连接', '在对云设备进行数据存取的使用安全连接', 'checkbox', '', '(推荐)'),
 
-				'private:bandwidth_toggle' => array(111, 'VErMPAw', array('checked' => true, 'on' => 'on', 'off' => 'off'), 'Use Full Upload/Download <br />Bandwidth', 'Customize bandwidth and backup/restore parallelism', 'checkbox', '', '', 'onChange="return bandwidth_toggle();"'),
-				'per_dle_pre' => array(115, 'VErmpAw', '<br /><br /><fieldset><legend>Speed Per Thread</legend>', '', '', 'html'),
-				'device_property_list:MAX_SEND_SPEED' => array(120, 'VErMPAw', 1024, 'Max Upload Speed', '', 'textUltraShortInput', 'KiB/second&nbsp;<b>x</b>', '<div style="clear:both; height:2px;"></div>'),
-				'device_property_list:MAX_RECV_SPEED' => array(130, 'VErMPAw', 1024, 'Max Download Speed', '', 'textUltraShortInput', 'KiB/second&nbsp;<b>x</b>'),
+				'private:bandwidth_toggle' => array(111, 'VErMPAw', array('checked' => true, 'on' => 'on', 'off' => 'off'), '不限速上传下载', '自定义备份还原速度', 'checkbox', '', '', 'onChange="return bandwidth_toggle();"'),
+				'per_dle_pre' => array(115, 'VErmpAw', '<br /><br /><fieldset><legend>单线程速度</legend>', '', '', 'html'),
+				'device_property_list:MAX_SEND_SPEED' => array(120, 'VErMPAw', 1024, '最大上传速度', '', 'textUltraShortInput', 'KiB/second&nbsp;<b>x</b>', '<div style="clear:both; height:2px;"></div>'),
+				'device_property_list:MAX_RECV_SPEED' => array(130, 'VErMPAw', 1024, '最大下载速度', '', 'textUltraShortInput', 'KiB/second&nbsp;<b>x</b>'),
 				'per_dle_post' => array(134, 'VErmpAw', '</fieldset>', '', '', 'html'),
-				'per_set_pre' => array(135, 'VErmpAw', '<fieldset><legend>Threads Per Upload/Download</legend>', '', '', 'html'),
-				'device_property_list:NB_THREADS_BACKUP' => array(140, 'VErMPAw', array(1=>1, 2=>2, 3=>3, 4 => 4, 8 => 8, 12 => 12, 16=>16), 'Backup Parallelism', '', 'selectUltraShortInput', '', 'Threads'),
-				'device_property_list:NB_THREADS_RECOVERY' => array(150, 'VErMPAw', array(1=>1, 2=>2, 3=>3, 4 => 4, 8 => 8, 12 => 12, 16=>16), 'Restore Parallelism', '', 'selectUltraShortInput', '', 'Threads'),
+				'per_set_pre' => array(135, 'VErmpAw', '<fieldset><legend>上传下载线程数</legend>', '', '', 'html'),
+				'device_property_list:NB_THREADS_BACKUP' => array(140, 'VErMPAw', array(1=>1, 2=>2, 3=>3, 4 => 4, 8 => 8, 12 => 12, 16=>16), '并行备份', '', 'selectUltraShortInput', '', '线程'),
+				'device_property_list:NB_THREADS_RECOVERY' => array(150, 'VErMPAw', array(1=>1, 2=>2, 3=>3, 4 => 4, 8 => 8, 12 => 12, 16=>16), '并行还原', '', 'selectUltraShortInput', '', '线程'),
 				'per_set_post' => array(199, 'VErmpAw', '</fieldset>', '', '', 'html'),
 			)
 		),
@@ -248,7 +249,7 @@ protected static function init()
 			'license_group' => 'changer',
 			'name' => 'Tape Changer Device',
 			'category' => 'tape',
-			'advanced_form_classes' => 'zmcUltraShortInput',
+			'advanced_form_classes' => 'wocloudUltraShortInput',
 			'form' => array(
 				'autolabel' => array(30, 'VErMPaw', array('checked' => true, 'on' => 'on', 'off' => 'off'), 'Auto Label Tapes', '', 'checkbox', null, false),
 				'autolabel_how' => array(31, 'VErMPaw',
@@ -294,7 +295,7 @@ protected static function init()
 
 
 				),
-				'changer:ignore_barcodes' => array(590, 'VErMPAw', array('checked' => false, 'on' => 'on', 'off' => 'off'), 'Ignore Bar Codes', '', 'checkbox', '', 'Not recommended.<br /><div class="zmcAfter">Only use if tapes are missing barcode labels.</div>'),
+				'changer:ignore_barcodes' => array(590, 'VErMPAw', array('checked' => false, 'on' => 'on', 'off' => 'off'), 'Ignore Bar Codes', '', 'checkbox', '', 'Not recommended.<br /><div class="wocloudAfter">Only use if tapes are missing barcode labels.</div>'),
 			)
 		),
 
@@ -302,8 +303,8 @@ protected static function init()
 			'license_group' => 'changer',
 			'name' => 'NDMP Changer Device',
 			'category' => 'changer',
-			'form_classes' => 'zmcLongInput',
-			'advanced_form_classes' => 'zmcShortestInput',
+			'form_classes' => 'wocloudLongInput',
+			'advanced_form_classes' => 'wocloudShortestInput',
 			'creationDefaults' => array(
 					'holdingdisk_list' => array(
 							'zmc_default_holding' => array('strategy' => 'disabled')

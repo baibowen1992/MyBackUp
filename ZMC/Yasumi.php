@@ -221,7 +221,10 @@ class ZMC_Yasumi
 			$this->debug_level = $args['data']['debug'];
 		if ($this->debug && $this->debug_level < ZMC_Error::DEBUG)
 			$this->debug_level = ZMC_Error::DEBUG;
+
+        //echo '...............>>'.$args;
 		$yasumi = $this->promote($args, $reply);
+
 		if (!empty($args['cacheFilename']))
 			$yasumi->cacheFilename = $args['cacheFilename'];
 		if ($yasumi->debug && !($yasumi->debug_level >= ZMC_Error::EMERGENCY || $yasumi->debug_level <= ZMC_Error::DEBUG)) 
@@ -276,6 +279,7 @@ class ZMC_Yasumi
 			error_log($msg);
 
 		$class = 'ZMC_Yasumi_' . str_replace('-', '', $args['what']);
+        //echo $class;//ZMC_Yasumi_DeviceProfile
 		try
 		{ class_exists($class, true); }
 		catch(Exception $e)

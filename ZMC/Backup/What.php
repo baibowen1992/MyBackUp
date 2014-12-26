@@ -24,15 +24,15 @@ class ZMC_Backup_What extends ZMC_Backup
 	public static function run(ZMC_Registry_MessageBox $pm)
 	{
 		$pm->enable_switcher = true;
-		ZMC_HeaderFooter::$instance->header($pm, 'Backup', 'ZMC - What to Backup', 'what');
+		ZMC_HeaderFooter::$instance->header($pm, 'Backup', '云备份 - 备份源', 'what');
 		$whatPage = new self($pm);
 		if (empty($pm->selected_name))
 		{
-			$pm->addWarning("Please select a backup set above.");
+			$pm->addWarning("请先选择一个备份集");
 			return 'MessageBox';
 		}
 		$pm->addEscapedInstruction(ZMC::$registry->tips['backup_what']);
-		$pm->advanced_options_title = 'Advanced Options for This Object Only';
+		$pm->advanced_options_title = '高级参数';
 		$pm->raw_binding = ZMC_Yaml_sfYaml::load(ZMC::$registry->etc_amanda . $pm->selected_name .  '/binding-' . $pm->edit['profile_name'] . '.yml'); 
 		$pm->users = ZMC_User::$users; 
 		
@@ -55,9 +55,9 @@ class ZMC_Backup_What extends ZMC_Backup
 
 		switch($pm->state)
 		{
-			case 'Update': 
+			case 'Update':
 				$update = true;
-			case 'Add': 
+			case 'create':
 				
 				$adminDevice = new ZMC_Admin_Devices($pm);
 				$adminDevice->getDeviceList($pm);
@@ -65,7 +65,7 @@ class ZMC_Backup_What extends ZMC_Backup
 				
 				$this->loadDisklist($pm);
 				if(!empty($_POST['disk_name']) && strpos($_POST['disk_name'], '/') !== false)
-					$pm->addError("Cannot use forward slash \"/\" in an alias. Please choose a different alias.");
+					$pm->addError("别名中不允许使用正斜杠 \"/\" 请重新选择表明");
 
 				$disk_name = empty($_POST['disk_name']) ? $_POST['disk_device'] : $_POST['disk_name'];
 				$newID = "{$pm->selected_name}|{$_POST['host_name']}|$disk_name";
@@ -73,7 +73,7 @@ class ZMC_Backup_What extends ZMC_Backup
 				if(($update && ($newID !== $oldID)) || !$update) {
 					foreach($pm->dles as $curDLE)
 						if($curDLE['natural_key'] === $newID){
-							$pm->addError("A DLE with the same hostname and alias/directory already exists. Please choose a different combination.");
+							$pm->addError("对应主机和对应目录已经存在于其他备份项中，请修改");
 							break;
 						}
 				}
@@ -116,7 +116,7 @@ class ZMC_Backup_What extends ZMC_Backup
 				catch (Exception $e)
 				{
 					$pm->addError("$e");
-					ZMC::auditLog(($update ? 'Edit' : 'Create') . ' of DLE "' . $dle['natural_key'] . "\" failed: $e", $e->getCode(), null, ZMC_Error::ERROR);
+					ZMC::auditLog(($update ? 'Edit' : 'New') . ' of DLE "' . $dle['natural_key'] . "\" failed: $e", $e->getCode(), null, ZMC_Error::ERROR);
 				}
 
 				if ($pm->isErrors())
@@ -124,7 +124,7 @@ class ZMC_Backup_What extends ZMC_Backup
 				else
 				{
 					!$update && ZMC_Paginator_Reset::reset('last_modified_time'); 
-					$pm->addMessage($msg = "Object/DLE '" . $dle['natural_key'] . ($update ? "' updated." : "' added."));
+					$pm->addMessage($msg = "备份项 '" . $dle['natural_key'] . ($update ? "' 更新" : "' 创建."));
 					ZMC::auditLog($msg, 0, null, ZMC_Error::NOTICE);
 					$pm->state = 'Create1';
 					$this->runState($pm);
@@ -135,14 +135,14 @@ class ZMC_Backup_What extends ZMC_Backup
 				if(isset($pm['selected_id'])){
 					$id = $pm['selected_id'];
 				} else {
-					$id = ZMC_Form::getEditId($pm, 'edit_id', 'Edit failed.  No DLE selected.');
+					$id = ZMC_Form::getEditId($pm, 'edit_id', '编辑失败，没有选中备份集。');
 				}
 				$this->loadDisklist($pm);
 				if (isset($pm->dles[$id]))
 					$dle = $pm->dles[$id];
 				else
 				{
-					$pm->addError("Object/DLE '$id' does not exist.");
+					$pm->addError("备份项 '$id' 不存在.");
 					$pm->state = 'Create1';
 					$this->runState($pm);
 					break;
@@ -194,13 +194,19 @@ class ZMC_Backup_What extends ZMC_Backup
 							$fn = $prefix . 'conf';
 						$lines = explode("\n", rtrim(file_get_contents($fn)));
 						$i = 1;
-						foreach($lines as $line)
-							$disklistContents .= (isset($lineNumbers[$i]) ? '<span style="background-color:#FCC;">' : '') . str_pad($i, 4) . (strpos($line, '"zmc_amcheck"') ? '' : $line) . (isset($lineNumbers[$i++]) ? '</span>' : '') . "\n";
+						foreach($lines as $line) {
+                            $disklistContents .= (isset($lineNumbers[$i]) ? '<span style="background-color:#FCC;">' : '') . str_pad($i, 4) . (strpos($line, '"zmc_amcheck"') ? '' : $line) . (isset($lineNumbers[$i++]) ? '</span>' : '') . "\n";
 
-						$disklistContents = "<h3>==&gt;<a href='' onclick=\"var o = gebi('disklist_contents'); if (o.style.display == 'block') o.style.display='none'; else o.style.display='block'; return false;\">" . ZMC::escape($fn) . "</a>&lt;==</h3>
-							<pre id='disklist_contents' style='display:none'>$disklistContents\n</pre>\n";
+                        }
+						$disklistContents = "<h3>==&gt;" . ZMC::escape($fn) . "</a>&lt;==</h3>  \n";
+//						$disklistContents = "<h3>==&gt;<a href='' onclick=\"var o = gebi('disklist_contents'); if (o.style.display == 'block') o.style.display='none'; else o.style.display='block'; return false;\">" . ZMC::escape($fn) . "</a>&lt;==</h3>
+//							<pre id='disklist_contents' style='display:none'>$disklistContents\n</pre>\n";
 					}
 					$msg = ZMC::escape(ZMC_Yasumi_Parser::unquote($dle['property_list']['zmc_amcheck']));
+                    //去掉错误输出中的下述字样，近显示关键错误信息  added by zhoulin 201411250044
+                    $msg=str_replace("Amanda Backup Client Hosts Check", "",$msg);
+                    $msg=str_replace("--------------------------------", "",$msg);
+                    $msg=str_replace("(brought to you by Amanda 3.3.6)", "",$msg);
 					if (strncmp($msg, 'checking', 8))
 						$pm->addEscapedError($msg . $disklistContents);
 					else
@@ -211,11 +217,11 @@ class ZMC_Backup_What extends ZMC_Backup
 				break;
 
 			case 'Move': 
-				$pm->addError('Not supported in this release of ZMC.');
+				$pm->addError('在后续版本会支持.');
 				break;
 
 			case 'Copy To': 
-				$pm->addError('Not yet supported, but planned as part of the support for "template" DLEs.');
+				$pm->addError('在后续版本会支持');
 				break;
 
 			case 'Check Hosts':
@@ -227,10 +233,10 @@ class ZMC_Backup_What extends ZMC_Backup
 					if (empty(ZMC::$userRegistry['selected_ids']))
 					{
 						if ($check)
-							$pm->addMessage('Checking all objects/DLEs (except paused and deleted) .. time required is proportional to the number of object/DLEs checked.');
+							$pm->addMessage('检查所有备份项 .. 需要的时间取决于备份项数目.');
 						else
 						{
-							$pm->addError('No objects/DLEs selected for deletion.  Nothing done.');
+							$pm->addError('没有备份项被删除');
 							$pm->state = 'Create1';
 							$this->runState($pm);
 							break;
@@ -243,9 +249,9 @@ class ZMC_Backup_What extends ZMC_Backup
 							list($list_name, $host_name, $disk_name) = explode('|', $id);
 							$dle_list[$id] = null;
 							if (!$check)
-								$pm->addMessage($msg = "Requesting deletion of object/DLE $disk_name for host $host_name");
+								$pm->addMessage($msg = "请求删除节点 $host_name 上的备份项 $disk_name ");
 						}
-						ZMC::auditLog(($check ? 'Checking' : 'Deleting') . ': ' . implode(', ', array_keys($dle_list)), 0, null, ZMC_Error::NOTICE);
+						ZMC::auditLog(($check ? '检查' : 'Delete') . ': ' . implode(', ', array_keys($dle_list)), 0, null, ZMC_Error::NOTICE);
 					}
 
 					$this->confDles = ZMC_Yasumi::operation($pm, array(
@@ -274,12 +280,12 @@ class ZMC_Backup_What extends ZMC_Backup
 			case 'Refresh Table':
 			case 'Refresh':
 			case 'Cancel':
-				if ($pm->state === 'Cancel') 
-					$pm->addWarning("Edit/Add cancelled.");
+				if ($pm->state === 'Cancel')
+					$pm->addWarning("编辑/新增 取消");
 
 				$pm->state = 'Create1';
 			case 'Create1':
-				$pm->addDefaultInstruction("Editing object list '$pm->selected_name'.");
+				$pm->addDefaultInstruction("编辑对象列表 '$pm->selected_name'.");
 				break;
 
 			case 'Create2': 
@@ -291,11 +297,11 @@ class ZMC_Backup_What extends ZMC_Backup
 					$pm->state = 'Create1';
 				else{
 					if($zmc_type === 'windowstemplate'){
-						$pm->addMessage("A template must be defined through ZWC on the client machine.");
-						$pm->addMessage("Check \"All Local Drives\" to backup all drives on the client.");
+						$pm->addMessage("模板必须在windows客户端上配置.");
+						$pm->addMessage("检查 \"所有本地磁盘\" 来备份所有客户端上的驱动器.");
 					}
 					if($zmc_type === 'windows')
-						$pm->addMessage("To backup all local drives on the client, please use \"Windows Template\" instead.");
+						$pm->addMessage("备份本地驱动器，请使用 \"Windows Template\" .");
 					$this->buildFormWrapper($pm, array('property_list:zmc_type' => $zmc_type, 'property_list:zmc_version' => ZMC::$registry->zmc_version));
 				}
 				break;
@@ -427,7 +433,8 @@ class ZMC_Backup_What extends ZMC_Backup
 	private function getLicenseStatus(ZMC_Registry_MessageBox $pm)
 	{
 		if (empty($pm->lstats))
-			return $pm->licensesRemaining = 'No licenses left';
+            return $pm->licensesRemaining = '';
+//			return $pm->licensesRemaining = 'No licenses left';
 			
 		if (!empty($pm->form_type))
 		{
@@ -447,17 +454,18 @@ class ZMC_Backup_What extends ZMC_Backup
 				$remaining = empty($licenses['Remaining']) ? 0 : $licenses['Remaining'][$group];
 				$pm->licensesRemaining = "$remaining of " . $licenses['Licensed'][$group] . ' new hostnames left';
 			}
+            $pm->licensesRemaining = '';
 		}
 
 		if (!empty($pm->lstats['dles_over_limit']) && !empty($pm->lstats['dles_over_limit'][$pm->selected_name]))
 		{
 			$groupTypes = array();
 			foreach(array_keys($pm->lstats['group_over_limit'][$pm->selected_name]) as $groupType)
-				if ($pm->state !== 'Add' || $pm->lstats['over_limit'][$groupType] > 1)
+				if ($pm->state !== 'create' || $pm->lstats['over_limit'][$groupType] > 1)
 					$groupTypes[] = $groupType;
 
-			if (!empty($groupTypes))
-				$pm->addEscapedError('Some DLEs exceed license limits (see ' . ZMC::getPageUrl($pm, 'Admin', 'licenses') . ').  DLEs of the following types have been disabled: ' . ZMC::escape(ZMC_Type_What::getNames($groupTypes)));
+//			if (!empty($groupTypes))
+//				$pm->addEscapedError('Some DLEs exceed license limits (see ' . ZMC::getPageUrl($pm, 'Admin', 'licenses') . ').  DLEs of the following types have been disabled: ' . ZMC::escape(ZMC_Type_What::getNames($groupTypes)));
 		}
 	}
 
@@ -551,7 +559,7 @@ class ZMC_Backup_What extends ZMC_Backup
 		}
 		catch (Exception $e)
 		{
-			$pm->addError("An unexpected problem occurred while reading and processing the object list '{$pm->selected_name}': $e");
+			$pm->addError("读取和处理对象列表 '{$pm->selected_name}'的时候发生位置错误： $e");
 		}
 	}
 
@@ -563,13 +571,13 @@ class ZMC_Backup_What extends ZMC_Backup
 		if (empty($dle['property_list:zmc_type']))
 			ZMC::quit('Unknown object type: ' . print_r($dle, true));
 
-		if ($pm->state !== 'Add' && $pm->state !== 'Create2' && empty($dle['natural_key_orig']))
+		if ($pm->state !== 'create' && $pm->state !== 'Create2' && empty($dle['natural_key_orig']))
 			$dle['natural_key_orig'] = $dle['natural_key'];
 
 		$dle['property_list:zmc_disklist'] = $pm->selected_name;
 		$form = array();
 		$pm->form_type = ZMC_Type_What::get($dle['property_list:zmc_type']);
-		ZMC_Form::buildForm($pm, $form, $dle, $pm->state === 'Add', 'ZMC_DleFilter');
+		ZMC_Form::buildForm($pm, $form, $dle, $pm->state === 'create', 'ZMC_DleFilter');
 		$pm->form_advanced_id = 'twirl_what';
 		ZMC_HeaderFooter::$instance->injectYuiCode(<<<EOD
 			var o1=gebi('property_list:zmc_show_advanced')
@@ -898,7 +906,7 @@ class ZMC_DleFilter
 	{
 		
 		if (($post['property_list:zmc_extended_attributes'] === 'suntar') && !empty($post['exclude']))
-			$pm->addEscapedError("Exclude patterns can not be used on Solaris, because extended attributes have been enabled.\n(<a href='http://wiki.zmanda.com/man/amsuntar.8.html'>&quot;suntar&quot;</a> does not support extended attributes.)");
+			$pm->addEscapedError("Exclude patterns can not be used on Solaris, because extended attributes have been enabled.\n(<a href='http://wiki.wocloud.cn/man/amsuntar.8.html'>&quot;suntar&quot;</a> does not support extended attributes.)");
 
 		return self::inputNixBase($pm, $post);
 	}
@@ -920,7 +928,7 @@ class ZMC_DleFilter
 
 	protected static function inputNixBase($pm, $post)
 	{
-		$post['disk_device'] = ZMC_Type_AmandaApps::assertValidDir($pm, $post['disk_device'], ZMC_Type_AmandaApps::DIR_UNIX, 'Directory/Path');
+		$post['disk_device'] = ZMC_Type_AmandaApps::assertValidDir($pm, $post['disk_device'], ZMC_Type_AmandaApps::DIR_UNIX, '目录');
 		self::inputFilterCludes($pm, $post);
 		return self::input($pm, $post);
 	}
@@ -958,7 +966,7 @@ class ZMC_DleFilter
 			$post['disk_device'] = 'ALL_LOCAL_DRIVES';
 			unset($post['all_local_drives']);
 		} elseif (!ZMC::isalnum_($post['disk_device']))
-		    $pm->addWarnError('Windows Template names may only use letters, digits, and the underscore character ("_").');
+		    $pm->addWarnError('Windows Template 名允许使用字母、数字和下划线 ("_").');
 
 		return self::inputWindowsBase($pm, $post);
 	}

@@ -46,6 +46,7 @@ if ($pm->state === 'Create1')
 	$i=0;
 	$prettyNames2types = ZMC_Type_What::getPrettyNames();
 	$zmcTypeApps = ZMC_Type_What::get();
+<<<<<<< HEAD
     echo "<table><tr>";
     foreach(array('File Systems', 'Databases') as $category)
     {
@@ -56,6 +57,16 @@ if ($pm->state === 'Create1')
         if($category=="Databases"){
             echo "<td><font color='blue'>数据库：</font></td><td><select name='selection$i' style='margin-right:20px' onchange=\"if (this.value != '') this.form.submit();\"><option value=''>请选择...</option>";
         }
+=======
+	foreach(array('File Systems', 'Databases') as $category)
+	{
+		$i++;
+		echo <<<EOD
+
+		<select name="selection$i" style="margin-right:20px" onchange="if (this.value != '') this.form.submit();">
+			<option value=''>$category...</option>
+EOD;
+>>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
 		$options = array();
 		foreach($zmcTypeApps as $zmcType => $info)
 			if ($info['category'] === $category)
@@ -78,7 +89,10 @@ if ($pm->state === 'Create1')
         echo "</td>";
 	}
 	?>
+<<<<<<< HEAD
     </tr></table>
+=======
+>>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
 	</div><!-- wocloudFormWrapper -->
 	<?
 }

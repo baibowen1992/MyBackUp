@@ -42,5 +42,5 @@ alter table users add COLUMN resource_pool VARCHAR(1000) NULL;
 ####测试加入sshkey
 
 
-####为毛没有
+####为毛没有2
 

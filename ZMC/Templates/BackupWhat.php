@@ -16,43 +16,46 @@ global $pm;
 $action = rtrim($pm->state, '012');
 echo "\n<form method='post' action='$pm->url'>\n";
 ?>
-<div class="zmcWindow">
-    <div class="zmcTitleBar">
+<div class="wocloudWindow">
+    <div class="wocloudTitleBar">
 	<?
 		$objectType = isset($pm->form_type) ? ' ' . $pm->form_type['name'] : '';
 		$preposition = 'in';
 		if ($action === 'Copy')
 			$preposition = 'to';
 		if (isset($pm->form_type))
-			echo "$action Object ", ZMC::escape($objectType), " (", ZMC::escape($pm->form_type['category']), ") $preposition list: ", ZMC::escape($pm->selected_name);
+//			echo "$action Object ", ZMC::escape($objectType), " (", ZMC::escape($pm->form_type['category']), ") $preposition list: ", ZMC::escape($pm->selected_name);
+			echo "在备份集 ",ZMC::escape($pm->selected_name),"配置",ZMC::escape($objectType)," 文件系统 " ;
 		if ($pm->state === 'Create1')
-			echo 'Add';
-		elseif ($pm->offsetExists('form_type'))
-			echo '<div style="float:right; margin-right:83px;"><small>Licensing: <a href="',
-				ZMC_HeaderFooter::$instance->getUrl('Admin', 'licenses') ,
-				'">', $pm->licensesRemaining, "</a></small></div>\n";
+			echo '新增';
+//		elseif ($pm->offsetExists('form_type'))
+//			echo '<div style="float:right; margin-right:83px;"><small>支持: <a href="',
+//				ZMC_HeaderFooter::$instance->getUrl('Admin', 'licenses') ,
+//				'">', $pm->licensesRemaining, "</a></small></div>\n";
 		?>
 	</div>
-	<a class="zmcHelpLink" id="zmcHelpLinkId" href="<? echo ZMC::$registry->wiki, $pm->tombstone, '+', ucFirst($pm->subnav), '#', $action, urlencode($objectType) ?>" target="_blank"></a>
+<!--	<a class="wocloudHelpLink" id="wocloudHelpLinkId" href="http://www.wocloud.cn" target="_blank"></a>-->
 <?
 if ($pm->state === 'Create1')
 {
 	?>
-	<div wrapperCreate1 class="zmcFormWrapper" style="padding:20px 0 20px 200px; width:auto; border-top:0px;">
-		<img class="zmcWindowBackgroundimageRight"src="/images/3.1/add.png" />
+	<div wrapperCreate1 class="wocloudFormWrapper" style="padding:20px 0 20px 200px; width:auto; border-top:0px;">
+		<img class="wocloudWindowBackgroundimageRight"src="/images/3.1/add.png" />
 		<input type="hidden" name="action" value="Create2" />
 	<?
 	$i=0;
 	$prettyNames2types = ZMC_Type_What::getPrettyNames();
 	$zmcTypeApps = ZMC_Type_What::get();
-	foreach(array('File Systems', 'Databases', 'Applications') as $category)
-	{
-		$i++;
-		echo <<<EOD
-
-		<select name="selection$i" style="margin-right:20px" onchange="if (this.value != '') this.form.submit();">
-			<option value=''>$category...</option>
-EOD;
+    echo "<table><tr>";
+    foreach(array('File Systems', 'Databases') as $category)
+    {
+        $i++;
+        if($category=="File Systems"){
+            echo "<td><font color='blue'>文件系统：</font></td><td><select name='selection$i' style='margin-right:20px' onchange=\"if (this.value != '') this.form.submit();\"><option value=''>请选择...</option>";
+        }
+        if($category=="Databases"){
+            echo "<td><font color='blue'>数据库：</font></td><td><select name='selection$i' style='margin-right:20px' onchange=\"if (this.value != '') this.form.submit();\"><option value=''>请选择...</option>";
+        }
 		$options = array();
 		foreach($zmcTypeApps as $zmcType => $info)
 			if ($info['category'] === $category)
@@ -61,6 +64,8 @@ EOD;
 		ksort($options);
 		foreach($options as $name => $zmcType)
 		{
+            if ($name === 'Oracle on Windows')
+                continue;
 			$disabled = '';
 			$type = $zmcTypeApps[$zmcType]['license_group'];
 			if (	($name === 'vmware' && empty(ZMC::$registry->vcli))
@@ -70,9 +75,11 @@ EOD;
 			echo "\t\t\t\t<option value='$zmcType' $disabled>$name</option>\n";
 		}
 		echo "\t\t\t</select>\n";
+        echo "</td>";
 	}
 	?>
-	</div><!-- zmcFormWrapper -->
+    </tr></table>
+	</div><!-- wocloudFormWrapper -->
 	<?
 }
 else 
@@ -80,26 +87,27 @@ else
 	?>
 	<input type="hidden" name="action" value="Create2" />
 	<input type="hidden" name="selection1" value="<?= $pm->form_type['_key_name'] ?>" />
-	<div wrapperCreate2 class="zmcFormWrapperRight <?= $pm->form_type['form_classes'] ?>" style="min-height:70px;">
-		<img class="zmcWindowBackgroundimageRight"src="/images/3.1/edit.png" />
+	<div wrapperCreate2 class="wocloudFormWrapperRight <?= $pm->form_type['form_classes'] ?>" style="min-height:70px;">
+		<img class="wocloudWindowBackgroundimageRight"src="/images/3.1/edit.png" />
 		<?= $pm->form_html ?>
-	</div><!-- zmcFormWrapper -->
+	</div><!-- wocloudFormWrapper -->
 	<?
 	if (!empty($pm->form_advanced_html))
 		ZMC_Loader::renderTemplate('formAdvanced', $pm);
 	?>
-	<div class="zmcButtonBar" style="position:relative;">
-		<input id="zmcSubmitButton" type="submit" name="action" value="<? echo (($pm->state === 'Edit' || $pm->state === 'Update') ? 'Update' : 'Add'); ?>" />
+	<div class="wocloudButtonBar" style="position:relative;">
+		<button id="zmcSubmitButton" type="submit" name="action" value="<? echo (($pm->state === 'Edit' || $pm->state === 'Update') ? 'Update' : 'create'); ?>" /><? echo (($pm->state === 'Edit' || $pm->state === 'Update') ? '更新' : '新增'); ?></button>
 		<? if ($pm->state === 'Edit')
-			echo '<input id="addButton" type="submit" name="action" value="Add" disabled="disabled" />';
+//			echo '<input id="addButton" type="submit" name="action" value="create" disabled="disabled" />';
+			echo '<button id="addButton" type="submit" name="action" value="create" disabled="disabled" />'.'新增</button>';
 		?>
-		<input type="submit" value="Discover" id="discoverButton" name="action"/>
-  		<input type="submit" value="Cancel" id="cancelButton" name="action"/>
+        <button type="submit" value="Discover" id="discoverButton" name="action"/>扫描</button>
+        <button type="submit" value="Cancel" id="cancelButton" name="action"/>取消</button>
 	</div>
 <?
 }
 ?>
-</div><!-- zmcWindow -->
+</div><!-- wocloudWindow -->
 <?
 
 
@@ -108,46 +116,47 @@ if (empty($pm->rows))
 	return print("<div style='height:250px;'>&nbsp;</div>\n</form>\n\n\n");
 
 $only1user = (ZMC_User::count() === 1);
-ZMC::titleHelpBar($pm, $pm->goto . "View, add, edit, and delete list of objects (DLEs) to backup with: " . $pm->selected_name, 'DLE+Table', 'zmcTitleBarTable');
+ZMC::titleHelpBar($pm, $pm->goto . "查看、添加、编辑和删除备份集 " . $pm->selected_name."  中的备份项", 'DLE+Table', 'wocloudTitleBarTable');
 ?>
 	<div class="dataTable">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<? ZMC_Form::thAll() ?>
-				<th title='Type'>
-					<a href='<?= $pm->colUrls['property_list:zmc_type'] ?>'>Type<? if ($pm->sortImageIdx == 'property_list:zmc_type') echo $pm->sortImageUrl; ?></a></th>
+				<th title='类型'>
+					<a href='<?= $pm->colUrls['property_list:zmc_type'] ?>'>类型<? if ($pm->sortImageIdx == 'property_list:zmc_type') echo $pm->sortImageUrl; ?></a></th>
 				<? if (!empty($pm->aliases))
-						echo "<th title='Alias (defaults to directory/path)'><a href='{$pm->colUrls['disk_name']}'>Alias",
+						echo "<th title='别名 (默认是目录名)'><a href='{$pm->colUrls['disk_name']}'>别名",
 							($pm->sortImageIdx == 'disk_name' ? $pm->sortImageUrl : ''), "</a></th>\n";
 					if (!empty($pm->comments))
-						echo "<th title='Comments'><a href='{$pm->colUrls['property_list:zmc_comments']}'>Comments",
+						echo "<th title='备注'><a href='{$pm->colUrls['property_list:zmc_comments']}'>备注",
 							($pm->sortImageIdx == 'property_list:zmc_comments' ? $pm->sortImageUrl : ''), "</a></th>\n";
 				?>
-				<th title='Host Name / DLE Check Status' style='min-width:200px'>
-					<a href='<?= $pm->colUrls['host_name'] ?>'>Host Name / DLE Check Status<? if ($pm->sortImageIdx == 'host_name') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Directory/Path'>
-					<a href='<?= $pm->colUrls['disk_device'] ?>'>Directory/Path<? if ($pm->sortImageIdx == 'disk_device') echo $pm->sortImageUrl; ?></a></th>
+				<th title='客户端名/ 备份项状态检查' style='min-width:200px'>
+					<a href='<?= $pm->colUrls['host_name'] ?>'>客户端名/ 备份项状态检查<? if ($pm->sortImageIdx == 'host_name') echo $pm->sortImageUrl; ?></a></th>
+				<th title='备份目录'>
+					<a href='<?= $pm->colUrls['disk_device'] ?>'>备份目录<? if ($pm->sortImageIdx == 'disk_device') echo $pm->sortImageUrl; ?></a></th>
 				<? if (!empty($pm->templates))
-						echo "<th title='Template Name'><a href='{$pm->colUrls['property_list:zmc_dle_template']}'>Template",
+						echo "<th title='模板名'><a href='{$pm->colUrls['property_list:zmc_dle_template']}'>模板",
 							($pm->sortImageIdx == 'property_list:zmc_dle_template' ? $pm->sortImageUrl : ''), "</a></th>\n";
 				?>
-				<th title='# L0 Backup Images'>
-					<a href='<?= $pm->colUrls['L0'] ?>'># L0<? if ($pm->sortImageIdx == 'L0') echo $pm->sortImageUrl; ?></th>
-				<th title='# L1+ Backup Images'>
+				<th title='# L0 备份镜像'>
+					<a href='<?= $pm->colUrls['L0'] ?>'># L0<? if ($pm->sortImageIdx == 'L0') echo $pm->sortImageUrl; ?></a></th>
+				<th title='# L1+ 备份镜像'>
 					<a href='<?= $pm->colUrls['Ln'] ?>'># L1+<? if ($pm->sortImageIdx == 'Ln') echo $pm->sortImageUrl; ?></a></th>
-				<th title='AE Client Version'>
-					<a href='<?= $pm->colUrls['property_list:zmc_amcheck_version'] ?>'>AE Version<? if ($pm->sortImageIdx == 'property_list:zmc_amcheck_version') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Client OS'>
-					<a href='<?= $pm->colUrls['property_list:zmc_amcheck_platform'] ?>'>OS<? if ($pm->sortImageIdx == 'property_list:zmc_amcheck_platform') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Encryption Mode'>
-					<a href='<?= $pm->colUrls['encrypt'] ?>'>Encrypt<? if ($pm->sortImageIdx == 'encrypt') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Compression Mode'>
-					<a href='<?= $pm->colUrls['compress'] ?>'>Compress<? if ($pm->sortImageIdx == 'compress') echo $pm->sortImageUrl; ?></a></th>
-				<th title='Last modified time'>
-					<a href='<?= $pm->colUrls['property_list:last_modified_time'] ?>'>Last Modified<? if ($pm->sortImageIdx == 'property_list:last_modified_time') echo $pm->sortImageUrl; ?></a></th>
+				<th title='客户端版本'>
+					<a href='<?= $pm->colUrls['property_list:zmc_amcheck_version'] ?>'>AE版本
+					<? if ($pm->sortImageIdx == 'property_list:zmc_amcheck_version') echo $pm->sortImageUrl; ?></a></th>
+				<th title='客户端操作系统'>
+					<a href='<?= $pm->colUrls['property_list:zmc_amcheck_platform'] ?>'>操作系统<? if ($pm->sortImageIdx == 'property_list:zmc_amcheck_platform') echo $pm->sortImageUrl; ?></a></th>
+				<th title='加密模式'>
+					<a href='<?= $pm->colUrls['encrypt'] ?>'>加密<? if ($pm->sortImageIdx == 'encrypt') echo $pm->sortImageUrl; ?></a></th>
+				<th title='压缩模式'>
+					<a href='<?= $pm->colUrls['compress'] ?>'>压缩<? if ($pm->sortImageIdx == 'compress') echo $pm->sortImageUrl; ?></a></th>
+				<th title='上次编辑时间'>
+					<a href='<?= $pm->colUrls['property_list:last_modified_time'] ?>'>上次编辑<? if ($pm->sortImageIdx == 'property_list:last_modified_time') echo $pm->sortImageUrl; ?></a></th>
 				<? if (!$only1user) { ?>
-				<th title='Last modified by'>
-					<a href='<?= $pm->colUrls['property_list:last_modified_by'] ?>'>By<? if ($pm->sortImageIdx == 'property_list:last_modified_by') echo $pm->sortImageUrl; ?></a></th>
+				<th title='上次编辑人'>
+					<a href='<?= $pm->colUrls['property_list:last_modified_by'] ?>'>上次编辑人<? if ($pm->sortImageIdx == 'property_list:last_modified_by') echo $pm->sortImageUrl; ?></a></th>
 				<? } ?>
 			</tr>
 <?
@@ -160,7 +169,7 @@ foreach ($pm->rows as $row)
 	{
 		$deleted = true;
 		$color = (($i++ % 2) ? 'stripeGrayDeleted':'stripeDeleted');
-		echo "<tr class='$color' onclick=\"window.confirm('Deleted DLEs can not be edited, and are removed when associated media have been dropped on the Backup|media page.'); return false;\">\n";
+		echo "<tr class='$color' onclick=\"window.confirm('已经删除的备份项不能被编辑.'); return false;\">\n";
 	}
 	else
 	{
@@ -179,7 +188,7 @@ foreach ($pm->rows as $row)
 	{
 		$escaped = (isset($row[$key]) ? ZMC::escape($row[$key]) : '');
 		$escapedTd = "<td>$escaped</td>\n";
-
+//        echo '<td hidden="hidden">'.$key.'--->>>'.$escaped.'</td>';
 		switch($key)
 		{
 			case 'natural_key':
@@ -223,7 +232,7 @@ foreach ($pm->rows as $row)
 			case 'property_list:zmc_type':
 				echo '<td>';
 				if (isset($pm->lstats['over_limit'][$row[$key]]))
-					echo '<img style="vertical-align:text-top; padding:0; margin:0" src="/images/global/calendar/icon_calendar_failure.gif" title="License limit exceeded. DLE disabled." />';
+					echo '<img style="vertical-align:text-top; padding:0; margin:0" src="/images/global/calendar/icon_calendar_failure.gif" title="系统注册已过期，备份项被停用" />';
 				echo ZMC_Type_What::getName($row[$key]), "</td>\n";
 				break;
 
@@ -241,7 +250,8 @@ foreach ($pm->rows as $row)
 				break;
 
 			case 'host_name':
-				$escaped = '<a onclick="noBubble(event)" href="/ZMC_Admin_Advanced?form=adminTasks&amp;action=Apply&amp;command=amadmin+' . ZMC::escape($pm->selected_name) . '+find+' . $row[$key] . "\">$escaped</a>";
+				//$escaped = '<a onclick="noBubble(event)" href="/ZMC_Admin_Advanced?form=adminTasks&amp;action=Apply&amp;command=amadmin+' . ZMC::escape($pm->selected_name) . '+find+' . $row[$key] . "\">$escaped</a>";
+				$escaped = '<a' . "\">$escaped</a>";
 				$escapedTd = "<td>$escaped</td>\n";
 				$last_modified_time = -1;
 				if (!empty($row['property_list:last_modified_time']))
@@ -323,6 +333,30 @@ foreach ($pm->rows as $row)
 					echo "<td>-</td>\n";
 					break;
 				}
+            case 'encrypt':
+                if($escaped=='none')
+                    echo "<td>  </td>\n";
+                elseif($escaped=='client')
+                    echo "<td>客户端</td>\n";
+                elseif($escaped=='server')
+                    echo "<td>服务端</td>\n";
+                break;
+            case 'compress':
+                if($escaped=='none')
+                    echo "<td>  </td>\n";
+                elseif($escaped=='client fast')
+                    echo "<td>客户端最快</td>\n";
+                elseif($escaped=='client best')
+                    echo "<td>客户端最佳</td>\n";
+                elseif($escaped=='server fast')
+                    echo "<td>服务端最快</td>\n";
+                elseif($escaped=='server best')
+                    echo "<td>服务端最佳</td>\n";
+                elseif($escaped=='client custom')
+                    echo "<td>客户端自定义</td>\n";
+                elseif($escaped=='server custom')
+                    echo "<td>服务端自定义</td>\n";
+                break;
 			default:
 				echo $escapedTd;
 		}
@@ -338,12 +372,12 @@ if (!empty($poll) && $pm->state === 'Create1')
 $html = '';
 if (!empty($deleted) || !empty($skipped))
 {
-	$html = '<div style="padding:4px; float:right;"><b>&nbsp;&nbsp;&nbsp;Row Legend:</b> ';
+	$html = '<div style="padding:4px; float:right;"><b>&nbsp;&nbsp;&nbsp;行传:</b> ';
 	if (!empty($deleted))
-		$html .= '<span class="stripeWhite" style="text-decoration: line-through">Deleted</span>';
+		$html .= '<span class="stripeWhite" style="text-decoration: line-through">删除</span>';
 
 	if (!empty($skipped))
-		$html .= '<span class="stripeGraySkip">Skipped</span>';
+		$html .= '<span class="stripeGraySkip">跳过</span>';
 
 	$html .= "</div>\n";
 }
@@ -351,12 +385,12 @@ if (!empty($deleted) || !empty($skipped))
 ZMC_Loader::renderTemplate('tableButtonBar', array('goto' => $pm->goto,
 	'buttons' => array(
 		'Refresh Table' => true,
-		'Edit' => false,
+		'Edit' => true,
 		
-		'Check Hosts' => "onclick=\"var sel=false; var o=gebi('dataTable').getElementsByTagName('input'); for(var i = 0; i < o.length; i++) { b = o.item(i); if (b.checked) sel=true; } if (sel) return true; return window.confirm('Check all?');\"",
+		'Check Hosts' => "onclick=\"var sel=true; var o=gebi('dataTable').getElementsByTagName('input'); for(var i = 0; i < o.length; i++) { b = o.item(i); if (b.checked) sel=true; } if (sel) return true; return window.confirm('检查所有备份项?');\"",
 
 
-		'Delete' => "onclick=\"return window.confirm('Deleting objects/DLEs does not delete backups.  If a backup still exists, the entry is marked as deleted, but remains visible on this page for reference, until the last backup is removed.  There is no undo, but backup copies are archived to /var/log/amanda/zmc.  Continue?')\"",
+		'Delete' => "onclick=\"return window.confirm('删除备份项不会删除备份文件。如果还有备份存在，备份项会标记为已删除，但是在本页面依然可见直到最后一个备份被删除。删除操作不能撤销，但备份集系统数据会被备份下，是否继续？')\"",
 	),
 	'html' => $html
 ));

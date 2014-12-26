@@ -305,85 +305,49 @@ EOD;
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-<<<<<<< HEAD
                             echo "		<li id='step1' class='disabled'>备份项目</li>\n";
                         else
                             echo "		<li id='step1'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">来源</a></li>\n";
-=======
-                            echo "		<li class='disabled'>来源</li>\n";
-                        else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">备份项目</a></li>\n";
->>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
                     }
                     elseif ( $description =='where' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-<<<<<<< HEAD
                             echo "		<li id='step2' class='disabled'>目的地</li>\n";
                         else
                             echo "		<li id='step2'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">目的地</a></li>\n";
-=======
-                            echo "		<li class='disabled'>目的地</li>\n";
-                        else
-                            echo "		<li hidden='hidden'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">目的地</a></li>\n";
->>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
                     }
                     elseif ( $description =='staging' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-<<<<<<< HEAD
                             echo "		<li id='step3' class='disabled'>缓存</li>\n";
                         else
                             echo "		<li  id='step3'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">缓存</a></li>\n";
-=======
-                            echo "		<li class='disabled'>缓存</li>\n";
-                        else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">缓存</a></li>\n";
->>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
                     }
                     elseif ( $description =='how' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-<<<<<<< HEAD
                             echo "		<li id='step4' class='disabled'>策略</li>\n";
                         else
                             echo "		<li id='step4'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">策略</a></li>\n";
-=======
-                            echo "		<li class='disabled'>策略</li>\n";
-                        else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">策略</a></li>\n";
->>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
                     }
                     elseif ( $description =='when' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-<<<<<<< HEAD
                             echo "		<li id='step5' class='disabled'>计划</li>\n";
                         else
                             echo "		<li id='step5'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">计划</a></li>\n";
-=======
-                            echo "		<li class='disabled'>计划</li>\n";
-                        else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">计划</a></li>\n";
->>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
                     }
                     elseif ( $description =='now' )
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-<<<<<<< HEAD
                             echo "		<li id='step6' class='disabled'>执行</li>\n";
                         else
                             echo "		<li id='step6'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">执行</a></li>\n";
-=======
-                            echo "		<li class='disabled'>执行</li>\n";
-                        else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">执行</a></li>\n";
->>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
                     }
                 }
                 elseif( $Tab == 'Monitor' )
@@ -416,15 +380,9 @@ EOD;
                     {
                         $link = self::getUrl($Tab, $description);
                         if (empty($link))
-<<<<<<< HEAD
                             echo "		<li data-step='1' data-intro='先在“管理 >> 备份集”页面，创建备份集。' data-position='right' class='disabled'>备份集</li>\n";
                         else
                             echo "		<li data-step='1' data-intro='先在“管理 >> 备份集”页面，创建备份集。' data-position='right'><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">备份集</a></li>\n";
-=======
-                            echo "		<li class='disabled'>备份集</li>\n";
-                        else
-                            echo "		<li><a href='$link' ", ($sub === $description) ? 'style="font-weight:bold;" ':'', ">备份集</a></li>\n";
->>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
                     }
                     elseif ( $description =='devices' )
                     {
@@ -479,10 +437,7 @@ EOD;
                     }
                 }
             }
-<<<<<<< HEAD
 
-=======
->>>>>>> b49f5f035663e1341c6b53994186bbcdc199bd8b
 		echo <<<EOD
 	</ol>
 </div><!-- subNav -->

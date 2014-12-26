@@ -39,3 +39,6 @@ alter table users add COLUMN resource_pool VARCHAR(1000) NULL;
 ######2014safdsfdsgfdgfdgfdgfd
 
 
+####测试加入sshkey
+
+

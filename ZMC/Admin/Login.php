@@ -54,6 +54,9 @@ class ZMC_Admin_Login
             $pm->token = $_GET['token'];
             unset($_SESSION['user_token']);
             $_SESSION['user_token']=$_GET['token'];
+        }else{
+            unset($_SESSION['user_token']);
+            $_SESSION['user_token']="";
         }
         //add by Johnny 20141217
         if ( isset($_GET['respool']) && !empty($_GET['respool'])){

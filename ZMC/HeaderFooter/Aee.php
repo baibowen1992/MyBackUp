@@ -468,7 +468,7 @@ EOD;
 	?>
 <div class="alertsHeadingExpanded">
 	<a class="wocloudHelpLink" style="top:10px;" target="_blank" href="<?=ZMC::$registry->wiki?>FilterByBackupSet"></a>
-	<div class="alertsHeadingTitle">
+	<div class="alertsHeadingTitle" id="step0">
 		备份集:&nbsp; <form name='form1' id='form1' action='<?= $this->pm->url ?>' method='post'>
 			<?
 			if (ZMC_BackupSet::count())

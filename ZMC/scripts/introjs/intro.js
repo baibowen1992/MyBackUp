@@ -35,7 +35,7 @@
       /* Previous button label in tooltip box */
       prevLabel: '&larr; 上一步',
       /* Skip button label in tooltip box */
-      skipLabel: '跳过',
+      skipLabel: '结束演示',
       /* Done button label in tooltip box */
       doneLabel: '演示结束',
       /* Default tooltip box position */

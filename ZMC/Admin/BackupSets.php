@@ -159,14 +159,24 @@ class ZMC_Admin_BackupSets extends ZMC_Backup
                     // $url  = "http://172.66.6.113:8082/instance/obs/getObsUser";  //http://$pm->resourcePool：8082/instance/obs/getObsUser
                     // $resultx = ZMC_User::http_post_data($url, $data);
 
-                    //        /instance/obs/getObsUser
-                    $url  = "http://172.66.6.113:8082/portal/instance/obs/getObsUser";
-                    session_start();
-                    $token= $_SESSION['token'];
-
+                    //使用配置的方式保存url：获取S3key的接口，记得顺序不能变，单点登录的下标是1
+                    $urlArray = json_decode(file_get_contents("../json/url.json"));
+                    $url  = $urlArray[1]->url;
+                    //$url  = "http://172.66.6.113:8082/portal/instance/obs/getObsUser";
+                    //session_start();
+                    $token= $_SESSION['user_token'];
+                    if(empty($token)||$token=='token is null,Johnny test.'){
+                        echo <<<EOD
+<script type="text/javascript">
+        alert("token失效，请重新登陆。");
+        window.location.href = 'ZMC_Admin_Login?logout=1&login=AEE';
+</script>
+EOD;
+                        return;
+                    }
                     //获取设备的s3HostIp
                     $poolName = $_POST['respool'];
-                    // echo $poolName;
+                    echo $poolName."<==poolname=======token==>".$token;
 
                     //获取设备的s3HostIp
                     $hostip = "";//定义资源池名称，默认为空
@@ -183,24 +193,27 @@ class ZMC_Admin_BackupSets extends ZMC_Backup
 
 
                     //拼接json作为post的参数传递
-                    // echo "====================".$token;
+                    echo "<br/>====================".$token;
                     $data = json_encode(array('resourcePool'=>$poolName,'token'=>$token));
-                    // echo "------data--------".$data;
+                    echo "<br/>------data--------".$data;
                     $resultx = ZMC_User::http_post_data($url, $data);
-
+                    echo "<br/>------返回的值--------".$resultx;
+                    echo '<pre>';
+                    print_r($resultx);
+                    echo '</pre>';
                     //处理返回值
                     if(!empty($resultx)){
                         $s3data=json_decode($resultx[1],true);
                         if(array_key_exists('data',$s3data)){
-                            $keydata=$s3data['data'][0];
+                            $keydata=$s3data['data']['data'][0];
                             $secretkey=$keydata['secretkey'];
                             $accesskey=$keydata['accesskey'];
                         }
                     }
 
-                    // echo "hostip-------- > ".$hostip;
-                    // echo "secretkey-------- > ".$secretkey;
-                    // echo "accesskey-------- > ".$accesskey;
+                    //echo "<br>hostip-------- > ".$hostip;
+                    //echo "<br>secretkey-------- > ".$secretkey;
+                    //echo "<br>accesskey-------- > ".$accesskey;
 
                     $pm_tmp=new ZMC_Registry_MessageBox();
 
@@ -227,8 +240,14 @@ class ZMC_Admin_BackupSets extends ZMC_Backup
                         "device_output_buffer_size"=>"512m"
                     );
 
-                    // print_r('AAAAAAAAAAAAAAAA');
+                    //echo '------b-----<pre>';
+                    //print_r($tmparray);
+                    //echo '</pre>------e---------';
+                    //return;
+                    $pm_tmp->addMessage($msg = (" 设备新建成功" ));
+                    //return;
                     $pm_tmp->binding = ZMC_DeviceFilter::filter($pm_tmp, 'input', $tmparray, 'ZMC_Type_Devices');
+                    echo "这里  还没报错 1";
                     $realpath = realpath($pm_tmp->binding['changer:changerdev']);
                     if ($rw = ZMC::is_readwrite($realpath, false))
                         $pm_tmp->addError("不能在路径'{$pm_tmp->binding['changer:changerdev']} => $realpath' 下新建设备，因为缺少读写权限.\n$rw");
@@ -236,12 +255,12 @@ class ZMC_Admin_BackupSets extends ZMC_Backup
                     {
                         //print_r('新增存储设备');
                         $result = ZMC_Yasumi::operation($pm, array(
-                            'pathInfo' => '/Device-Profile/' . ($update ? 'merge' : 'create'),
+                            'pathInfo' => '/Device-Profile/create',
                             'data' => array(
                                 'commit_comment' => 'Admin|devices add/update device profile',
                                 'message_type' => 'Device Profile Edit',
                                 'device_profile_list' => array($pm_tmp->binding['id'] => $pm_tmp->binding)
-                            ),
+                            )
                         ));
                         $pm_tmp->merge($result);
                         ZMC_Type_Devices::addExpireWarnings($pm_tmp);

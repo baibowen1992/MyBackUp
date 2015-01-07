@@ -260,7 +260,7 @@ class ZMC_BackupSet
 
 		if (!$creatingNewSet && !isset(self::$myNames[$name]))
 		{
-			$pm->addError("不能切换备份集到 '$name'，请选择其他备份集");
+//			$pm->addError("不能切换备份集到 '$name'，请选择其他备份集");
 			return $_SESSION['configurationName'] = false;
 		}
 

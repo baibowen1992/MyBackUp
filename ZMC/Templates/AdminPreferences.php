@@ -205,10 +205,10 @@ else
 			ZMC_Loader::renderTemplate('formAdvanced', $pm);
 		?>
 	<div class="wocloudButtonBar">
-		<button type="submit" value="Apply" name="action" />应用</button>
-		<button type="reset" value="Cancel" name="action" />取消</button>
-		<button type="submit" value="Reset to Defaults" name="action" class="wocloudButtonsLeft" />还原默认配置</button>
-		<button hidden="hidden" name="form" value="globalDefaults" />
+		<button type="submit" value="Apply" name="action" >应用</button>
+		<button type="reset" value="Cancel" name="action" >取消</button>
+		<button type="submit" value="Reset to Defaults" name="action" class="wocloudButtonsLeft" >还原默认配置</button>
+		<input type="hidden" name="form" value="globalDefaults" />
 	</div>
 	</form>
 </div><!-- wocloudLeftWindow -->
@@ -239,9 +239,9 @@ else
 		</div>
 	</div><!-- wocloudFormWrapper -->
 	<div class="wocloudButtonBar">
-        <button type="submit" value="Apply" name="action" />应用</button>
-        <button type="reset" value="Cancel" name="action" />取消</button>
-		<input hidden="hidden" name="form" value="userPreferences" />
+        <button type="submit" value="Apply" name="action" >应用</button>
+        <button type="reset" value="Cancel" name="action" >取消</button>
+		<input type="hidden" name="form" value="userPreferences" />
 	</div>
 	</form>
 </div><!-- wocloudLeftWindow -->
@@ -276,9 +276,9 @@ else
 		</div>
 </div>
 	<div class="wocloudButtonBar">
-        <button type="submit" value="Apply" name="action" />应用</button>
-        <button type="reset" value="Cancel" name="action" />取消</button>
-		<input hidden="hidden"  name="form" value="globalInputDefaults" />
+        <button type="submit" value="Apply" name="action" >应用</button>
+        <button type="reset" value="Cancel" name="action" >取消</button>
+		<input type="hidden" name="form" value="globalInputDefaults" />
 	</div>
 	</form>
 </div><!-- wocloudLeftWindow -->

@@ -36,7 +36,7 @@ class ZMC_Admin_Preferences
 		'log_slow_queries' => array('日志慢速查询?', true),
 		'ultra_turbo' => array('显示过期结果?', false),
 		'verbose_logs' => array('详细日志?', true),
-		'verify_installed_files' => array('校验安装文件?', falsse),
+		'verify_installed_files' => array('校验安装文件?', false),
 		'enable_monitor_role' => array('启用监控用户?', false),
 		'enable_restore_role' => array('启用恢复用户?', false),
 
@@ -150,7 +150,7 @@ class ZMC_Admin_Preferences
 		if ($_POST['show_help_pages'] === 'Yes')
 		{
 			ZMC_User::set($_SESSION['user_id'], 'show_starter_page', 1);
-			$pm->addMessage('Dismissed informational and help pages will be displayed.');
+			$pm->addMessage('重置信息，帮助页面将显示.');
 		}
 	}
 	public static function opGlobalInputDefaults($pm)
@@ -229,7 +229,10 @@ class ZMC_Admin_Preferences
 				if (ZMC::$registry->$key !== $overrides[$key])
 				{
 				   	ZMC::$registry->$key = $overrides[$key];
-					$pm->addMessage(str_replace('?', ': ', $bconfig[self::PROMPT]) . ' ' . $_POST[$key]);
+                    if ($_POST[$key] === 'Yes')
+					    $pm->addMessage(str_replace('?', ': ', $bconfig[self::PROMPT]) . ' 是' );
+                    elseif ($_POST[$key] === 'No')
+                        $pm->addMessage(str_replace('?', ': ', $bconfig[self::PROMPT]) . ' 否' );
 				}
 				
 			}

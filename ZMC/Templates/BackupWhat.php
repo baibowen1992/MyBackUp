@@ -335,7 +335,7 @@ foreach ($pm->rows as $row)
 				}
             case 'encrypt':
                 if($escaped=='none')
-                    echo "<td>  </td>\n";
+                    echo "<td>无</td>\n";
                 elseif($escaped=='client')
                     echo "<td>客户端</td>\n";
                 elseif($escaped=='server')
@@ -343,7 +343,7 @@ foreach ($pm->rows as $row)
                 break;
             case 'compress':
                 if($escaped=='none')
-                    echo "<td>  </td>\n";
+                    echo "<td>无</td>\n";
                 elseif($escaped=='client fast')
                     echo "<td>客户端最快</td>\n";
                 elseif($escaped=='client best')

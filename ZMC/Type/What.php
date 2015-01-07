@@ -30,7 +30,7 @@ protected static $labelFixes = array(
 		'server client' => '历史平均'
 	),
 	'encrypt' => array(
-		'none' => '  ',
+		'none' => '无',
 //		'client' => '客户端',
 		'server' => '服务端',
 //		'pfx' => '客户端PFX认证',
@@ -38,7 +38,7 @@ protected static $labelFixes = array(
 	),
 	'compress' => array(
 		
-		'none' => '  ',
+		'none' => '无',
 		'client fast' => '客户端最快',
 		'client best' => '客户端最佳',
 //		'client custom' => '客户端自定义',

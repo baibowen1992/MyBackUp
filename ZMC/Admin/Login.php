@@ -201,14 +201,8 @@ class ZMC_Admin_Login
                 //$_SESSION['token']=$pm->token;
                 //session_commit();
                 ZMC_Mysql::logVars($pm);
-                //$userId = ZMC_User::getUserIdByNetwork($username, ZMC::$registry->short_name_lc);
-                $userid_respool_array=ZMC_User::getUserIdAddResPoolByNetwork($username, ZMC::$registry->short_name_lc);
-                $resourcePool = "";
-                foreach($userid_respool_array as $k1=>$v1) {
-                    //echo $k1.'< -------johnny test-------- >'.$v1;
-                    $userId = $v1["user_id"];
-                    $resourcePool = $v1["resource_pool"];
-                }
+                //首先检查用户是否在数据库中以存在
+                $userId = ZMC_User::getUserIdByNetwork($username, ZMC::$registry->short_name_lc);
                 //当用户在zmc数据库里不存在，则新增用户到数据，并返回用户ID
                 if(!$userId){
                     $my_array2 = json_decode($my_array['data'], true);
@@ -221,8 +215,13 @@ class ZMC_Admin_Login
                     $password = "1qazXSW@";
                     $userId = ZMC_User::insertUser($username,$user_role, $email, $password, $zmandaNetworkID,$pm->resPool);
                 }
-                //这里操作资源池的更新
+                //如果存在用户，则获取资源池对比决定是否进行资源池的更新
                 else{
+                    $userid_respool_array=ZMC_User::getUserIdAddResPoolByNetwork($username, ZMC::$registry->short_name_lc);
+                    $resourcePool = "";
+                    foreach($userid_respool_array as $k1=>$v1) {
+                        $resourcePool = $v1["resource_pool"];
+                    }
                     if($pm->resPool!=$resourcePool){
                         ZMC_User::updateUserResPool($pm->resPool,$username);
                     }
